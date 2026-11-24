@@ -43,6 +43,8 @@ def compile_limits():
 def execute_wasi(binary, stdin):
     import wasmtime as w
     cfg=w.Config(); cfg.consume_fuel=True
+    # Avoid host-sized compilation pools inside resource-limited containers.
+    cfg.parallel_compilation=False
     cfg.cranelift_opt_level='none'
     engine=w.Engine(cfg); store=w.Store(engine)
     store.set_fuel(50_000_000)
@@ -98,7 +100,7 @@ def check(source,work,compiler,tests):
             raise RuntimeError('Compiler unavailable: '+cc)
         cmd=[cc,'-Wall','-Werror',str(path.resolve()),'-o',str(binary.resolve()),'-lm']
         if wasi:
-            cmd[1:1]=['--target=wasm32-wasi','--sysroot='+os.environ.get('COMPAILER_WASI_SYSROOT','/usr'),'-Wl,--max-memory=268435456','-Wl,-z,stack-size=8388608']
+            cmd[1:1]=['--target=wasm32-wasi','--sysroot='+os.environ.get('COMPAILER_WASI_SYSROOT','/usr'),'-Wl,--threads=1','-Wl,--max-memory=268435456','-Wl,-z,stack-size=8388608']
         if wasi: cmd.insert(-1, '-Wno-unused-function')
         with tempfile.TemporaryFile() as log:
             built=subprocess.run(cmd,stdout=log,stderr=log,cwd=work,
