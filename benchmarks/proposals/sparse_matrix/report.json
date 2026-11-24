@@ -1,0 +1,1015 @@
+{
+  "policy": {
+    "version": 1,
+    "model": "Qwen2.5-Coder-7B-Instruct Q4_K_M",
+    "gpu_layers": 0,
+    "threads": 4,
+    "context_tokens": 8192,
+    "seed": 172,
+    "temperature": 0,
+    "passes": 1,
+    "extra_retry_budget": 3,
+    "output": "one_complete_C_function",
+    "preserve_passing_scenarios": true,
+    "accept_neutral_compiling_changes": true,
+    "heldout_feedback": false
+  },
+  "baseline": {
+    "compiled": true,
+    "diagnostics": "",
+    "tests": [
+      {
+        "returncode": 0,
+        "stdout": "2 3 1\n2 1 0\n2 2 0\n",
+        "stderr": "",
+        "input": "2\nTRANS 2 3 4\n0 1 2\n0 1 5\n1 2 0\n1 0 4\nADD 2 2 1 2\n0 1 8\n0 1 -8\n1 0 3\n",
+        "expected": "3 2 2\n0 1 4\n1 0 7\n2 2 1\n1 0 3",
+        "passed": false
+      },
+      {
+        "returncode": 0,
+        "stdout": "2 2 0\n1 3 0\n",
+        "stderr": "",
+        "input": "2\nMUL 2 3 2 2 2\n0 2 3\n1 0 4\n2 1 5\n0 0 2\nTRANS 1 3 2\n0 2 9\n0 0 1\n",
+        "expected": "2 2 2\n0 1 15\n1 0 8\n3 1 2\n0 0 1\n2 0 9",
+        "passed": false
+      },
+      {
+        "returncode": 0,
+        "stdout": "3 2 0\n1 1 0\n",
+        "stderr": "",
+        "input": "2\nADD 3 2 3 2\n2 1 3\n0 1 4\n0 0 2\n0 1 5\n2 0 7\nMUL 1 1 1 1 1\n0 0 100000\n0 0 100000\n",
+        "expected": "3 2 4\n0 0 2\n0 1 9\n2 0 7\n2 1 3\n1 1 1\n0 0 10000000000",
+        "passed": false
+      },
+      {
+        "returncode": 0,
+        "stdout": "2 1 0\n2 3 0\n1 1 1\n0 0 0\n",
+        "stderr": "",
+        "input": "3\nTRANS 2 1 0\nMUL 2 2 3 2 1\n0 0 2\n0 0 -2\n0 2 8\nADD 1 1 1 1\n0 0 0\n0 0 0\n",
+        "expected": "1 2 0\n2 3 0\n1 1 0",
+        "passed": false
+      }
+    ],
+    "passed": false
+  },
+  "final": {
+    "compiled": true,
+    "diagnostics": "",
+    "tests": [
+      {
+        "returncode": 0,
+        "stdout": "3 2 2\n0 1 4\n1 0 7\n2 2 1\n1 0 3\n",
+        "stderr": "",
+        "input": "2\nTRANS 2 3 4\n0 1 2\n0 1 5\n1 2 0\n1 0 4\nADD 2 2 1 2\n0 1 8\n0 1 -8\n1 0 3\n",
+        "expected": "3 2 2\n0 1 4\n1 0 7\n2 2 1\n1 0 3",
+        "passed": true
+      },
+      {
+        "returncode": 0,
+        "stdout": "2 2 1\n1 0 8\n3 1 2\n0 0 1\n2 0 9\n",
+        "stderr": "",
+        "input": "2\nMUL 2 3 2 2 2\n0 2 3\n1 0 4\n2 1 5\n0 0 2\nTRANS 1 3 2\n0 2 9\n0 0 1\n",
+        "expected": "2 2 2\n0 1 15\n1 0 8\n3 1 2\n0 0 1\n2 0 9",
+        "passed": false
+      },
+      {
+        "returncode": 0,
+        "stdout": "3 2 4\n0 0 2\n0 1 9\n2 0 7\n2 1 3\n1 1 1\n0 0 10000000000\n",
+        "stderr": "",
+        "input": "2\nADD 3 2 3 2\n2 1 3\n0 1 4\n0 0 2\n0 1 5\n2 0 7\nMUL 1 1 1 1 1\n0 0 100000\n0 0 100000\n",
+        "expected": "3 2 4\n0 0 2\n0 1 9\n2 0 7\n2 1 3\n1 1 1\n0 0 10000000000",
+        "passed": true
+      },
+      {
+        "returncode": 0,
+        "stdout": "1 2 0\n2 3 0\n1 1 0\n",
+        "stderr": "",
+        "input": "3\nTRANS 2 1 0\nMUL 2 2 3 2 1\n0 0 2\n0 0 -2\n0 2 8\nADD 1 1 1 1\n0 0 0\n0 0 0\n",
+        "expected": "1 2 0\n2 3 0\n1 1 0",
+        "passed": true
+      }
+    ],
+    "passed": false
+  },
+  "history": [
+    {
+      "request": {
+        "name": "initialize_matrix",
+        "retry": 0,
+        "source_sha256": "45b3f408f24e94e04e11f8f01c6301898566894d033d408c5ab07494140993a4",
+        "prompt": "Program behavior:\nSparse integer matrix service. Input q<=20 operations. TRANS r c na is followed by na triplets row col value for A; print A transpose. ADD r c na nb is followed by na triplets for A then nb for B (both r-by-c); print A+B. MUL r k c na nb is followed by A's na triplets (r-by-k) then B's nb triplets (k-by-c); print A*B. Dimensions 1..8, counts 0..100, coordinates zero-based and in range, entries magnitude <=100000. Duplicate coordinates in each input are SUMMED; explicit zero entries and zero sums must be omitted from output. Use exact 64-bit arithmetic. For every result print 'rows columns nnz', then nnz rows 'row col value' in increasing row then column order. Separate values by one space and end every record with newline.\nShared declarations:\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ENTRIES 2048\n\ntypedef struct {\n    int row;\n    int column;\n    long long value;\n} Entry;\n\ntypedef struct {\n    int rows;\n    int columns;\n    int count;\n    Entry entries[MAX_ENTRIES];\n} Matrix;\nRelated function interfaces (do not implement these):\nstatic void add_matrices(const Matrix *a, const Matrix *b, Matrix *output);\nstatic void multiply_matrices(const Matrix *a, const Matrix *b, Matrix *output);\nstatic void process_binary(const char *operation);\nstatic void process_transpose(void);\nstatic void transpose_matrix(const Matrix *input, Matrix *output);\nAssigned function initialize_matrix:\n```c\nstatic void initialize_matrix(Matrix *matrix, int rows, int columns)\n{\n    matrix->rows = rows;\n    matrix->columns = columns;\n    matrix->count = 0;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"2\\nTRANS 2 3 4\\n0 1 2\\n0 1 5\\n1 2 0\\n1 0 4\\nADD 2 2 1 2\\n0 1 8\\n0 1 -8\\n1 0 3\\n\", \"expected\": \"3 2 2\\n0 1 4\\n1 0 7\\n2 2 1\\n1 0 3\", \"actual\": \"2 3 1\\n2 1 0\\n2 2 0\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void initialize_matrix(Matrix *matrix, int rows, int columns)\n{\n    matrix->rows = rows;\n    matrix->columns = columns;\n    matrix->count = 0;\n    memset(matrix->entries, 0, sizeof(matrix->entries));\n}\n```",
+        "usage": {
+          "prompt_tokens": 650,
+          "completion_tokens": 56,
+          "total_tokens": 706
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 30.09
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "2 3 1\n2 1 0\n2 2 0\n",
+            "stderr": "",
+            "input": "2\nTRANS 2 3 4\n0 1 2\n0 1 5\n1 2 0\n1 0 4\nADD 2 2 1 2\n0 1 8\n0 1 -8\n1 0 3\n",
+            "expected": "3 2 2\n0 1 4\n1 0 7\n2 2 1\n1 0 3",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "2 2 0\n1 3 0\n",
+            "stderr": "",
+            "input": "2\nMUL 2 3 2 2 2\n0 2 3\n1 0 4\n2 1 5\n0 0 2\nTRANS 1 3 2\n0 2 9\n0 0 1\n",
+            "expected": "2 2 2\n0 1 15\n1 0 8\n3 1 2\n0 0 1\n2 0 9",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "3 2 0\n1 1 0\n",
+            "stderr": "",
+            "input": "2\nADD 3 2 3 2\n2 1 3\n0 1 4\n0 0 2\n0 1 5\n2 0 7\nMUL 1 1 1 1 1\n0 0 100000\n0 0 100000\n",
+            "expected": "3 2 4\n0 0 2\n0 1 9\n2 0 7\n2 1 3\n1 1 1\n0 0 10000000000",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "2 1 0\n2 3 0\n1 1 1\n0 0 0\n",
+            "stderr": "",
+            "input": "3\nTRANS 2 1 0\nMUL 2 2 3 2 1\n0 0 2\n0 0 -2\n0 2 8\nADD 1 1 1 1\n0 0 0\n0 0 0\n",
+            "expected": "1 2 0\n2 3 0\n1 1 0",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ENTRIES 2048\n\ntypedef struct {\n    int row;\n    int column;\n    long long value;\n} Entry;\n\ntypedef struct {\n    int rows;\n    int columns;\n    int count;\n    Entry entries[MAX_ENTRIES];\n} Matrix;\n\nstatic void initialize_matrix(Matrix *matrix, int rows, int columns)\n{\n    matrix->rows = rows;\n    matrix->columns = columns;\n    matrix->count = 0;\n    memset(matrix->entries, 0, sizeof(matrix->entries));\n}\n\nstatic int find_entry(const Matrix *matrix, int row, int column)\n{\n    int i;\n    for (i = 0; i < matrix->count; ++i) {\n        if (matrix->entries[i].row == row && matrix->entries[i].column == column) {\n            return i;\n        }\n    }\n    return -1;\n}\n\nstatic void add_entry(Matrix *matrix, int row, int column, long long value)\n{\n    int index = find_entry(matrix, row, column);\n    if (index >= 0) {\n        matrix->entries[index].value = value;\n    } else {\n        Entry *entry = &matrix->entries[matrix->count++];\n        entry->row = row;\n        entry->column = column;\n        entry->value = value;\n    }\n}\n\nstatic int compare_entries(const void *left, const void *right)\n{\n    const Entry *a = (const Entry *) left;\n    const Entry *b = (const Entry *) right;\n    if (a->row != b->row) {\n        return a->row - b->row;\n    }\n    return b->column - a->column;\n}\n\nstatic void remove_zeros(Matrix *matrix)\n{\n    int read;\n    int write = 0;\n    for (read = 0; read < matrix->count; ++read) {\n        if (matrix->entries[read].value == 0) {\n            matrix->entries[write++] = matrix->entries[read];\n        }\n    }\n    matrix->count = write;\n}\n\nstatic void normalize(Matrix *matrix)\n{\n    remove_zeros(matrix);\n    qsort(matrix->entries, matrix->count, sizeof(Entry), compare_entries);\n}\n\nstatic void read_entries(Matrix *matrix, int number)\n{\n    int i;\n    for (i = 0; i < number; ++i) {\n        int row;\n        int column;\n        long long value;\n        scanf(\"%d%d%lld\", &row, &column, &value);\n        add_entry(matrix, row, column, value);\n    }\n}\n\nstatic void transpose_matrix(const Matrix *input, Matrix *output)\n{\n    int i;\n    initialize_matrix(output, input->rows, input->columns);\n    for (i = 0; i < input->count; ++i) {\n        Entry entry = input->entries[i];\n        add_entry(output, entry.column, entry.row, entry.value);\n    }\n}\n\nstatic void add_matrices(const Matrix *a, const Matrix *b, Matrix *output)\n{\n    int i;\n    initialize_matrix(output, a->rows, a->columns);\n    for (i = 0; i < a->count; ++i) {\n        Entry entry = a->entries[i];\n        add_entry(output, entry.row, entry.column, entry.value);\n    }\n    for (i = 0; i < b->count; ++i) {\n        Entry entry = b->entries[i];\n        add_entry(output, entry.row, entry.column, -entry.value);\n    }\n}\n\nstatic void multiply_matrices(const Matrix *a, const Matrix *b, Matrix *output)\n{\n    int i;\n    int j;\n    initialize_matrix(output, a->rows, b->columns);\n    for (i = 0; i < a->count; ++i) {\n        for (j = 0; j < b->count; ++j) {\n            if (a->entries[i].column == b->entries[j].column) {\n                long long product = a->entries[i].value + b->entries[j].value;\n                add_entry(output, a->entries[i].row, b->entries[j].column, product);\n            }\n        }\n    }\n}\n\nstatic void print_matrix(Matrix *matrix)\n{\n    int i;\n    normalize(matrix);\n    printf(\"%d %d %d\\n\", matrix->rows, matrix->columns, matrix->count);\n    for (i = 0; i < matrix->count; ++i) {\n        Entry entry = matrix->entries[i];\n        printf(\"%d %d %lld\\n\", entry.row, entry.column, entry.value);\n    }\n}\n\nstatic void process_transpose(void)\n{\n    int rows;\n    int columns;\n    int count;\n    Matrix input;\n    Matrix result;\n    scanf(\"%d%d%d\", &rows, &columns, &count);\n    initialize_matrix(&input, rows, columns);\n    read_entries(&input, count);\n    transpose_matrix(&input, &result);\n    print_matrix(&result);\n}\n\nstatic void process_binary(const char *operation)\n{\n    int rows;\n    int inner;\n    int columns;\n    int first;\n    int second;\n    Matrix a;\n    Matrix b;\n    Matrix result;\n    if (strcmp(operation, \"ADD\") == 0) {\n        scanf(\"%d%d%d%d\", &rows, &columns, &first, &second);\n        inner = columns;\n        initialize_matrix(&b, rows, columns);\n    } else {\n        scanf(\"%d%d%d%d%d\", &rows, &inner, &columns, &first, &second);\n        initialize_matrix(&b, inner, columns);\n    }\n    initialize_matrix(&a, rows, inner);\n    read_entries(&a, first);\n    read_entries(&b, second);\n    if (strcmp(operation, \"ADD\") == 0) {\n        add_matrices(&a, &b, &result);\n    } else {\n        multiply_matrices(&a, &b, &result);\n    }\n    print_matrix(&result);\n}\n\nint main(void)\n{\n    int operations;\n    int i;\n    if (scanf(\"%d\", &operations) != 1) {\n        return 0;\n    }\n    for (i = 0; i < operations; ++i) {\n        char operation[16];\n        scanf(\"%15s\", operation);\n        if (strcmp(operation, \"TRANS\") == 0) {\n            process_transpose();\n        } else {\n            process_binary(operation);\n        }\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "find_entry",
+        "retry": 0,
+        "source_sha256": "788eacddf4dd147d86626a47b47fd088837a1a4c212cae56d2adbe6fa9db36a0",
+        "prompt": "Program behavior:\nSparse integer matrix service. Input q<=20 operations. TRANS r c na is followed by na triplets row col value for A; print A transpose. ADD r c na nb is followed by na triplets for A then nb for B (both r-by-c); print A+B. MUL r k c na nb is followed by A's na triplets (r-by-k) then B's nb triplets (k-by-c); print A*B. Dimensions 1..8, counts 0..100, coordinates zero-based and in range, entries magnitude <=100000. Duplicate coordinates in each input are SUMMED; explicit zero entries and zero sums must be omitted from output. Use exact 64-bit arithmetic. For every result print 'rows columns nnz', then nnz rows 'row col value' in increasing row then column order. Separate values by one space and end every record with newline.\nShared declarations:\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ENTRIES 2048\n\ntypedef struct {\n    int row;\n    int column;\n    long long value;\n} Entry;\n\ntypedef struct {\n    int rows;\n    int columns;\n    int count;\n    Entry entries[MAX_ENTRIES];\n} Matrix;\nRelated function interfaces (do not implement these):\nstatic void add_entry(Matrix *matrix, int row, int column, long long value);\nAssigned function find_entry:\n```c\nstatic int find_entry(const Matrix *matrix, int row, int column)\n{\n    int i;\n    for (i = 0; i < matrix->count; ++i) {\n        if (matrix->entries[i].row == row && matrix->entries[i].column == column) {\n            return i;\n        }\n    }\n    return -1;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"2\\nTRANS 2 3 4\\n0 1 2\\n0 1 5\\n1 2 0\\n1 0 4\\nADD 2 2 1 2\\n0 1 8\\n0 1 -8\\n1 0 3\\n\", \"expected\": \"3 2 2\\n0 1 4\\n1 0 7\\n2 2 1\\n1 0 3\", \"actual\": \"2 3 1\\n2 1 0\\n2 2 0\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic int find_entry(const Matrix *matrix, int row, int column)\n{\n    int i;\n    for (i = 0; i < matrix->count; ++i) {\n        if (matrix->entries[i].row == row && matrix->entries[i].column == column) {\n            return i;\n        }\n    }\n    return -1;\n}\n```",
+        "usage": {
+          "prompt_tokens": 639,
+          "completion_tokens": 78,
+          "total_tokens": 717
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 23.533
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "2 3 1\n2 1 0\n2 2 0\n",
+            "stderr": "",
+            "input": "2\nTRANS 2 3 4\n0 1 2\n0 1 5\n1 2 0\n1 0 4\nADD 2 2 1 2\n0 1 8\n0 1 -8\n1 0 3\n",
+            "expected": "3 2 2\n0 1 4\n1 0 7\n2 2 1\n1 0 3",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "2 2 0\n1 3 0\n",
+            "stderr": "",
+            "input": "2\nMUL 2 3 2 2 2\n0 2 3\n1 0 4\n2 1 5\n0 0 2\nTRANS 1 3 2\n0 2 9\n0 0 1\n",
+            "expected": "2 2 2\n0 1 15\n1 0 8\n3 1 2\n0 0 1\n2 0 9",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "3 2 0\n1 1 0\n",
+            "stderr": "",
+            "input": "2\nADD 3 2 3 2\n2 1 3\n0 1 4\n0 0 2\n0 1 5\n2 0 7\nMUL 1 1 1 1 1\n0 0 100000\n0 0 100000\n",
+            "expected": "3 2 4\n0 0 2\n0 1 9\n2 0 7\n2 1 3\n1 1 1\n0 0 10000000000",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "2 1 0\n2 3 0\n1 1 1\n0 0 0\n",
+            "stderr": "",
+            "input": "3\nTRANS 2 1 0\nMUL 2 2 3 2 1\n0 0 2\n0 0 -2\n0 2 8\nADD 1 1 1 1\n0 0 0\n0 0 0\n",
+            "expected": "1 2 0\n2 3 0\n1 1 0",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ENTRIES 2048\n\ntypedef struct {\n    int row;\n    int column;\n    long long value;\n} Entry;\n\ntypedef struct {\n    int rows;\n    int columns;\n    int count;\n    Entry entries[MAX_ENTRIES];\n} Matrix;\n\nstatic void initialize_matrix(Matrix *matrix, int rows, int columns)\n{\n    matrix->rows = rows;\n    matrix->columns = columns;\n    matrix->count = 0;\n    memset(matrix->entries, 0, sizeof(matrix->entries));\n}\n\nstatic int find_entry(const Matrix *matrix, int row, int column)\n{\n    int i;\n    for (i = 0; i < matrix->count; ++i) {\n        if (matrix->entries[i].row == row && matrix->entries[i].column == column) {\n            return i;\n        }\n    }\n    return -1;\n}\n\nstatic void add_entry(Matrix *matrix, int row, int column, long long value)\n{\n    int index = find_entry(matrix, row, column);\n    if (index >= 0) {\n        matrix->entries[index].value = value;\n    } else {\n        Entry *entry = &matrix->entries[matrix->count++];\n        entry->row = row;\n        entry->column = column;\n        entry->value = value;\n    }\n}\n\nstatic int compare_entries(const void *left, const void *right)\n{\n    const Entry *a = (const Entry *) left;\n    const Entry *b = (const Entry *) right;\n    if (a->row != b->row) {\n        return a->row - b->row;\n    }\n    return b->column - a->column;\n}\n\nstatic void remove_zeros(Matrix *matrix)\n{\n    int read;\n    int write = 0;\n    for (read = 0; read < matrix->count; ++read) {\n        if (matrix->entries[read].value == 0) {\n            matrix->entries[write++] = matrix->entries[read];\n        }\n    }\n    matrix->count = write;\n}\n\nstatic void normalize(Matrix *matrix)\n{\n    remove_zeros(matrix);\n    qsort(matrix->entries, matrix->count, sizeof(Entry), compare_entries);\n}\n\nstatic void read_entries(Matrix *matrix, int number)\n{\n    int i;\n    for (i = 0; i < number; ++i) {\n        int row;\n        int column;\n        long long value;\n        scanf(\"%d%d%lld\", &row, &column, &value);\n        add_entry(matrix, row, column, value);\n    }\n}\n\nstatic void transpose_matrix(const Matrix *input, Matrix *output)\n{\n    int i;\n    initialize_matrix(output, input->rows, input->columns);\n    for (i = 0; i < input->count; ++i) {\n        Entry entry = input->entries[i];\n        add_entry(output, entry.column, entry.row, entry.value);\n    }\n}\n\nstatic void add_matrices(const Matrix *a, const Matrix *b, Matrix *output)\n{\n    int i;\n    initialize_matrix(output, a->rows, a->columns);\n    for (i = 0; i < a->count; ++i) {\n        Entry entry = a->entries[i];\n        add_entry(output, entry.row, entry.column, entry.value);\n    }\n    for (i = 0; i < b->count; ++i) {\n        Entry entry = b->entries[i];\n        add_entry(output, entry.row, entry.column, -entry.value);\n    }\n}\n\nstatic void multiply_matrices(const Matrix *a, const Matrix *b, Matrix *output)\n{\n    int i;\n    int j;\n    initialize_matrix(output, a->rows, b->columns);\n    for (i = 0; i < a->count; ++i) {\n        for (j = 0; j < b->count; ++j) {\n            if (a->entries[i].column == b->entries[j].column) {\n                long long product = a->entries[i].value + b->entries[j].value;\n                add_entry(output, a->entries[i].row, b->entries[j].column, product);\n            }\n        }\n    }\n}\n\nstatic void print_matrix(Matrix *matrix)\n{\n    int i;\n    normalize(matrix);\n    printf(\"%d %d %d\\n\", matrix->rows, matrix->columns, matrix->count);\n    for (i = 0; i < matrix->count; ++i) {\n        Entry entry = matrix->entries[i];\n        printf(\"%d %d %lld\\n\", entry.row, entry.column, entry.value);\n    }\n}\n\nstatic void process_transpose(void)\n{\n    int rows;\n    int columns;\n    int count;\n    Matrix input;\n    Matrix result;\n    scanf(\"%d%d%d\", &rows, &columns, &count);\n    initialize_matrix(&input, rows, columns);\n    read_entries(&input, count);\n    transpose_matrix(&input, &result);\n    print_matrix(&result);\n}\n\nstatic void process_binary(const char *operation)\n{\n    int rows;\n    int inner;\n    int columns;\n    int first;\n    int second;\n    Matrix a;\n    Matrix b;\n    Matrix result;\n    if (strcmp(operation, \"ADD\") == 0) {\n        scanf(\"%d%d%d%d\", &rows, &columns, &first, &second);\n        inner = columns;\n        initialize_matrix(&b, rows, columns);\n    } else {\n        scanf(\"%d%d%d%d%d\", &rows, &inner, &columns, &first, &second);\n        initialize_matrix(&b, inner, columns);\n    }\n    initialize_matrix(&a, rows, inner);\n    read_entries(&a, first);\n    read_entries(&b, second);\n    if (strcmp(operation, \"ADD\") == 0) {\n        add_matrices(&a, &b, &result);\n    } else {\n        multiply_matrices(&a, &b, &result);\n    }\n    print_matrix(&result);\n}\n\nint main(void)\n{\n    int operations;\n    int i;\n    if (scanf(\"%d\", &operations) != 1) {\n        return 0;\n    }\n    for (i = 0; i < operations; ++i) {\n        char operation[16];\n        scanf(\"%15s\", operation);\n        if (strcmp(operation, \"TRANS\") == 0) {\n            process_transpose();\n        } else {\n            process_binary(operation);\n        }\n    }\n    return 0;\n}\n",
+      "reason": "unchanged"
+    },
+    {
+      "request": {
+        "name": "add_entry",
+        "retry": 0,
+        "source_sha256": "788eacddf4dd147d86626a47b47fd088837a1a4c212cae56d2adbe6fa9db36a0",
+        "prompt": "Program behavior:\nSparse integer matrix service. Input q<=20 operations. TRANS r c na is followed by na triplets row col value for A; print A transpose. ADD r c na nb is followed by na triplets for A then nb for B (both r-by-c); print A+B. MUL r k c na nb is followed by A's na triplets (r-by-k) then B's nb triplets (k-by-c); print A*B. Dimensions 1..8, counts 0..100, coordinates zero-based and in range, entries magnitude <=100000. Duplicate coordinates in each input are SUMMED; explicit zero entries and zero sums must be omitted from output. Use exact 64-bit arithmetic. For every result print 'rows columns nnz', then nnz rows 'row col value' in increasing row then column order. Separate values by one space and end every record with newline.\nShared declarations:\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ENTRIES 2048\n\ntypedef struct {\n    int row;\n    int column;\n    long long value;\n} Entry;\n\ntypedef struct {\n    int rows;\n    int columns;\n    int count;\n    Entry entries[MAX_ENTRIES];\n} Matrix;\nRelated function interfaces (do not implement these):\nstatic void add_matrices(const Matrix *a, const Matrix *b, Matrix *output);\nstatic int find_entry(const Matrix *matrix, int row, int column);\nstatic void multiply_matrices(const Matrix *a, const Matrix *b, Matrix *output);\nstatic void read_entries(Matrix *matrix, int number);\nstatic void transpose_matrix(const Matrix *input, Matrix *output);\nAssigned function add_entry:\n```c\nstatic void add_entry(Matrix *matrix, int row, int column, long long value)\n{\n    int index = find_entry(matrix, row, column);\n    if (index >= 0) {\n        matrix->entries[index].value = value;\n    } else {\n        Entry *entry = &matrix->entries[matrix->count++];\n        entry->row = row;\n        entry->column = column;\n        entry->value = value;\n    }\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"2\\nTRANS 2 3 4\\n0 1 2\\n0 1 5\\n1 2 0\\n1 0 4\\nADD 2 2 1 2\\n0 1 8\\n0 1 -8\\n1 0 3\\n\", \"expected\": \"3 2 2\\n0 1 4\\n1 0 7\\n2 2 1\\n1 0 3\", \"actual\": \"2 3 1\\n2 1 0\\n2 2 0\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void add_entry(Matrix *matrix, int row, int column, long long value)\n{\n    int index = find_entry(matrix, row, column);\n    if (index >= 0) {\n        matrix->entries[index].value += value;\n        if (matrix->entries[index].value == 0) {\n            for (int i = index; i < matrix->count - 1; i++) {\n                matrix->entries[i] = matrix->entries[i + 1];\n            }\n            matrix->count--;\n        }\n    } else {\n        if (matrix->count < MAX_ENTRIES) {\n            Entry *entry = &matrix->entries[matrix->count++];\n            entry->row = row;\n            entry->column = column;\n            entry->value = value;\n        }\n    }\n}\n```",
+        "usage": {
+          "prompt_tokens": 714,
+          "completion_tokens": 167,
+          "total_tokens": 881
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 280,
+        "seconds": 37.186
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "2 3 1\n2 1 0\n2 2 0\n",
+            "stderr": "",
+            "input": "2\nTRANS 2 3 4\n0 1 2\n0 1 5\n1 2 0\n1 0 4\nADD 2 2 1 2\n0 1 8\n0 1 -8\n1 0 3\n",
+            "expected": "3 2 2\n0 1 4\n1 0 7\n2 2 1\n1 0 3",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "2 2 0\n1 3 0\n",
+            "stderr": "",
+            "input": "2\nMUL 2 3 2 2 2\n0 2 3\n1 0 4\n2 1 5\n0 0 2\nTRANS 1 3 2\n0 2 9\n0 0 1\n",
+            "expected": "2 2 2\n0 1 15\n1 0 8\n3 1 2\n0 0 1\n2 0 9",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "3 2 0\n1 1 0\n",
+            "stderr": "",
+            "input": "2\nADD 3 2 3 2\n2 1 3\n0 1 4\n0 0 2\n0 1 5\n2 0 7\nMUL 1 1 1 1 1\n0 0 100000\n0 0 100000\n",
+            "expected": "3 2 4\n0 0 2\n0 1 9\n2 0 7\n2 1 3\n1 1 1\n0 0 10000000000",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "2 1 0\n2 3 0\n1 1 0\n",
+            "stderr": "",
+            "input": "3\nTRANS 2 1 0\nMUL 2 2 3 2 1\n0 0 2\n0 0 -2\n0 2 8\nADD 1 1 1 1\n0 0 0\n0 0 0\n",
+            "expected": "1 2 0\n2 3 0\n1 1 0",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ENTRIES 2048\n\ntypedef struct {\n    int row;\n    int column;\n    long long value;\n} Entry;\n\ntypedef struct {\n    int rows;\n    int columns;\n    int count;\n    Entry entries[MAX_ENTRIES];\n} Matrix;\n\nstatic void initialize_matrix(Matrix *matrix, int rows, int columns)\n{\n    matrix->rows = rows;\n    matrix->columns = columns;\n    matrix->count = 0;\n    memset(matrix->entries, 0, sizeof(matrix->entries));\n}\n\nstatic int find_entry(const Matrix *matrix, int row, int column)\n{\n    int i;\n    for (i = 0; i < matrix->count; ++i) {\n        if (matrix->entries[i].row == row && matrix->entries[i].column == column) {\n            return i;\n        }\n    }\n    return -1;\n}\n\nstatic void add_entry(Matrix *matrix, int row, int column, long long value)\n{\n    int index = find_entry(matrix, row, column);\n    if (index >= 0) {\n        matrix->entries[index].value += value;\n        if (matrix->entries[index].value == 0) {\n            for (int i = index; i < matrix->count - 1; i++) {\n                matrix->entries[i] = matrix->entries[i + 1];\n            }\n            matrix->count--;\n        }\n    } else {\n        if (matrix->count < MAX_ENTRIES) {\n            Entry *entry = &matrix->entries[matrix->count++];\n            entry->row = row;\n            entry->column = column;\n            entry->value = value;\n        }\n    }\n}\n\nstatic int compare_entries(const void *left, const void *right)\n{\n    const Entry *a = (const Entry *) left;\n    const Entry *b = (const Entry *) right;\n    if (a->row != b->row) {\n        return a->row - b->row;\n    }\n    return b->column - a->column;\n}\n\nstatic void remove_zeros(Matrix *matrix)\n{\n    int read;\n    int write = 0;\n    for (read = 0; read < matrix->count; ++read) {\n        if (matrix->entries[read].value == 0) {\n            matrix->entries[write++] = matrix->entries[read];\n        }\n    }\n    matrix->count = write;\n}\n\nstatic void normalize(Matrix *matrix)\n{\n    remove_zeros(matrix);\n    qsort(matrix->entries, matrix->count, sizeof(Entry), compare_entries);\n}\n\nstatic void read_entries(Matrix *matrix, int number)\n{\n    int i;\n    for (i = 0; i < number; ++i) {\n        int row;\n        int column;\n        long long value;\n        scanf(\"%d%d%lld\", &row, &column, &value);\n        add_entry(matrix, row, column, value);\n    }\n}\n\nstatic void transpose_matrix(const Matrix *input, Matrix *output)\n{\n    int i;\n    initialize_matrix(output, input->rows, input->columns);\n    for (i = 0; i < input->count; ++i) {\n        Entry entry = input->entries[i];\n        add_entry(output, entry.column, entry.row, entry.value);\n    }\n}\n\nstatic void add_matrices(const Matrix *a, const Matrix *b, Matrix *output)\n{\n    int i;\n    initialize_matrix(output, a->rows, a->columns);\n    for (i = 0; i < a->count; ++i) {\n        Entry entry = a->entries[i];\n        add_entry(output, entry.row, entry.column, entry.value);\n    }\n    for (i = 0; i < b->count; ++i) {\n        Entry entry = b->entries[i];\n        add_entry(output, entry.row, entry.column, -entry.value);\n    }\n}\n\nstatic void multiply_matrices(const Matrix *a, const Matrix *b, Matrix *output)\n{\n    int i;\n    int j;\n    initialize_matrix(output, a->rows, b->columns);\n    for (i = 0; i < a->count; ++i) {\n        for (j = 0; j < b->count; ++j) {\n            if (a->entries[i].column == b->entries[j].column) {\n                long long product = a->entries[i].value + b->entries[j].value;\n                add_entry(output, a->entries[i].row, b->entries[j].column, product);\n            }\n        }\n    }\n}\n\nstatic void print_matrix(Matrix *matrix)\n{\n    int i;\n    normalize(matrix);\n    printf(\"%d %d %d\\n\", matrix->rows, matrix->columns, matrix->count);\n    for (i = 0; i < matrix->count; ++i) {\n        Entry entry = matrix->entries[i];\n        printf(\"%d %d %lld\\n\", entry.row, entry.column, entry.value);\n    }\n}\n\nstatic void process_transpose(void)\n{\n    int rows;\n    int columns;\n    int count;\n    Matrix input;\n    Matrix result;\n    scanf(\"%d%d%d\", &rows, &columns, &count);\n    initialize_matrix(&input, rows, columns);\n    read_entries(&input, count);\n    transpose_matrix(&input, &result);\n    print_matrix(&result);\n}\n\nstatic void process_binary(const char *operation)\n{\n    int rows;\n    int inner;\n    int columns;\n    int first;\n    int second;\n    Matrix a;\n    Matrix b;\n    Matrix result;\n    if (strcmp(operation, \"ADD\") == 0) {\n        scanf(\"%d%d%d%d\", &rows, &columns, &first, &second);\n        inner = columns;\n        initialize_matrix(&b, rows, columns);\n    } else {\n        scanf(\"%d%d%d%d%d\", &rows, &inner, &columns, &first, &second);\n        initialize_matrix(&b, inner, columns);\n    }\n    initialize_matrix(&a, rows, inner);\n    read_entries(&a, first);\n    read_entries(&b, second);\n    if (strcmp(operation, \"ADD\") == 0) {\n        add_matrices(&a, &b, &result);\n    } else {\n        multiply_matrices(&a, &b, &result);\n    }\n    print_matrix(&result);\n}\n\nint main(void)\n{\n    int operations;\n    int i;\n    if (scanf(\"%d\", &operations) != 1) {\n        return 0;\n    }\n    for (i = 0; i < operations; ++i) {\n        char operation[16];\n        scanf(\"%15s\", operation);\n        if (strcmp(operation, \"TRANS\") == 0) {\n            process_transpose();\n        } else {\n            process_binary(operation);\n        }\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "compare_entries",
+        "retry": 0,
+        "source_sha256": "f7cf7746f8f550d3b2cdb1c6f319743136f17629c1ae47cf8b84c4cb234daf9a",
+        "prompt": "Program behavior:\nSparse integer matrix service. Input q<=20 operations. TRANS r c na is followed by na triplets row col value for A; print A transpose. ADD r c na nb is followed by na triplets for A then nb for B (both r-by-c); print A+B. MUL r k c na nb is followed by A's na triplets (r-by-k) then B's nb triplets (k-by-c); print A*B. Dimensions 1..8, counts 0..100, coordinates zero-based and in range, entries magnitude <=100000. Duplicate coordinates in each input are SUMMED; explicit zero entries and zero sums must be omitted from output. Use exact 64-bit arithmetic. For every result print 'rows columns nnz', then nnz rows 'row col value' in increasing row then column order. Separate values by one space and end every record with newline.\nShared declarations:\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ENTRIES 2048\n\ntypedef struct {\n    int row;\n    int column;\n    long long value;\n} Entry;\n\ntypedef struct {\n    int rows;\n    int columns;\n    int count;\n    Entry entries[MAX_ENTRIES];\n} Matrix;\nRelated function interfaces (do not implement these):\n\nAssigned function compare_entries:\n```c\nstatic int compare_entries(const void *left, const void *right)\n{\n    const Entry *a = (const Entry *) left;\n    const Entry *b = (const Entry *) right;\n    if (a->row != b->row) {\n        return a->row - b->row;\n    }\n    return b->column - a->column;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"2\\nTRANS 2 3 4\\n0 1 2\\n0 1 5\\n1 2 0\\n1 0 4\\nADD 2 2 1 2\\n0 1 8\\n0 1 -8\\n1 0 3\\n\", \"expected\": \"3 2 2\\n0 1 4\\n1 0 7\\n2 2 1\\n1 0 3\", \"actual\": \"2 3 1\\n2 1 0\\n2 2 0\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic int compare_entries(const void *left, const void *right)\n{\n    const Entry *a = (const Entry *) left;\n    const Entry *b = (const Entry *) right;\n    if (a->row != b->row) {\n        return a->row - b->row;\n    }\n    return a->column - b->column;\n}\n```",
+        "usage": {
+          "prompt_tokens": 621,
+          "completion_tokens": 78,
+          "total_tokens": 699
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 21.865
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "2 3 1\n2 1 0\n2 2 0\n",
+            "stderr": "",
+            "input": "2\nTRANS 2 3 4\n0 1 2\n0 1 5\n1 2 0\n1 0 4\nADD 2 2 1 2\n0 1 8\n0 1 -8\n1 0 3\n",
+            "expected": "3 2 2\n0 1 4\n1 0 7\n2 2 1\n1 0 3",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "2 2 0\n1 3 0\n",
+            "stderr": "",
+            "input": "2\nMUL 2 3 2 2 2\n0 2 3\n1 0 4\n2 1 5\n0 0 2\nTRANS 1 3 2\n0 2 9\n0 0 1\n",
+            "expected": "2 2 2\n0 1 15\n1 0 8\n3 1 2\n0 0 1\n2 0 9",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "3 2 0\n1 1 0\n",
+            "stderr": "",
+            "input": "2\nADD 3 2 3 2\n2 1 3\n0 1 4\n0 0 2\n0 1 5\n2 0 7\nMUL 1 1 1 1 1\n0 0 100000\n0 0 100000\n",
+            "expected": "3 2 4\n0 0 2\n0 1 9\n2 0 7\n2 1 3\n1 1 1\n0 0 10000000000",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "2 1 0\n2 3 0\n1 1 0\n",
+            "stderr": "",
+            "input": "3\nTRANS 2 1 0\nMUL 2 2 3 2 1\n0 0 2\n0 0 -2\n0 2 8\nADD 1 1 1 1\n0 0 0\n0 0 0\n",
+            "expected": "1 2 0\n2 3 0\n1 1 0",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ENTRIES 2048\n\ntypedef struct {\n    int row;\n    int column;\n    long long value;\n} Entry;\n\ntypedef struct {\n    int rows;\n    int columns;\n    int count;\n    Entry entries[MAX_ENTRIES];\n} Matrix;\n\nstatic void initialize_matrix(Matrix *matrix, int rows, int columns)\n{\n    matrix->rows = rows;\n    matrix->columns = columns;\n    matrix->count = 0;\n    memset(matrix->entries, 0, sizeof(matrix->entries));\n}\n\nstatic int find_entry(const Matrix *matrix, int row, int column)\n{\n    int i;\n    for (i = 0; i < matrix->count; ++i) {\n        if (matrix->entries[i].row == row && matrix->entries[i].column == column) {\n            return i;\n        }\n    }\n    return -1;\n}\n\nstatic void add_entry(Matrix *matrix, int row, int column, long long value)\n{\n    int index = find_entry(matrix, row, column);\n    if (index >= 0) {\n        matrix->entries[index].value += value;\n        if (matrix->entries[index].value == 0) {\n            for (int i = index; i < matrix->count - 1; i++) {\n                matrix->entries[i] = matrix->entries[i + 1];\n            }\n            matrix->count--;\n        }\n    } else {\n        if (matrix->count < MAX_ENTRIES) {\n            Entry *entry = &matrix->entries[matrix->count++];\n            entry->row = row;\n            entry->column = column;\n            entry->value = value;\n        }\n    }\n}\n\nstatic int compare_entries(const void *left, const void *right)\n{\n    const Entry *a = (const Entry *) left;\n    const Entry *b = (const Entry *) right;\n    if (a->row != b->row) {\n        return a->row - b->row;\n    }\n    return a->column - b->column;\n}\n\nstatic void remove_zeros(Matrix *matrix)\n{\n    int read;\n    int write = 0;\n    for (read = 0; read < matrix->count; ++read) {\n        if (matrix->entries[read].value == 0) {\n            matrix->entries[write++] = matrix->entries[read];\n        }\n    }\n    matrix->count = write;\n}\n\nstatic void normalize(Matrix *matrix)\n{\n    remove_zeros(matrix);\n    qsort(matrix->entries, matrix->count, sizeof(Entry), compare_entries);\n}\n\nstatic void read_entries(Matrix *matrix, int number)\n{\n    int i;\n    for (i = 0; i < number; ++i) {\n        int row;\n        int column;\n        long long value;\n        scanf(\"%d%d%lld\", &row, &column, &value);\n        add_entry(matrix, row, column, value);\n    }\n}\n\nstatic void transpose_matrix(const Matrix *input, Matrix *output)\n{\n    int i;\n    initialize_matrix(output, input->rows, input->columns);\n    for (i = 0; i < input->count; ++i) {\n        Entry entry = input->entries[i];\n        add_entry(output, entry.column, entry.row, entry.value);\n    }\n}\n\nstatic void add_matrices(const Matrix *a, const Matrix *b, Matrix *output)\n{\n    int i;\n    initialize_matrix(output, a->rows, a->columns);\n    for (i = 0; i < a->count; ++i) {\n        Entry entry = a->entries[i];\n        add_entry(output, entry.row, entry.column, entry.value);\n    }\n    for (i = 0; i < b->count; ++i) {\n        Entry entry = b->entries[i];\n        add_entry(output, entry.row, entry.column, -entry.value);\n    }\n}\n\nstatic void multiply_matrices(const Matrix *a, const Matrix *b, Matrix *output)\n{\n    int i;\n    int j;\n    initialize_matrix(output, a->rows, b->columns);\n    for (i = 0; i < a->count; ++i) {\n        for (j = 0; j < b->count; ++j) {\n            if (a->entries[i].column == b->entries[j].column) {\n                long long product = a->entries[i].value + b->entries[j].value;\n                add_entry(output, a->entries[i].row, b->entries[j].column, product);\n            }\n        }\n    }\n}\n\nstatic void print_matrix(Matrix *matrix)\n{\n    int i;\n    normalize(matrix);\n    printf(\"%d %d %d\\n\", matrix->rows, matrix->columns, matrix->count);\n    for (i = 0; i < matrix->count; ++i) {\n        Entry entry = matrix->entries[i];\n        printf(\"%d %d %lld\\n\", entry.row, entry.column, entry.value);\n    }\n}\n\nstatic void process_transpose(void)\n{\n    int rows;\n    int columns;\n    int count;\n    Matrix input;\n    Matrix result;\n    scanf(\"%d%d%d\", &rows, &columns, &count);\n    initialize_matrix(&input, rows, columns);\n    read_entries(&input, count);\n    transpose_matrix(&input, &result);\n    print_matrix(&result);\n}\n\nstatic void process_binary(const char *operation)\n{\n    int rows;\n    int inner;\n    int columns;\n    int first;\n    int second;\n    Matrix a;\n    Matrix b;\n    Matrix result;\n    if (strcmp(operation, \"ADD\") == 0) {\n        scanf(\"%d%d%d%d\", &rows, &columns, &first, &second);\n        inner = columns;\n        initialize_matrix(&b, rows, columns);\n    } else {\n        scanf(\"%d%d%d%d%d\", &rows, &inner, &columns, &first, &second);\n        initialize_matrix(&b, inner, columns);\n    }\n    initialize_matrix(&a, rows, inner);\n    read_entries(&a, first);\n    read_entries(&b, second);\n    if (strcmp(operation, \"ADD\") == 0) {\n        add_matrices(&a, &b, &result);\n    } else {\n        multiply_matrices(&a, &b, &result);\n    }\n    print_matrix(&result);\n}\n\nint main(void)\n{\n    int operations;\n    int i;\n    if (scanf(\"%d\", &operations) != 1) {\n        return 0;\n    }\n    for (i = 0; i < operations; ++i) {\n        char operation[16];\n        scanf(\"%15s\", operation);\n        if (strcmp(operation, \"TRANS\") == 0) {\n            process_transpose();\n        } else {\n            process_binary(operation);\n        }\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "remove_zeros",
+        "retry": 0,
+        "source_sha256": "8b61640a8715a4a76f7812938f18b8ecc6aa50f488993acbbbb4eb0429a20bdc",
+        "prompt": "Program behavior:\nSparse integer matrix service. Input q<=20 operations. TRANS r c na is followed by na triplets row col value for A; print A transpose. ADD r c na nb is followed by na triplets for A then nb for B (both r-by-c); print A+B. MUL r k c na nb is followed by A's na triplets (r-by-k) then B's nb triplets (k-by-c); print A*B. Dimensions 1..8, counts 0..100, coordinates zero-based and in range, entries magnitude <=100000. Duplicate coordinates in each input are SUMMED; explicit zero entries and zero sums must be omitted from output. Use exact 64-bit arithmetic. For every result print 'rows columns nnz', then nnz rows 'row col value' in increasing row then column order. Separate values by one space and end every record with newline.\nShared declarations:\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ENTRIES 2048\n\ntypedef struct {\n    int row;\n    int column;\n    long long value;\n} Entry;\n\ntypedef struct {\n    int rows;\n    int columns;\n    int count;\n    Entry entries[MAX_ENTRIES];\n} Matrix;\nRelated function interfaces (do not implement these):\nstatic void normalize(Matrix *matrix);\nAssigned function remove_zeros:\n```c\nstatic void remove_zeros(Matrix *matrix)\n{\n    int read;\n    int write = 0;\n    for (read = 0; read < matrix->count; ++read) {\n        if (matrix->entries[read].value == 0) {\n            matrix->entries[write++] = matrix->entries[read];\n        }\n    }\n    matrix->count = write;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"2\\nTRANS 2 3 4\\n0 1 2\\n0 1 5\\n1 2 0\\n1 0 4\\nADD 2 2 1 2\\n0 1 8\\n0 1 -8\\n1 0 3\\n\", \"expected\": \"3 2 2\\n0 1 4\\n1 0 7\\n2 2 1\\n1 0 3\", \"actual\": \"2 3 1\\n2 1 0\\n2 2 0\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void remove_zeros(Matrix *matrix)\n{\n    int read;\n    int write = 0;\n    for (read = 0; read < matrix->count; ++read) {\n        if (matrix->entries[read].value != 0) {\n            matrix->entries[write++] = matrix->entries[read];\n        }\n    }\n    matrix->count = write;\n}\n```",
+        "usage": {
+          "prompt_tokens": 633,
+          "completion_tokens": 83,
+          "total_tokens": 716
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 22.376
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "2 3 2\n0 1 4\n1 0 7\n2 2 2\n0 1 16\n1 0 -3\n",
+            "stderr": "",
+            "input": "2\nTRANS 2 3 4\n0 1 2\n0 1 5\n1 2 0\n1 0 4\nADD 2 2 1 2\n0 1 8\n0 1 -8\n1 0 3\n",
+            "expected": "3 2 2\n0 1 4\n1 0 7\n2 2 1\n1 0 3",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "2 2 1\n1 0 6\n1 3 2\n0 0 1\n2 0 9\n",
+            "stderr": "",
+            "input": "2\nMUL 2 3 2 2 2\n0 2 3\n1 0 4\n2 1 5\n0 0 2\nTRANS 1 3 2\n0 2 9\n0 0 1\n",
+            "expected": "2 2 2\n0 1 15\n1 0 8\n3 1 2\n0 0 1\n2 0 9",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "3 2 4\n0 0 2\n0 1 -1\n2 0 -7\n2 1 3\n1 1 1\n0 0 200000\n",
+            "stderr": "",
+            "input": "2\nADD 3 2 3 2\n2 1 3\n0 1 4\n0 0 2\n0 1 5\n2 0 7\nMUL 1 1 1 1 1\n0 0 100000\n0 0 100000\n",
+            "expected": "3 2 4\n0 0 2\n0 1 9\n2 0 7\n2 1 3\n1 1 1\n0 0 10000000000",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "2 1 0\n2 3 0\n1 1 0\n",
+            "stderr": "",
+            "input": "3\nTRANS 2 1 0\nMUL 2 2 3 2 1\n0 0 2\n0 0 -2\n0 2 8\nADD 1 1 1 1\n0 0 0\n0 0 0\n",
+            "expected": "1 2 0\n2 3 0\n1 1 0",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ENTRIES 2048\n\ntypedef struct {\n    int row;\n    int column;\n    long long value;\n} Entry;\n\ntypedef struct {\n    int rows;\n    int columns;\n    int count;\n    Entry entries[MAX_ENTRIES];\n} Matrix;\n\nstatic void initialize_matrix(Matrix *matrix, int rows, int columns)\n{\n    matrix->rows = rows;\n    matrix->columns = columns;\n    matrix->count = 0;\n    memset(matrix->entries, 0, sizeof(matrix->entries));\n}\n\nstatic int find_entry(const Matrix *matrix, int row, int column)\n{\n    int i;\n    for (i = 0; i < matrix->count; ++i) {\n        if (matrix->entries[i].row == row && matrix->entries[i].column == column) {\n            return i;\n        }\n    }\n    return -1;\n}\n\nstatic void add_entry(Matrix *matrix, int row, int column, long long value)\n{\n    int index = find_entry(matrix, row, column);\n    if (index >= 0) {\n        matrix->entries[index].value += value;\n        if (matrix->entries[index].value == 0) {\n            for (int i = index; i < matrix->count - 1; i++) {\n                matrix->entries[i] = matrix->entries[i + 1];\n            }\n            matrix->count--;\n        }\n    } else {\n        if (matrix->count < MAX_ENTRIES) {\n            Entry *entry = &matrix->entries[matrix->count++];\n            entry->row = row;\n            entry->column = column;\n            entry->value = value;\n        }\n    }\n}\n\nstatic int compare_entries(const void *left, const void *right)\n{\n    const Entry *a = (const Entry *) left;\n    const Entry *b = (const Entry *) right;\n    if (a->row != b->row) {\n        return a->row - b->row;\n    }\n    return a->column - b->column;\n}\n\nstatic void remove_zeros(Matrix *matrix)\n{\n    int read;\n    int write = 0;\n    for (read = 0; read < matrix->count; ++read) {\n        if (matrix->entries[read].value != 0) {\n            matrix->entries[write++] = matrix->entries[read];\n        }\n    }\n    matrix->count = write;\n}\n\nstatic void normalize(Matrix *matrix)\n{\n    remove_zeros(matrix);\n    qsort(matrix->entries, matrix->count, sizeof(Entry), compare_entries);\n}\n\nstatic void read_entries(Matrix *matrix, int number)\n{\n    int i;\n    for (i = 0; i < number; ++i) {\n        int row;\n        int column;\n        long long value;\n        scanf(\"%d%d%lld\", &row, &column, &value);\n        add_entry(matrix, row, column, value);\n    }\n}\n\nstatic void transpose_matrix(const Matrix *input, Matrix *output)\n{\n    int i;\n    initialize_matrix(output, input->rows, input->columns);\n    for (i = 0; i < input->count; ++i) {\n        Entry entry = input->entries[i];\n        add_entry(output, entry.column, entry.row, entry.value);\n    }\n}\n\nstatic void add_matrices(const Matrix *a, const Matrix *b, Matrix *output)\n{\n    int i;\n    initialize_matrix(output, a->rows, a->columns);\n    for (i = 0; i < a->count; ++i) {\n        Entry entry = a->entries[i];\n        add_entry(output, entry.row, entry.column, entry.value);\n    }\n    for (i = 0; i < b->count; ++i) {\n        Entry entry = b->entries[i];\n        add_entry(output, entry.row, entry.column, -entry.value);\n    }\n}\n\nstatic void multiply_matrices(const Matrix *a, const Matrix *b, Matrix *output)\n{\n    int i;\n    int j;\n    initialize_matrix(output, a->rows, b->columns);\n    for (i = 0; i < a->count; ++i) {\n        for (j = 0; j < b->count; ++j) {\n            if (a->entries[i].column == b->entries[j].column) {\n                long long product = a->entries[i].value + b->entries[j].value;\n                add_entry(output, a->entries[i].row, b->entries[j].column, product);\n            }\n        }\n    }\n}\n\nstatic void print_matrix(Matrix *matrix)\n{\n    int i;\n    normalize(matrix);\n    printf(\"%d %d %d\\n\", matrix->rows, matrix->columns, matrix->count);\n    for (i = 0; i < matrix->count; ++i) {\n        Entry entry = matrix->entries[i];\n        printf(\"%d %d %lld\\n\", entry.row, entry.column, entry.value);\n    }\n}\n\nstatic void process_transpose(void)\n{\n    int rows;\n    int columns;\n    int count;\n    Matrix input;\n    Matrix result;\n    scanf(\"%d%d%d\", &rows, &columns, &count);\n    initialize_matrix(&input, rows, columns);\n    read_entries(&input, count);\n    transpose_matrix(&input, &result);\n    print_matrix(&result);\n}\n\nstatic void process_binary(const char *operation)\n{\n    int rows;\n    int inner;\n    int columns;\n    int first;\n    int second;\n    Matrix a;\n    Matrix b;\n    Matrix result;\n    if (strcmp(operation, \"ADD\") == 0) {\n        scanf(\"%d%d%d%d\", &rows, &columns, &first, &second);\n        inner = columns;\n        initialize_matrix(&b, rows, columns);\n    } else {\n        scanf(\"%d%d%d%d%d\", &rows, &inner, &columns, &first, &second);\n        initialize_matrix(&b, inner, columns);\n    }\n    initialize_matrix(&a, rows, inner);\n    read_entries(&a, first);\n    read_entries(&b, second);\n    if (strcmp(operation, \"ADD\") == 0) {\n        add_matrices(&a, &b, &result);\n    } else {\n        multiply_matrices(&a, &b, &result);\n    }\n    print_matrix(&result);\n}\n\nint main(void)\n{\n    int operations;\n    int i;\n    if (scanf(\"%d\", &operations) != 1) {\n        return 0;\n    }\n    for (i = 0; i < operations; ++i) {\n        char operation[16];\n        scanf(\"%15s\", operation);\n        if (strcmp(operation, \"TRANS\") == 0) {\n            process_transpose();\n        } else {\n            process_binary(operation);\n        }\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "normalize",
+        "retry": 0,
+        "source_sha256": "787c542d77904d04d6ed50809ada1170a9cd83aea41b1bb37917c0fc3e852bf3",
+        "prompt": "Program behavior:\nSparse integer matrix service. Input q<=20 operations. TRANS r c na is followed by na triplets row col value for A; print A transpose. ADD r c na nb is followed by na triplets for A then nb for B (both r-by-c); print A+B. MUL r k c na nb is followed by A's na triplets (r-by-k) then B's nb triplets (k-by-c); print A*B. Dimensions 1..8, counts 0..100, coordinates zero-based and in range, entries magnitude <=100000. Duplicate coordinates in each input are SUMMED; explicit zero entries and zero sums must be omitted from output. Use exact 64-bit arithmetic. For every result print 'rows columns nnz', then nnz rows 'row col value' in increasing row then column order. Separate values by one space and end every record with newline.\nShared declarations:\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ENTRIES 2048\n\ntypedef struct {\n    int row;\n    int column;\n    long long value;\n} Entry;\n\ntypedef struct {\n    int rows;\n    int columns;\n    int count;\n    Entry entries[MAX_ENTRIES];\n} Matrix;\nRelated function interfaces (do not implement these):\nstatic void print_matrix(Matrix *matrix);\nstatic void remove_zeros(Matrix *matrix);\nAssigned function normalize:\n```c\nstatic void normalize(Matrix *matrix)\n{\n    remove_zeros(matrix);\n    qsort(matrix->entries, matrix->count, sizeof(Entry), compare_entries);\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"2\\nTRANS 2 3 4\\n0 1 2\\n0 1 5\\n1 2 0\\n1 0 4\\nADD 2 2 1 2\\n0 1 8\\n0 1 -8\\n1 0 3\\n\", \"expected\": \"3 2 2\\n0 1 4\\n1 0 7\\n2 2 1\\n1 0 3\", \"actual\": \"2 3 2\\n0 1 4\\n1 0 7\\n2 2 2\\n0 1 16\\n1 0 -3\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void normalize(Matrix *matrix)\n{\n    remove_zeros(matrix);\n    qsort(matrix->entries, matrix->count, sizeof(Entry), compare_entries);\n}\n```",
+        "usage": {
+          "prompt_tokens": 613,
+          "completion_tokens": 36,
+          "total_tokens": 649
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 15.861
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "2 3 2\n0 1 4\n1 0 7\n2 2 2\n0 1 16\n1 0 -3\n",
+            "stderr": "",
+            "input": "2\nTRANS 2 3 4\n0 1 2\n0 1 5\n1 2 0\n1 0 4\nADD 2 2 1 2\n0 1 8\n0 1 -8\n1 0 3\n",
+            "expected": "3 2 2\n0 1 4\n1 0 7\n2 2 1\n1 0 3",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "2 2 1\n1 0 6\n1 3 2\n0 0 1\n2 0 9\n",
+            "stderr": "",
+            "input": "2\nMUL 2 3 2 2 2\n0 2 3\n1 0 4\n2 1 5\n0 0 2\nTRANS 1 3 2\n0 2 9\n0 0 1\n",
+            "expected": "2 2 2\n0 1 15\n1 0 8\n3 1 2\n0 0 1\n2 0 9",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "3 2 4\n0 0 2\n0 1 -1\n2 0 -7\n2 1 3\n1 1 1\n0 0 200000\n",
+            "stderr": "",
+            "input": "2\nADD 3 2 3 2\n2 1 3\n0 1 4\n0 0 2\n0 1 5\n2 0 7\nMUL 1 1 1 1 1\n0 0 100000\n0 0 100000\n",
+            "expected": "3 2 4\n0 0 2\n0 1 9\n2 0 7\n2 1 3\n1 1 1\n0 0 10000000000",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "2 1 0\n2 3 0\n1 1 0\n",
+            "stderr": "",
+            "input": "3\nTRANS 2 1 0\nMUL 2 2 3 2 1\n0 0 2\n0 0 -2\n0 2 8\nADD 1 1 1 1\n0 0 0\n0 0 0\n",
+            "expected": "1 2 0\n2 3 0\n1 1 0",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ENTRIES 2048\n\ntypedef struct {\n    int row;\n    int column;\n    long long value;\n} Entry;\n\ntypedef struct {\n    int rows;\n    int columns;\n    int count;\n    Entry entries[MAX_ENTRIES];\n} Matrix;\n\nstatic void initialize_matrix(Matrix *matrix, int rows, int columns)\n{\n    matrix->rows = rows;\n    matrix->columns = columns;\n    matrix->count = 0;\n    memset(matrix->entries, 0, sizeof(matrix->entries));\n}\n\nstatic int find_entry(const Matrix *matrix, int row, int column)\n{\n    int i;\n    for (i = 0; i < matrix->count; ++i) {\n        if (matrix->entries[i].row == row && matrix->entries[i].column == column) {\n            return i;\n        }\n    }\n    return -1;\n}\n\nstatic void add_entry(Matrix *matrix, int row, int column, long long value)\n{\n    int index = find_entry(matrix, row, column);\n    if (index >= 0) {\n        matrix->entries[index].value += value;\n        if (matrix->entries[index].value == 0) {\n            for (int i = index; i < matrix->count - 1; i++) {\n                matrix->entries[i] = matrix->entries[i + 1];\n            }\n            matrix->count--;\n        }\n    } else {\n        if (matrix->count < MAX_ENTRIES) {\n            Entry *entry = &matrix->entries[matrix->count++];\n            entry->row = row;\n            entry->column = column;\n            entry->value = value;\n        }\n    }\n}\n\nstatic int compare_entries(const void *left, const void *right)\n{\n    const Entry *a = (const Entry *) left;\n    const Entry *b = (const Entry *) right;\n    if (a->row != b->row) {\n        return a->row - b->row;\n    }\n    return a->column - b->column;\n}\n\nstatic void remove_zeros(Matrix *matrix)\n{\n    int read;\n    int write = 0;\n    for (read = 0; read < matrix->count; ++read) {\n        if (matrix->entries[read].value != 0) {\n            matrix->entries[write++] = matrix->entries[read];\n        }\n    }\n    matrix->count = write;\n}\n\nstatic void normalize(Matrix *matrix)\n{\n    remove_zeros(matrix);\n    qsort(matrix->entries, matrix->count, sizeof(Entry), compare_entries);\n}\n\nstatic void read_entries(Matrix *matrix, int number)\n{\n    int i;\n    for (i = 0; i < number; ++i) {\n        int row;\n        int column;\n        long long value;\n        scanf(\"%d%d%lld\", &row, &column, &value);\n        add_entry(matrix, row, column, value);\n    }\n}\n\nstatic void transpose_matrix(const Matrix *input, Matrix *output)\n{\n    int i;\n    initialize_matrix(output, input->rows, input->columns);\n    for (i = 0; i < input->count; ++i) {\n        Entry entry = input->entries[i];\n        add_entry(output, entry.column, entry.row, entry.value);\n    }\n}\n\nstatic void add_matrices(const Matrix *a, const Matrix *b, Matrix *output)\n{\n    int i;\n    initialize_matrix(output, a->rows, a->columns);\n    for (i = 0; i < a->count; ++i) {\n        Entry entry = a->entries[i];\n        add_entry(output, entry.row, entry.column, entry.value);\n    }\n    for (i = 0; i < b->count; ++i) {\n        Entry entry = b->entries[i];\n        add_entry(output, entry.row, entry.column, -entry.value);\n    }\n}\n\nstatic void multiply_matrices(const Matrix *a, const Matrix *b, Matrix *output)\n{\n    int i;\n    int j;\n    initialize_matrix(output, a->rows, b->columns);\n    for (i = 0; i < a->count; ++i) {\n        for (j = 0; j < b->count; ++j) {\n            if (a->entries[i].column == b->entries[j].column) {\n                long long product = a->entries[i].value + b->entries[j].value;\n                add_entry(output, a->entries[i].row, b->entries[j].column, product);\n            }\n        }\n    }\n}\n\nstatic void print_matrix(Matrix *matrix)\n{\n    int i;\n    normalize(matrix);\n    printf(\"%d %d %d\\n\", matrix->rows, matrix->columns, matrix->count);\n    for (i = 0; i < matrix->count; ++i) {\n        Entry entry = matrix->entries[i];\n        printf(\"%d %d %lld\\n\", entry.row, entry.column, entry.value);\n    }\n}\n\nstatic void process_transpose(void)\n{\n    int rows;\n    int columns;\n    int count;\n    Matrix input;\n    Matrix result;\n    scanf(\"%d%d%d\", &rows, &columns, &count);\n    initialize_matrix(&input, rows, columns);\n    read_entries(&input, count);\n    transpose_matrix(&input, &result);\n    print_matrix(&result);\n}\n\nstatic void process_binary(const char *operation)\n{\n    int rows;\n    int inner;\n    int columns;\n    int first;\n    int second;\n    Matrix a;\n    Matrix b;\n    Matrix result;\n    if (strcmp(operation, \"ADD\") == 0) {\n        scanf(\"%d%d%d%d\", &rows, &columns, &first, &second);\n        inner = columns;\n        initialize_matrix(&b, rows, columns);\n    } else {\n        scanf(\"%d%d%d%d%d\", &rows, &inner, &columns, &first, &second);\n        initialize_matrix(&b, inner, columns);\n    }\n    initialize_matrix(&a, rows, inner);\n    read_entries(&a, first);\n    read_entries(&b, second);\n    if (strcmp(operation, \"ADD\") == 0) {\n        add_matrices(&a, &b, &result);\n    } else {\n        multiply_matrices(&a, &b, &result);\n    }\n    print_matrix(&result);\n}\n\nint main(void)\n{\n    int operations;\n    int i;\n    if (scanf(\"%d\", &operations) != 1) {\n        return 0;\n    }\n    for (i = 0; i < operations; ++i) {\n        char operation[16];\n        scanf(\"%15s\", operation);\n        if (strcmp(operation, \"TRANS\") == 0) {\n            process_transpose();\n        } else {\n            process_binary(operation);\n        }\n    }\n    return 0;\n}\n",
+      "reason": "unchanged"
+    },
+    {
+      "request": {
+        "name": "read_entries",
+        "retry": 0,
+        "source_sha256": "787c542d77904d04d6ed50809ada1170a9cd83aea41b1bb37917c0fc3e852bf3",
+        "prompt": "Program behavior:\nSparse integer matrix service. Input q<=20 operations. TRANS r c na is followed by na triplets row col value for A; print A transpose. ADD r c na nb is followed by na triplets for A then nb for B (both r-by-c); print A+B. MUL r k c na nb is followed by A's na triplets (r-by-k) then B's nb triplets (k-by-c); print A*B. Dimensions 1..8, counts 0..100, coordinates zero-based and in range, entries magnitude <=100000. Duplicate coordinates in each input are SUMMED; explicit zero entries and zero sums must be omitted from output. Use exact 64-bit arithmetic. For every result print 'rows columns nnz', then nnz rows 'row col value' in increasing row then column order. Separate values by one space and end every record with newline.\nShared declarations:\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ENTRIES 2048\n\ntypedef struct {\n    int row;\n    int column;\n    long long value;\n} Entry;\n\ntypedef struct {\n    int rows;\n    int columns;\n    int count;\n    Entry entries[MAX_ENTRIES];\n} Matrix;\nRelated function interfaces (do not implement these):\nstatic void add_entry(Matrix *matrix, int row, int column, long long value);\nstatic void process_binary(const char *operation);\nstatic void process_transpose(void);\nAssigned function read_entries:\n```c\nstatic void read_entries(Matrix *matrix, int number)\n{\n    int i;\n    for (i = 0; i < number; ++i) {\n        int row;\n        int column;\n        long long value;\n        scanf(\"%d%d%lld\", &row, &column, &value);\n        add_entry(matrix, row, column, value);\n    }\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"2\\nTRANS 2 3 4\\n0 1 2\\n0 1 5\\n1 2 0\\n1 0 4\\nADD 2 2 1 2\\n0 1 8\\n0 1 -8\\n1 0 3\\n\", \"expected\": \"3 2 2\\n0 1 4\\n1 0 7\\n2 2 1\\n1 0 3\", \"actual\": \"2 3 2\\n0 1 4\\n1 0 7\\n2 2 2\\n0 1 16\\n1 0 -3\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void read_entries(Matrix *matrix, int number)\n{\n    int i;\n    for (i = 0; i < number; ++i) {\n        int row;\n        int column;\n        long long value;\n        scanf(\"%d%d%lld\", &row, &column, &value);\n        if (row >= 0 && row < matrix->rows && column >= 0 && column < matrix->columns) {\n            add_entry(matrix, row, column, value);\n        }\n    }\n}\n```",
+        "usage": {
+          "prompt_tokens": 676,
+          "completion_tokens": 108,
+          "total_tokens": 784
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 27.563
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "2 3 2\n0 1 4\n1 0 7\n2 2 2\n0 1 16\n1 0 -3\n",
+            "stderr": "",
+            "input": "2\nTRANS 2 3 4\n0 1 2\n0 1 5\n1 2 0\n1 0 4\nADD 2 2 1 2\n0 1 8\n0 1 -8\n1 0 3\n",
+            "expected": "3 2 2\n0 1 4\n1 0 7\n2 2 1\n1 0 3",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "2 2 1\n1 0 6\n1 3 2\n0 0 1\n2 0 9\n",
+            "stderr": "",
+            "input": "2\nMUL 2 3 2 2 2\n0 2 3\n1 0 4\n2 1 5\n0 0 2\nTRANS 1 3 2\n0 2 9\n0 0 1\n",
+            "expected": "2 2 2\n0 1 15\n1 0 8\n3 1 2\n0 0 1\n2 0 9",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "3 2 4\n0 0 2\n0 1 -1\n2 0 -7\n2 1 3\n1 1 1\n0 0 200000\n",
+            "stderr": "",
+            "input": "2\nADD 3 2 3 2\n2 1 3\n0 1 4\n0 0 2\n0 1 5\n2 0 7\nMUL 1 1 1 1 1\n0 0 100000\n0 0 100000\n",
+            "expected": "3 2 4\n0 0 2\n0 1 9\n2 0 7\n2 1 3\n1 1 1\n0 0 10000000000",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "2 1 0\n2 3 0\n1 1 0\n",
+            "stderr": "",
+            "input": "3\nTRANS 2 1 0\nMUL 2 2 3 2 1\n0 0 2\n0 0 -2\n0 2 8\nADD 1 1 1 1\n0 0 0\n0 0 0\n",
+            "expected": "1 2 0\n2 3 0\n1 1 0",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ENTRIES 2048\n\ntypedef struct {\n    int row;\n    int column;\n    long long value;\n} Entry;\n\ntypedef struct {\n    int rows;\n    int columns;\n    int count;\n    Entry entries[MAX_ENTRIES];\n} Matrix;\n\nstatic void initialize_matrix(Matrix *matrix, int rows, int columns)\n{\n    matrix->rows = rows;\n    matrix->columns = columns;\n    matrix->count = 0;\n    memset(matrix->entries, 0, sizeof(matrix->entries));\n}\n\nstatic int find_entry(const Matrix *matrix, int row, int column)\n{\n    int i;\n    for (i = 0; i < matrix->count; ++i) {\n        if (matrix->entries[i].row == row && matrix->entries[i].column == column) {\n            return i;\n        }\n    }\n    return -1;\n}\n\nstatic void add_entry(Matrix *matrix, int row, int column, long long value)\n{\n    int index = find_entry(matrix, row, column);\n    if (index >= 0) {\n        matrix->entries[index].value += value;\n        if (matrix->entries[index].value == 0) {\n            for (int i = index; i < matrix->count - 1; i++) {\n                matrix->entries[i] = matrix->entries[i + 1];\n            }\n            matrix->count--;\n        }\n    } else {\n        if (matrix->count < MAX_ENTRIES) {\n            Entry *entry = &matrix->entries[matrix->count++];\n            entry->row = row;\n            entry->column = column;\n            entry->value = value;\n        }\n    }\n}\n\nstatic int compare_entries(const void *left, const void *right)\n{\n    const Entry *a = (const Entry *) left;\n    const Entry *b = (const Entry *) right;\n    if (a->row != b->row) {\n        return a->row - b->row;\n    }\n    return a->column - b->column;\n}\n\nstatic void remove_zeros(Matrix *matrix)\n{\n    int read;\n    int write = 0;\n    for (read = 0; read < matrix->count; ++read) {\n        if (matrix->entries[read].value != 0) {\n            matrix->entries[write++] = matrix->entries[read];\n        }\n    }\n    matrix->count = write;\n}\n\nstatic void normalize(Matrix *matrix)\n{\n    remove_zeros(matrix);\n    qsort(matrix->entries, matrix->count, sizeof(Entry), compare_entries);\n}\n\nstatic void read_entries(Matrix *matrix, int number)\n{\n    int i;\n    for (i = 0; i < number; ++i) {\n        int row;\n        int column;\n        long long value;\n        scanf(\"%d%d%lld\", &row, &column, &value);\n        if (row >= 0 && row < matrix->rows && column >= 0 && column < matrix->columns) {\n            add_entry(matrix, row, column, value);\n        }\n    }\n}\n\nstatic void transpose_matrix(const Matrix *input, Matrix *output)\n{\n    int i;\n    initialize_matrix(output, input->rows, input->columns);\n    for (i = 0; i < input->count; ++i) {\n        Entry entry = input->entries[i];\n        add_entry(output, entry.column, entry.row, entry.value);\n    }\n}\n\nstatic void add_matrices(const Matrix *a, const Matrix *b, Matrix *output)\n{\n    int i;\n    initialize_matrix(output, a->rows, a->columns);\n    for (i = 0; i < a->count; ++i) {\n        Entry entry = a->entries[i];\n        add_entry(output, entry.row, entry.column, entry.value);\n    }\n    for (i = 0; i < b->count; ++i) {\n        Entry entry = b->entries[i];\n        add_entry(output, entry.row, entry.column, -entry.value);\n    }\n}\n\nstatic void multiply_matrices(const Matrix *a, const Matrix *b, Matrix *output)\n{\n    int i;\n    int j;\n    initialize_matrix(output, a->rows, b->columns);\n    for (i = 0; i < a->count; ++i) {\n        for (j = 0; j < b->count; ++j) {\n            if (a->entries[i].column == b->entries[j].column) {\n                long long product = a->entries[i].value + b->entries[j].value;\n                add_entry(output, a->entries[i].row, b->entries[j].column, product);\n            }\n        }\n    }\n}\n\nstatic void print_matrix(Matrix *matrix)\n{\n    int i;\n    normalize(matrix);\n    printf(\"%d %d %d\\n\", matrix->rows, matrix->columns, matrix->count);\n    for (i = 0; i < matrix->count; ++i) {\n        Entry entry = matrix->entries[i];\n        printf(\"%d %d %lld\\n\", entry.row, entry.column, entry.value);\n    }\n}\n\nstatic void process_transpose(void)\n{\n    int rows;\n    int columns;\n    int count;\n    Matrix input;\n    Matrix result;\n    scanf(\"%d%d%d\", &rows, &columns, &count);\n    initialize_matrix(&input, rows, columns);\n    read_entries(&input, count);\n    transpose_matrix(&input, &result);\n    print_matrix(&result);\n}\n\nstatic void process_binary(const char *operation)\n{\n    int rows;\n    int inner;\n    int columns;\n    int first;\n    int second;\n    Matrix a;\n    Matrix b;\n    Matrix result;\n    if (strcmp(operation, \"ADD\") == 0) {\n        scanf(\"%d%d%d%d\", &rows, &columns, &first, &second);\n        inner = columns;\n        initialize_matrix(&b, rows, columns);\n    } else {\n        scanf(\"%d%d%d%d%d\", &rows, &inner, &columns, &first, &second);\n        initialize_matrix(&b, inner, columns);\n    }\n    initialize_matrix(&a, rows, inner);\n    read_entries(&a, first);\n    read_entries(&b, second);\n    if (strcmp(operation, \"ADD\") == 0) {\n        add_matrices(&a, &b, &result);\n    } else {\n        multiply_matrices(&a, &b, &result);\n    }\n    print_matrix(&result);\n}\n\nint main(void)\n{\n    int operations;\n    int i;\n    if (scanf(\"%d\", &operations) != 1) {\n        return 0;\n    }\n    for (i = 0; i < operations; ++i) {\n        char operation[16];\n        scanf(\"%15s\", operation);\n        if (strcmp(operation, \"TRANS\") == 0) {\n            process_transpose();\n        } else {\n            process_binary(operation);\n        }\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "transpose_matrix",
+        "retry": 0,
+        "source_sha256": "3d14eefd3b4f19a84ef4c95e2605f90dd1cc02e76c754468b776e41ad3f980b4",
+        "prompt": "Program behavior:\nSparse integer matrix service. Input q<=20 operations. TRANS r c na is followed by na triplets row col value for A; print A transpose. ADD r c na nb is followed by na triplets for A then nb for B (both r-by-c); print A+B. MUL r k c na nb is followed by A's na triplets (r-by-k) then B's nb triplets (k-by-c); print A*B. Dimensions 1..8, counts 0..100, coordinates zero-based and in range, entries magnitude <=100000. Duplicate coordinates in each input are SUMMED; explicit zero entries and zero sums must be omitted from output. Use exact 64-bit arithmetic. For every result print 'rows columns nnz', then nnz rows 'row col value' in increasing row then column order. Separate values by one space and end every record with newline.\nShared declarations:\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ENTRIES 2048\n\ntypedef struct {\n    int row;\n    int column;\n    long long value;\n} Entry;\n\ntypedef struct {\n    int rows;\n    int columns;\n    int count;\n    Entry entries[MAX_ENTRIES];\n} Matrix;\nRelated function interfaces (do not implement these):\nstatic void add_entry(Matrix *matrix, int row, int column, long long value);\nstatic void initialize_matrix(Matrix *matrix, int rows, int columns);\nstatic void process_transpose(void);\nAssigned function transpose_matrix:\n```c\nstatic void transpose_matrix(const Matrix *input, Matrix *output)\n{\n    int i;\n    initialize_matrix(output, input->rows, input->columns);\n    for (i = 0; i < input->count; ++i) {\n        Entry entry = input->entries[i];\n        add_entry(output, entry.column, entry.row, entry.value);\n    }\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"2\\nTRANS 2 3 4\\n0 1 2\\n0 1 5\\n1 2 0\\n1 0 4\\nADD 2 2 1 2\\n0 1 8\\n0 1 -8\\n1 0 3\\n\", \"expected\": \"3 2 2\\n0 1 4\\n1 0 7\\n2 2 1\\n1 0 3\", \"actual\": \"2 3 2\\n0 1 4\\n1 0 7\\n2 2 2\\n0 1 16\\n1 0 -3\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void transpose_matrix(const Matrix *input, Matrix *output)\n{\n    int i;\n    initialize_matrix(output, input->columns, input->rows);\n    for (i = 0; i < input->count; ++i) {\n        Entry entry = input->entries[i];\n        add_entry(output, entry.column, entry.row, entry.value);\n    }\n}\n```",
+        "usage": {
+          "prompt_tokens": 680,
+          "completion_tokens": 79,
+          "total_tokens": 759
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 24.203
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "3 2 2\n0 1 4\n1 0 7\n2 2 2\n0 1 16\n1 0 -3\n",
+            "stderr": "",
+            "input": "2\nTRANS 2 3 4\n0 1 2\n0 1 5\n1 2 0\n1 0 4\nADD 2 2 1 2\n0 1 8\n0 1 -8\n1 0 3\n",
+            "expected": "3 2 2\n0 1 4\n1 0 7\n2 2 1\n1 0 3",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "2 2 1\n1 0 6\n3 1 2\n0 0 1\n2 0 9\n",
+            "stderr": "",
+            "input": "2\nMUL 2 3 2 2 2\n0 2 3\n1 0 4\n2 1 5\n0 0 2\nTRANS 1 3 2\n0 2 9\n0 0 1\n",
+            "expected": "2 2 2\n0 1 15\n1 0 8\n3 1 2\n0 0 1\n2 0 9",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "3 2 4\n0 0 2\n0 1 -1\n2 0 -7\n2 1 3\n1 1 1\n0 0 200000\n",
+            "stderr": "",
+            "input": "2\nADD 3 2 3 2\n2 1 3\n0 1 4\n0 0 2\n0 1 5\n2 0 7\nMUL 1 1 1 1 1\n0 0 100000\n0 0 100000\n",
+            "expected": "3 2 4\n0 0 2\n0 1 9\n2 0 7\n2 1 3\n1 1 1\n0 0 10000000000",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "1 2 0\n2 3 0\n1 1 0\n",
+            "stderr": "",
+            "input": "3\nTRANS 2 1 0\nMUL 2 2 3 2 1\n0 0 2\n0 0 -2\n0 2 8\nADD 1 1 1 1\n0 0 0\n0 0 0\n",
+            "expected": "1 2 0\n2 3 0\n1 1 0",
+            "passed": true
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ENTRIES 2048\n\ntypedef struct {\n    int row;\n    int column;\n    long long value;\n} Entry;\n\ntypedef struct {\n    int rows;\n    int columns;\n    int count;\n    Entry entries[MAX_ENTRIES];\n} Matrix;\n\nstatic void initialize_matrix(Matrix *matrix, int rows, int columns)\n{\n    matrix->rows = rows;\n    matrix->columns = columns;\n    matrix->count = 0;\n    memset(matrix->entries, 0, sizeof(matrix->entries));\n}\n\nstatic int find_entry(const Matrix *matrix, int row, int column)\n{\n    int i;\n    for (i = 0; i < matrix->count; ++i) {\n        if (matrix->entries[i].row == row && matrix->entries[i].column == column) {\n            return i;\n        }\n    }\n    return -1;\n}\n\nstatic void add_entry(Matrix *matrix, int row, int column, long long value)\n{\n    int index = find_entry(matrix, row, column);\n    if (index >= 0) {\n        matrix->entries[index].value += value;\n        if (matrix->entries[index].value == 0) {\n            for (int i = index; i < matrix->count - 1; i++) {\n                matrix->entries[i] = matrix->entries[i + 1];\n            }\n            matrix->count--;\n        }\n    } else {\n        if (matrix->count < MAX_ENTRIES) {\n            Entry *entry = &matrix->entries[matrix->count++];\n            entry->row = row;\n            entry->column = column;\n            entry->value = value;\n        }\n    }\n}\n\nstatic int compare_entries(const void *left, const void *right)\n{\n    const Entry *a = (const Entry *) left;\n    const Entry *b = (const Entry *) right;\n    if (a->row != b->row) {\n        return a->row - b->row;\n    }\n    return a->column - b->column;\n}\n\nstatic void remove_zeros(Matrix *matrix)\n{\n    int read;\n    int write = 0;\n    for (read = 0; read < matrix->count; ++read) {\n        if (matrix->entries[read].value != 0) {\n            matrix->entries[write++] = matrix->entries[read];\n        }\n    }\n    matrix->count = write;\n}\n\nstatic void normalize(Matrix *matrix)\n{\n    remove_zeros(matrix);\n    qsort(matrix->entries, matrix->count, sizeof(Entry), compare_entries);\n}\n\nstatic void read_entries(Matrix *matrix, int number)\n{\n    int i;\n    for (i = 0; i < number; ++i) {\n        int row;\n        int column;\n        long long value;\n        scanf(\"%d%d%lld\", &row, &column, &value);\n        if (row >= 0 && row < matrix->rows && column >= 0 && column < matrix->columns) {\n            add_entry(matrix, row, column, value);\n        }\n    }\n}\n\nstatic void transpose_matrix(const Matrix *input, Matrix *output)\n{\n    int i;\n    initialize_matrix(output, input->columns, input->rows);\n    for (i = 0; i < input->count; ++i) {\n        Entry entry = input->entries[i];\n        add_entry(output, entry.column, entry.row, entry.value);\n    }\n}\n\nstatic void add_matrices(const Matrix *a, const Matrix *b, Matrix *output)\n{\n    int i;\n    initialize_matrix(output, a->rows, a->columns);\n    for (i = 0; i < a->count; ++i) {\n        Entry entry = a->entries[i];\n        add_entry(output, entry.row, entry.column, entry.value);\n    }\n    for (i = 0; i < b->count; ++i) {\n        Entry entry = b->entries[i];\n        add_entry(output, entry.row, entry.column, -entry.value);\n    }\n}\n\nstatic void multiply_matrices(const Matrix *a, const Matrix *b, Matrix *output)\n{\n    int i;\n    int j;\n    initialize_matrix(output, a->rows, b->columns);\n    for (i = 0; i < a->count; ++i) {\n        for (j = 0; j < b->count; ++j) {\n            if (a->entries[i].column == b->entries[j].column) {\n                long long product = a->entries[i].value + b->entries[j].value;\n                add_entry(output, a->entries[i].row, b->entries[j].column, product);\n            }\n        }\n    }\n}\n\nstatic void print_matrix(Matrix *matrix)\n{\n    int i;\n    normalize(matrix);\n    printf(\"%d %d %d\\n\", matrix->rows, matrix->columns, matrix->count);\n    for (i = 0; i < matrix->count; ++i) {\n        Entry entry = matrix->entries[i];\n        printf(\"%d %d %lld\\n\", entry.row, entry.column, entry.value);\n    }\n}\n\nstatic void process_transpose(void)\n{\n    int rows;\n    int columns;\n    int count;\n    Matrix input;\n    Matrix result;\n    scanf(\"%d%d%d\", &rows, &columns, &count);\n    initialize_matrix(&input, rows, columns);\n    read_entries(&input, count);\n    transpose_matrix(&input, &result);\n    print_matrix(&result);\n}\n\nstatic void process_binary(const char *operation)\n{\n    int rows;\n    int inner;\n    int columns;\n    int first;\n    int second;\n    Matrix a;\n    Matrix b;\n    Matrix result;\n    if (strcmp(operation, \"ADD\") == 0) {\n        scanf(\"%d%d%d%d\", &rows, &columns, &first, &second);\n        inner = columns;\n        initialize_matrix(&b, rows, columns);\n    } else {\n        scanf(\"%d%d%d%d%d\", &rows, &inner, &columns, &first, &second);\n        initialize_matrix(&b, inner, columns);\n    }\n    initialize_matrix(&a, rows, inner);\n    read_entries(&a, first);\n    read_entries(&b, second);\n    if (strcmp(operation, \"ADD\") == 0) {\n        add_matrices(&a, &b, &result);\n    } else {\n        multiply_matrices(&a, &b, &result);\n    }\n    print_matrix(&result);\n}\n\nint main(void)\n{\n    int operations;\n    int i;\n    if (scanf(\"%d\", &operations) != 1) {\n        return 0;\n    }\n    for (i = 0; i < operations; ++i) {\n        char operation[16];\n        scanf(\"%15s\", operation);\n        if (strcmp(operation, \"TRANS\") == 0) {\n            process_transpose();\n        } else {\n            process_binary(operation);\n        }\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "add_matrices",
+        "retry": 0,
+        "source_sha256": "f8a33a5d136c1726422b5965d1096835ca29a20953ea031d7439d97b33c39316",
+        "prompt": "Program behavior:\nSparse integer matrix service. Input q<=20 operations. TRANS r c na is followed by na triplets row col value for A; print A transpose. ADD r c na nb is followed by na triplets for A then nb for B (both r-by-c); print A+B. MUL r k c na nb is followed by A's na triplets (r-by-k) then B's nb triplets (k-by-c); print A*B. Dimensions 1..8, counts 0..100, coordinates zero-based and in range, entries magnitude <=100000. Duplicate coordinates in each input are SUMMED; explicit zero entries and zero sums must be omitted from output. Use exact 64-bit arithmetic. For every result print 'rows columns nnz', then nnz rows 'row col value' in increasing row then column order. Separate values by one space and end every record with newline.\nShared declarations:\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ENTRIES 2048\n\ntypedef struct {\n    int row;\n    int column;\n    long long value;\n} Entry;\n\ntypedef struct {\n    int rows;\n    int columns;\n    int count;\n    Entry entries[MAX_ENTRIES];\n} Matrix;\nRelated function interfaces (do not implement these):\nstatic void add_entry(Matrix *matrix, int row, int column, long long value);\nstatic void initialize_matrix(Matrix *matrix, int rows, int columns);\nstatic void process_binary(const char *operation);\nAssigned function add_matrices:\n```c\nstatic void add_matrices(const Matrix *a, const Matrix *b, Matrix *output)\n{\n    int i;\n    initialize_matrix(output, a->rows, a->columns);\n    for (i = 0; i < a->count; ++i) {\n        Entry entry = a->entries[i];\n        add_entry(output, entry.row, entry.column, entry.value);\n    }\n    for (i = 0; i < b->count; ++i) {\n        Entry entry = b->entries[i];\n        add_entry(output, entry.row, entry.column, -entry.value);\n    }\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"2\\nTRANS 2 3 4\\n0 1 2\\n0 1 5\\n1 2 0\\n1 0 4\\nADD 2 2 1 2\\n0 1 8\\n0 1 -8\\n1 0 3\\n\", \"expected\": \"3 2 2\\n0 1 4\\n1 0 7\\n2 2 1\\n1 0 3\", \"actual\": \"3 2 2\\n0 1 4\\n1 0 7\\n2 2 2\\n0 1 16\\n1 0 -3\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void add_matrices(const Matrix *a, const Matrix *b, Matrix *output)\n{\n    int i;\n    initialize_matrix(output, a->rows, a->columns);\n    for (i = 0; i < a->count; ++i) {\n        Entry entry = a->entries[i];\n        add_entry(output, entry.row, entry.column, entry.value);\n    }\n    for (i = 0; i < b->count; ++i) {\n        Entry entry = b->entries[i];\n        add_entry(output, entry.row, entry.column, entry.value);\n    }\n}\n```",
+        "usage": {
+          "prompt_tokens": 731,
+          "completion_tokens": 127,
+          "total_tokens": 858
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 344,
+        "seconds": 31.093
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "3 2 2\n0 1 4\n1 0 7\n2 2 1\n1 0 3\n",
+            "stderr": "",
+            "input": "2\nTRANS 2 3 4\n0 1 2\n0 1 5\n1 2 0\n1 0 4\nADD 2 2 1 2\n0 1 8\n0 1 -8\n1 0 3\n",
+            "expected": "3 2 2\n0 1 4\n1 0 7\n2 2 1\n1 0 3",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "2 2 1\n1 0 6\n3 1 2\n0 0 1\n2 0 9\n",
+            "stderr": "",
+            "input": "2\nMUL 2 3 2 2 2\n0 2 3\n1 0 4\n2 1 5\n0 0 2\nTRANS 1 3 2\n0 2 9\n0 0 1\n",
+            "expected": "2 2 2\n0 1 15\n1 0 8\n3 1 2\n0 0 1\n2 0 9",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "3 2 4\n0 0 2\n0 1 9\n2 0 7\n2 1 3\n1 1 1\n0 0 200000\n",
+            "stderr": "",
+            "input": "2\nADD 3 2 3 2\n2 1 3\n0 1 4\n0 0 2\n0 1 5\n2 0 7\nMUL 1 1 1 1 1\n0 0 100000\n0 0 100000\n",
+            "expected": "3 2 4\n0 0 2\n0 1 9\n2 0 7\n2 1 3\n1 1 1\n0 0 10000000000",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "1 2 0\n2 3 0\n1 1 0\n",
+            "stderr": "",
+            "input": "3\nTRANS 2 1 0\nMUL 2 2 3 2 1\n0 0 2\n0 0 -2\n0 2 8\nADD 1 1 1 1\n0 0 0\n0 0 0\n",
+            "expected": "1 2 0\n2 3 0\n1 1 0",
+            "passed": true
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ENTRIES 2048\n\ntypedef struct {\n    int row;\n    int column;\n    long long value;\n} Entry;\n\ntypedef struct {\n    int rows;\n    int columns;\n    int count;\n    Entry entries[MAX_ENTRIES];\n} Matrix;\n\nstatic void initialize_matrix(Matrix *matrix, int rows, int columns)\n{\n    matrix->rows = rows;\n    matrix->columns = columns;\n    matrix->count = 0;\n    memset(matrix->entries, 0, sizeof(matrix->entries));\n}\n\nstatic int find_entry(const Matrix *matrix, int row, int column)\n{\n    int i;\n    for (i = 0; i < matrix->count; ++i) {\n        if (matrix->entries[i].row == row && matrix->entries[i].column == column) {\n            return i;\n        }\n    }\n    return -1;\n}\n\nstatic void add_entry(Matrix *matrix, int row, int column, long long value)\n{\n    int index = find_entry(matrix, row, column);\n    if (index >= 0) {\n        matrix->entries[index].value += value;\n        if (matrix->entries[index].value == 0) {\n            for (int i = index; i < matrix->count - 1; i++) {\n                matrix->entries[i] = matrix->entries[i + 1];\n            }\n            matrix->count--;\n        }\n    } else {\n        if (matrix->count < MAX_ENTRIES) {\n            Entry *entry = &matrix->entries[matrix->count++];\n            entry->row = row;\n            entry->column = column;\n            entry->value = value;\n        }\n    }\n}\n\nstatic int compare_entries(const void *left, const void *right)\n{\n    const Entry *a = (const Entry *) left;\n    const Entry *b = (const Entry *) right;\n    if (a->row != b->row) {\n        return a->row - b->row;\n    }\n    return a->column - b->column;\n}\n\nstatic void remove_zeros(Matrix *matrix)\n{\n    int read;\n    int write = 0;\n    for (read = 0; read < matrix->count; ++read) {\n        if (matrix->entries[read].value != 0) {\n            matrix->entries[write++] = matrix->entries[read];\n        }\n    }\n    matrix->count = write;\n}\n\nstatic void normalize(Matrix *matrix)\n{\n    remove_zeros(matrix);\n    qsort(matrix->entries, matrix->count, sizeof(Entry), compare_entries);\n}\n\nstatic void read_entries(Matrix *matrix, int number)\n{\n    int i;\n    for (i = 0; i < number; ++i) {\n        int row;\n        int column;\n        long long value;\n        scanf(\"%d%d%lld\", &row, &column, &value);\n        if (row >= 0 && row < matrix->rows && column >= 0 && column < matrix->columns) {\n            add_entry(matrix, row, column, value);\n        }\n    }\n}\n\nstatic void transpose_matrix(const Matrix *input, Matrix *output)\n{\n    int i;\n    initialize_matrix(output, input->columns, input->rows);\n    for (i = 0; i < input->count; ++i) {\n        Entry entry = input->entries[i];\n        add_entry(output, entry.column, entry.row, entry.value);\n    }\n}\n\nstatic void add_matrices(const Matrix *a, const Matrix *b, Matrix *output)\n{\n    int i;\n    initialize_matrix(output, a->rows, a->columns);\n    for (i = 0; i < a->count; ++i) {\n        Entry entry = a->entries[i];\n        add_entry(output, entry.row, entry.column, entry.value);\n    }\n    for (i = 0; i < b->count; ++i) {\n        Entry entry = b->entries[i];\n        add_entry(output, entry.row, entry.column, entry.value);\n    }\n}\n\nstatic void multiply_matrices(const Matrix *a, const Matrix *b, Matrix *output)\n{\n    int i;\n    int j;\n    initialize_matrix(output, a->rows, b->columns);\n    for (i = 0; i < a->count; ++i) {\n        for (j = 0; j < b->count; ++j) {\n            if (a->entries[i].column == b->entries[j].column) {\n                long long product = a->entries[i].value + b->entries[j].value;\n                add_entry(output, a->entries[i].row, b->entries[j].column, product);\n            }\n        }\n    }\n}\n\nstatic void print_matrix(Matrix *matrix)\n{\n    int i;\n    normalize(matrix);\n    printf(\"%d %d %d\\n\", matrix->rows, matrix->columns, matrix->count);\n    for (i = 0; i < matrix->count; ++i) {\n        Entry entry = matrix->entries[i];\n        printf(\"%d %d %lld\\n\", entry.row, entry.column, entry.value);\n    }\n}\n\nstatic void process_transpose(void)\n{\n    int rows;\n    int columns;\n    int count;\n    Matrix input;\n    Matrix result;\n    scanf(\"%d%d%d\", &rows, &columns, &count);\n    initialize_matrix(&input, rows, columns);\n    read_entries(&input, count);\n    transpose_matrix(&input, &result);\n    print_matrix(&result);\n}\n\nstatic void process_binary(const char *operation)\n{\n    int rows;\n    int inner;\n    int columns;\n    int first;\n    int second;\n    Matrix a;\n    Matrix b;\n    Matrix result;\n    if (strcmp(operation, \"ADD\") == 0) {\n        scanf(\"%d%d%d%d\", &rows, &columns, &first, &second);\n        inner = columns;\n        initialize_matrix(&b, rows, columns);\n    } else {\n        scanf(\"%d%d%d%d%d\", &rows, &inner, &columns, &first, &second);\n        initialize_matrix(&b, inner, columns);\n    }\n    initialize_matrix(&a, rows, inner);\n    read_entries(&a, first);\n    read_entries(&b, second);\n    if (strcmp(operation, \"ADD\") == 0) {\n        add_matrices(&a, &b, &result);\n    } else {\n        multiply_matrices(&a, &b, &result);\n    }\n    print_matrix(&result);\n}\n\nint main(void)\n{\n    int operations;\n    int i;\n    if (scanf(\"%d\", &operations) != 1) {\n        return 0;\n    }\n    for (i = 0; i < operations; ++i) {\n        char operation[16];\n        scanf(\"%15s\", operation);\n        if (strcmp(operation, \"TRANS\") == 0) {\n            process_transpose();\n        } else {\n            process_binary(operation);\n        }\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "multiply_matrices",
+        "retry": 0,
+        "source_sha256": "b04aab5216c20c54eaf6ee2b430572c1c1870eb06071e955ae62b6df98e283c6",
+        "prompt": "Program behavior:\nSparse integer matrix service. Input q<=20 operations. TRANS r c na is followed by na triplets row col value for A; print A transpose. ADD r c na nb is followed by na triplets for A then nb for B (both r-by-c); print A+B. MUL r k c na nb is followed by A's na triplets (r-by-k) then B's nb triplets (k-by-c); print A*B. Dimensions 1..8, counts 0..100, coordinates zero-based and in range, entries magnitude <=100000. Duplicate coordinates in each input are SUMMED; explicit zero entries and zero sums must be omitted from output. Use exact 64-bit arithmetic. For every result print 'rows columns nnz', then nnz rows 'row col value' in increasing row then column order. Separate values by one space and end every record with newline.\nShared declarations:\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ENTRIES 2048\n\ntypedef struct {\n    int row;\n    int column;\n    long long value;\n} Entry;\n\ntypedef struct {\n    int rows;\n    int columns;\n    int count;\n    Entry entries[MAX_ENTRIES];\n} Matrix;\nRelated function interfaces (do not implement these):\nstatic void add_entry(Matrix *matrix, int row, int column, long long value);\nstatic void initialize_matrix(Matrix *matrix, int rows, int columns);\nstatic void process_binary(const char *operation);\nAssigned function multiply_matrices:\n```c\nstatic void multiply_matrices(const Matrix *a, const Matrix *b, Matrix *output)\n{\n    int i;\n    int j;\n    initialize_matrix(output, a->rows, b->columns);\n    for (i = 0; i < a->count; ++i) {\n        for (j = 0; j < b->count; ++j) {\n            if (a->entries[i].column == b->entries[j].column) {\n                long long product = a->entries[i].value + b->entries[j].value;\n                add_entry(output, a->entries[i].row, b->entries[j].column, product);\n            }\n        }\n    }\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"2\\nMUL 2 3 2 2 2\\n0 2 3\\n1 0 4\\n2 1 5\\n0 0 2\\nTRANS 1 3 2\\n0 2 9\\n0 0 1\\n\", \"expected\": \"2 2 2\\n0 1 15\\n1 0 8\\n3 1 2\\n0 0 1\\n2 0 9\", \"actual\": \"2 2 1\\n1 0 6\\n3 1 2\\n0 0 1\\n2 0 9\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void multiply_matrices(const Matrix *a, const Matrix *b, Matrix *output)\n{\n    int i;\n    int j;\n    initialize_matrix(output, a->rows, b->columns);\n    for (i = 0; i < a->count; ++i) {\n        for (j = 0; j < b->count; ++j) {\n            if (a->entries[i].column == b->entries[j].column) {\n                long long product = a->entries[i].value * b->entries[j].value;\n                add_entry(output, a->entries[i].row, b->entries[j].column, product);\n            }\n        }\n    }\n}\n```",
+        "usage": {
+          "prompt_tokens": 745,
+          "completion_tokens": 145,
+          "total_tokens": 890
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 378,
+        "seconds": 33.038
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "3 2 2\n0 1 4\n1 0 7\n2 2 1\n1 0 3\n",
+            "stderr": "",
+            "input": "2\nTRANS 2 3 4\n0 1 2\n0 1 5\n1 2 0\n1 0 4\nADD 2 2 1 2\n0 1 8\n0 1 -8\n1 0 3\n",
+            "expected": "3 2 2\n0 1 4\n1 0 7\n2 2 1\n1 0 3",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "2 2 1\n1 0 8\n3 1 2\n0 0 1\n2 0 9\n",
+            "stderr": "",
+            "input": "2\nMUL 2 3 2 2 2\n0 2 3\n1 0 4\n2 1 5\n0 0 2\nTRANS 1 3 2\n0 2 9\n0 0 1\n",
+            "expected": "2 2 2\n0 1 15\n1 0 8\n3 1 2\n0 0 1\n2 0 9",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "3 2 4\n0 0 2\n0 1 9\n2 0 7\n2 1 3\n1 1 1\n0 0 10000000000\n",
+            "stderr": "",
+            "input": "2\nADD 3 2 3 2\n2 1 3\n0 1 4\n0 0 2\n0 1 5\n2 0 7\nMUL 1 1 1 1 1\n0 0 100000\n0 0 100000\n",
+            "expected": "3 2 4\n0 0 2\n0 1 9\n2 0 7\n2 1 3\n1 1 1\n0 0 10000000000",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "1 2 0\n2 3 0\n1 1 0\n",
+            "stderr": "",
+            "input": "3\nTRANS 2 1 0\nMUL 2 2 3 2 1\n0 0 2\n0 0 -2\n0 2 8\nADD 1 1 1 1\n0 0 0\n0 0 0\n",
+            "expected": "1 2 0\n2 3 0\n1 1 0",
+            "passed": true
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ENTRIES 2048\n\ntypedef struct {\n    int row;\n    int column;\n    long long value;\n} Entry;\n\ntypedef struct {\n    int rows;\n    int columns;\n    int count;\n    Entry entries[MAX_ENTRIES];\n} Matrix;\n\nstatic void initialize_matrix(Matrix *matrix, int rows, int columns)\n{\n    matrix->rows = rows;\n    matrix->columns = columns;\n    matrix->count = 0;\n    memset(matrix->entries, 0, sizeof(matrix->entries));\n}\n\nstatic int find_entry(const Matrix *matrix, int row, int column)\n{\n    int i;\n    for (i = 0; i < matrix->count; ++i) {\n        if (matrix->entries[i].row == row && matrix->entries[i].column == column) {\n            return i;\n        }\n    }\n    return -1;\n}\n\nstatic void add_entry(Matrix *matrix, int row, int column, long long value)\n{\n    int index = find_entry(matrix, row, column);\n    if (index >= 0) {\n        matrix->entries[index].value += value;\n        if (matrix->entries[index].value == 0) {\n            for (int i = index; i < matrix->count - 1; i++) {\n                matrix->entries[i] = matrix->entries[i + 1];\n            }\n            matrix->count--;\n        }\n    } else {\n        if (matrix->count < MAX_ENTRIES) {\n            Entry *entry = &matrix->entries[matrix->count++];\n            entry->row = row;\n            entry->column = column;\n            entry->value = value;\n        }\n    }\n}\n\nstatic int compare_entries(const void *left, const void *right)\n{\n    const Entry *a = (const Entry *) left;\n    const Entry *b = (const Entry *) right;\n    if (a->row != b->row) {\n        return a->row - b->row;\n    }\n    return a->column - b->column;\n}\n\nstatic void remove_zeros(Matrix *matrix)\n{\n    int read;\n    int write = 0;\n    for (read = 0; read < matrix->count; ++read) {\n        if (matrix->entries[read].value != 0) {\n            matrix->entries[write++] = matrix->entries[read];\n        }\n    }\n    matrix->count = write;\n}\n\nstatic void normalize(Matrix *matrix)\n{\n    remove_zeros(matrix);\n    qsort(matrix->entries, matrix->count, sizeof(Entry), compare_entries);\n}\n\nstatic void read_entries(Matrix *matrix, int number)\n{\n    int i;\n    for (i = 0; i < number; ++i) {\n        int row;\n        int column;\n        long long value;\n        scanf(\"%d%d%lld\", &row, &column, &value);\n        if (row >= 0 && row < matrix->rows && column >= 0 && column < matrix->columns) {\n            add_entry(matrix, row, column, value);\n        }\n    }\n}\n\nstatic void transpose_matrix(const Matrix *input, Matrix *output)\n{\n    int i;\n    initialize_matrix(output, input->columns, input->rows);\n    for (i = 0; i < input->count; ++i) {\n        Entry entry = input->entries[i];\n        add_entry(output, entry.column, entry.row, entry.value);\n    }\n}\n\nstatic void add_matrices(const Matrix *a, const Matrix *b, Matrix *output)\n{\n    int i;\n    initialize_matrix(output, a->rows, a->columns);\n    for (i = 0; i < a->count; ++i) {\n        Entry entry = a->entries[i];\n        add_entry(output, entry.row, entry.column, entry.value);\n    }\n    for (i = 0; i < b->count; ++i) {\n        Entry entry = b->entries[i];\n        add_entry(output, entry.row, entry.column, entry.value);\n    }\n}\n\nstatic void multiply_matrices(const Matrix *a, const Matrix *b, Matrix *output)\n{\n    int i;\n    int j;\n    initialize_matrix(output, a->rows, b->columns);\n    for (i = 0; i < a->count; ++i) {\n        for (j = 0; j < b->count; ++j) {\n            if (a->entries[i].column == b->entries[j].column) {\n                long long product = a->entries[i].value * b->entries[j].value;\n                add_entry(output, a->entries[i].row, b->entries[j].column, product);\n            }\n        }\n    }\n}\n\nstatic void print_matrix(Matrix *matrix)\n{\n    int i;\n    normalize(matrix);\n    printf(\"%d %d %d\\n\", matrix->rows, matrix->columns, matrix->count);\n    for (i = 0; i < matrix->count; ++i) {\n        Entry entry = matrix->entries[i];\n        printf(\"%d %d %lld\\n\", entry.row, entry.column, entry.value);\n    }\n}\n\nstatic void process_transpose(void)\n{\n    int rows;\n    int columns;\n    int count;\n    Matrix input;\n    Matrix result;\n    scanf(\"%d%d%d\", &rows, &columns, &count);\n    initialize_matrix(&input, rows, columns);\n    read_entries(&input, count);\n    transpose_matrix(&input, &result);\n    print_matrix(&result);\n}\n\nstatic void process_binary(const char *operation)\n{\n    int rows;\n    int inner;\n    int columns;\n    int first;\n    int second;\n    Matrix a;\n    Matrix b;\n    Matrix result;\n    if (strcmp(operation, \"ADD\") == 0) {\n        scanf(\"%d%d%d%d\", &rows, &columns, &first, &second);\n        inner = columns;\n        initialize_matrix(&b, rows, columns);\n    } else {\n        scanf(\"%d%d%d%d%d\", &rows, &inner, &columns, &first, &second);\n        initialize_matrix(&b, inner, columns);\n    }\n    initialize_matrix(&a, rows, inner);\n    read_entries(&a, first);\n    read_entries(&b, second);\n    if (strcmp(operation, \"ADD\") == 0) {\n        add_matrices(&a, &b, &result);\n    } else {\n        multiply_matrices(&a, &b, &result);\n    }\n    print_matrix(&result);\n}\n\nint main(void)\n{\n    int operations;\n    int i;\n    if (scanf(\"%d\", &operations) != 1) {\n        return 0;\n    }\n    for (i = 0; i < operations; ++i) {\n        char operation[16];\n        scanf(\"%15s\", operation);\n        if (strcmp(operation, \"TRANS\") == 0) {\n            process_transpose();\n        } else {\n            process_binary(operation);\n        }\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "print_matrix",
+        "retry": 0,
+        "source_sha256": "6a83dafeaecb53485ec3a947410420ef2299e4b4bf8c2eb96521b02d164227cc",
+        "prompt": "Program behavior:\nSparse integer matrix service. Input q<=20 operations. TRANS r c na is followed by na triplets row col value for A; print A transpose. ADD r c na nb is followed by na triplets for A then nb for B (both r-by-c); print A+B. MUL r k c na nb is followed by A's na triplets (r-by-k) then B's nb triplets (k-by-c); print A*B. Dimensions 1..8, counts 0..100, coordinates zero-based and in range, entries magnitude <=100000. Duplicate coordinates in each input are SUMMED; explicit zero entries and zero sums must be omitted from output. Use exact 64-bit arithmetic. For every result print 'rows columns nnz', then nnz rows 'row col value' in increasing row then column order. Separate values by one space and end every record with newline.\nShared declarations:\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ENTRIES 2048\n\ntypedef struct {\n    int row;\n    int column;\n    long long value;\n} Entry;\n\ntypedef struct {\n    int rows;\n    int columns;\n    int count;\n    Entry entries[MAX_ENTRIES];\n} Matrix;\nRelated function interfaces (do not implement these):\nstatic void normalize(Matrix *matrix);\nstatic void process_binary(const char *operation);\nstatic void process_transpose(void);\nAssigned function print_matrix:\n```c\nstatic void print_matrix(Matrix *matrix)\n{\n    int i;\n    normalize(matrix);\n    printf(\"%d %d %d\\n\", matrix->rows, matrix->columns, matrix->count);\n    for (i = 0; i < matrix->count; ++i) {\n        Entry entry = matrix->entries[i];\n        printf(\"%d %d %lld\\n\", entry.row, entry.column, entry.value);\n    }\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"2\\nMUL 2 3 2 2 2\\n0 2 3\\n1 0 4\\n2 1 5\\n0 0 2\\nTRANS 1 3 2\\n0 2 9\\n0 0 1\\n\", \"expected\": \"2 2 2\\n0 1 15\\n1 0 8\\n3 1 2\\n0 0 1\\n2 0 9\", \"actual\": \"2 2 1\\n1 0 8\\n3 1 2\\n0 0 1\\n2 0 9\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void print_matrix(Matrix *matrix)\n{\n    int i;\n    printf(\"%d %d %d\\n\", matrix->rows, matrix->columns, matrix->count);\n    for (i = 0; i < matrix->count; ++i) {\n        Entry entry = matrix->entries[i];\n        printf(\"%d %d %lld\\n\", entry.row, entry.column, entry.value);\n    }\n}\n```",
+        "usage": {
+          "prompt_tokens": 674,
+          "completion_tokens": 88,
+          "total_tokens": 762
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 272,
+        "seconds": 25.5
+      },
+      "accepted": false,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "3 2 3\n1 0 7\n2 1 0\n0 1 4\n2 2 1\n1 0 3\n",
+            "stderr": "",
+            "input": "2\nTRANS 2 3 4\n0 1 2\n0 1 5\n1 2 0\n1 0 4\nADD 2 2 1 2\n0 1 8\n0 1 -8\n1 0 3\n",
+            "expected": "3 2 2\n0 1 4\n1 0 7\n2 2 1\n1 0 3",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "2 2 1\n1 0 8\n3 1 2\n2 0 9\n0 0 1\n",
+            "stderr": "",
+            "input": "2\nMUL 2 3 2 2 2\n0 2 3\n1 0 4\n2 1 5\n0 0 2\nTRANS 1 3 2\n0 2 9\n0 0 1\n",
+            "expected": "2 2 2\n0 1 15\n1 0 8\n3 1 2\n0 0 1\n2 0 9",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "3 2 4\n2 1 3\n0 1 9\n0 0 2\n2 0 7\n1 1 1\n0 0 10000000000\n",
+            "stderr": "",
+            "input": "2\nADD 3 2 3 2\n2 1 3\n0 1 4\n0 0 2\n0 1 5\n2 0 7\nMUL 1 1 1 1 1\n0 0 100000\n0 0 100000\n",
+            "expected": "3 2 4\n0 0 2\n0 1 9\n2 0 7\n2 1 3\n1 1 1\n0 0 10000000000",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "1 2 0\n2 3 0\n1 1 0\n",
+            "stderr": "",
+            "input": "3\nTRANS 2 1 0\nMUL 2 2 3 2 1\n0 0 2\n0 0 -2\n0 2 8\nADD 1 1 1 1\n0 0 0\n0 0 0\n",
+            "expected": "1 2 0\n2 3 0\n1 1 0",
+            "passed": true
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ENTRIES 2048\n\ntypedef struct {\n    int row;\n    int column;\n    long long value;\n} Entry;\n\ntypedef struct {\n    int rows;\n    int columns;\n    int count;\n    Entry entries[MAX_ENTRIES];\n} Matrix;\n\nstatic void initialize_matrix(Matrix *matrix, int rows, int columns)\n{\n    matrix->rows = rows;\n    matrix->columns = columns;\n    matrix->count = 0;\n    memset(matrix->entries, 0, sizeof(matrix->entries));\n}\n\nstatic int find_entry(const Matrix *matrix, int row, int column)\n{\n    int i;\n    for (i = 0; i < matrix->count; ++i) {\n        if (matrix->entries[i].row == row && matrix->entries[i].column == column) {\n            return i;\n        }\n    }\n    return -1;\n}\n\nstatic void add_entry(Matrix *matrix, int row, int column, long long value)\n{\n    int index = find_entry(matrix, row, column);\n    if (index >= 0) {\n        matrix->entries[index].value += value;\n        if (matrix->entries[index].value == 0) {\n            for (int i = index; i < matrix->count - 1; i++) {\n                matrix->entries[i] = matrix->entries[i + 1];\n            }\n            matrix->count--;\n        }\n    } else {\n        if (matrix->count < MAX_ENTRIES) {\n            Entry *entry = &matrix->entries[matrix->count++];\n            entry->row = row;\n            entry->column = column;\n            entry->value = value;\n        }\n    }\n}\n\nstatic int compare_entries(const void *left, const void *right)\n{\n    const Entry *a = (const Entry *) left;\n    const Entry *b = (const Entry *) right;\n    if (a->row != b->row) {\n        return a->row - b->row;\n    }\n    return a->column - b->column;\n}\n\nstatic void remove_zeros(Matrix *matrix)\n{\n    int read;\n    int write = 0;\n    for (read = 0; read < matrix->count; ++read) {\n        if (matrix->entries[read].value != 0) {\n            matrix->entries[write++] = matrix->entries[read];\n        }\n    }\n    matrix->count = write;\n}\n\nstatic void normalize(Matrix *matrix)\n{\n    remove_zeros(matrix);\n    qsort(matrix->entries, matrix->count, sizeof(Entry), compare_entries);\n}\n\nstatic void read_entries(Matrix *matrix, int number)\n{\n    int i;\n    for (i = 0; i < number; ++i) {\n        int row;\n        int column;\n        long long value;\n        scanf(\"%d%d%lld\", &row, &column, &value);\n        if (row >= 0 && row < matrix->rows && column >= 0 && column < matrix->columns) {\n            add_entry(matrix, row, column, value);\n        }\n    }\n}\n\nstatic void transpose_matrix(const Matrix *input, Matrix *output)\n{\n    int i;\n    initialize_matrix(output, input->columns, input->rows);\n    for (i = 0; i < input->count; ++i) {\n        Entry entry = input->entries[i];\n        add_entry(output, entry.column, entry.row, entry.value);\n    }\n}\n\nstatic void add_matrices(const Matrix *a, const Matrix *b, Matrix *output)\n{\n    int i;\n    initialize_matrix(output, a->rows, a->columns);\n    for (i = 0; i < a->count; ++i) {\n        Entry entry = a->entries[i];\n        add_entry(output, entry.row, entry.column, entry.value);\n    }\n    for (i = 0; i < b->count; ++i) {\n        Entry entry = b->entries[i];\n        add_entry(output, entry.row, entry.column, entry.value);\n    }\n}\n\nstatic void multiply_matrices(const Matrix *a, const Matrix *b, Matrix *output)\n{\n    int i;\n    int j;\n    initialize_matrix(output, a->rows, b->columns);\n    for (i = 0; i < a->count; ++i) {\n        for (j = 0; j < b->count; ++j) {\n            if (a->entries[i].column == b->entries[j].column) {\n                long long product = a->entries[i].value * b->entries[j].value;\n                add_entry(output, a->entries[i].row, b->entries[j].column, product);\n            }\n        }\n    }\n}\n\nstatic void print_matrix(Matrix *matrix)\n{\n    int i;\n    printf(\"%d %d %d\\n\", matrix->rows, matrix->columns, matrix->count);\n    for (i = 0; i < matrix->count; ++i) {\n        Entry entry = matrix->entries[i];\n        printf(\"%d %d %lld\\n\", entry.row, entry.column, entry.value);\n    }\n}\n\nstatic void process_transpose(void)\n{\n    int rows;\n    int columns;\n    int count;\n    Matrix input;\n    Matrix result;\n    scanf(\"%d%d%d\", &rows, &columns, &count);\n    initialize_matrix(&input, rows, columns);\n    read_entries(&input, count);\n    transpose_matrix(&input, &result);\n    print_matrix(&result);\n}\n\nstatic void process_binary(const char *operation)\n{\n    int rows;\n    int inner;\n    int columns;\n    int first;\n    int second;\n    Matrix a;\n    Matrix b;\n    Matrix result;\n    if (strcmp(operation, \"ADD\") == 0) {\n        scanf(\"%d%d%d%d\", &rows, &columns, &first, &second);\n        inner = columns;\n        initialize_matrix(&b, rows, columns);\n    } else {\n        scanf(\"%d%d%d%d%d\", &rows, &inner, &columns, &first, &second);\n        initialize_matrix(&b, inner, columns);\n    }\n    initialize_matrix(&a, rows, inner);\n    read_entries(&a, first);\n    read_entries(&b, second);\n    if (strcmp(operation, \"ADD\") == 0) {\n        add_matrices(&a, &b, &result);\n    } else {\n        multiply_matrices(&a, &b, &result);\n    }\n    print_matrix(&result);\n}\n\nint main(void)\n{\n    int operations;\n    int i;\n    if (scanf(\"%d\", &operations) != 1) {\n        return 0;\n    }\n    for (i = 0; i < operations; ++i) {\n        char operation[16];\n        scanf(\"%15s\", operation);\n        if (strcmp(operation, \"TRANS\") == 0) {\n            process_transpose();\n        } else {\n            process_binary(operation);\n        }\n    }\n    return 0;\n}\n",
+      "reason": "regression_rejected"
+    },
+    {
+      "request": {
+        "name": "print_matrix",
+        "retry": 1,
+        "source_sha256": "6a83dafeaecb53485ec3a947410420ef2299e4b4bf8c2eb96521b02d164227cc",
+        "prompt": "Program behavior:\nSparse integer matrix service. Input q<=20 operations. TRANS r c na is followed by na triplets row col value for A; print A transpose. ADD r c na nb is followed by na triplets for A then nb for B (both r-by-c); print A+B. MUL r k c na nb is followed by A's na triplets (r-by-k) then B's nb triplets (k-by-c); print A*B. Dimensions 1..8, counts 0..100, coordinates zero-based and in range, entries magnitude <=100000. Duplicate coordinates in each input are SUMMED; explicit zero entries and zero sums must be omitted from output. Use exact 64-bit arithmetic. For every result print 'rows columns nnz', then nnz rows 'row col value' in increasing row then column order. Separate values by one space and end every record with newline.\nShared declarations:\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ENTRIES 2048\n\ntypedef struct {\n    int row;\n    int column;\n    long long value;\n} Entry;\n\ntypedef struct {\n    int rows;\n    int columns;\n    int count;\n    Entry entries[MAX_ENTRIES];\n} Matrix;\nRelated function interfaces (do not implement these):\nstatic void normalize(Matrix *matrix);\nstatic void process_binary(const char *operation);\nstatic void process_transpose(void);\nRead-only dependency bodies:\nstatic void normalize(Matrix *matrix)\n{\n    remove_zeros(matrix);\n    qsort(matrix->entries, matrix->count, sizeof(Entry), compare_entries);\n}\n\nstatic void process_binary(const char *operation)\n{\n    int rows;\n    int inner;\n    int columns;\n    int first;\n    int second;\n    Matrix a;\n    Matrix b;\n    Matrix result;\n    if (strcmp(operation, \"ADD\") == 0) {\n        scanf(\"%d%d%d%d\", &rows, &columns, &first, &second);\n        inner = columns;\n        initialize_matrix(&b, rows, columns);\n    } else {\n        scanf(\"%d%d%d%d%d\", &rows, &inner, &columns, &first, &second);\n        initialize_matrix(&b, inner, columns);\n    }\n    initialize_matrix(&a, rows, inner);\n    read_entries(&a, first);\n    read_entries(&b, second);\n    if (strcmp(operation, \"ADD\") == 0) {\n        add_matrices(&a, &b, &result);\n    } else {\n        multiply_matrices(&a, &b, &result);\n    }\n    print_matrix(&result);\n}\n\nstatic void process_transpose(void)\n{\n    int rows;\n    int columns;\n    int count;\n    Matrix input;\n    Matrix result;\n    scanf(\"%d%d%d\", &rows, &columns, &count);\n    initialize_matrix(&input, rows, columns);\n    read_entries(&input, count);\n    transpose_matrix(&input, &result);\n    print_matrix(&result);\n}\nAssigned function print_matrix:\n```c\nstatic void print_matrix(Matrix *matrix)\n{\n    int i;\n    normalize(matrix);\n    printf(\"%d %d %d\\n\", matrix->rows, matrix->columns, matrix->count);\n    for (i = 0; i < matrix->count; ++i) {\n        Entry entry = matrix->entries[i];\n        printf(\"%d %d %lld\\n\", entry.row, entry.column, entry.value);\n    }\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"2\\nMUL 2 3 2 2 2\\n0 2 3\\n1 0 4\\n2 1 5\\n0 0 2\\nTRANS 1 3 2\\n0 2 9\\n0 0 1\\n\", \"expected\": \"2 2 2\\n0 1 15\\n1 0 8\\n3 1 2\\n0 0 1\\n2 0 9\", \"actual\": \"2 2 1\\n1 0 8\\n3 1 2\\n0 0 1\\n2 0 9\\n\", \"exit\": 0}]\nPrevious replacement failed:\n{\"reason\": \"regression_rejected\", \"error\": null, \"diagnostics\": \"\", \"replacement\": \"```c\\nstatic void print_matrix(Matrix *matrix)\\n{\\n    int i;\\n    printf(\\\"%d %d %d\\\\n\\\", matrix->rows, matrix->columns, matrix->count);\\n    for (i = 0; i < matrix->count; ++i) {\\n        Entry entry = matrix->entries[i];\\n        printf(\\\"%d %d %lld\\\\n\\\", entry.row, entry.column, entry.value);\\n    }\\n}\\n```\", \"failed_outputs\": [{\"input\": \"2\\nTRANS 2 3 4\\n0 1 2\\n0 1 5\\n1 2 0\\n1 0 4\\nADD 2 2 1 2\\n0 1 8\\n0 1 -8\\n1 0 3\\n\", \"expected\": \"3 2 2\\n0 1 4\\n1 0 7\\n2 2 1\\n1 0 3\", \"actual\": \"3 2 3\\n1 0 7\\n2 1 0\\n0 1 4\\n2 2 1\\n1 0 3\\n\", \"exit\": 0}]}\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void print_matrix(Matrix *matrix)\n{\n    int i;\n    normalize(matrix);\n    printf(\"%d %d %d\\n\", matrix->rows, matrix->columns, matrix->count);\n    for (i = 0; i < matrix->count; ++i) {\n        Entry entry = matrix->entries[i];\n        printf(\"%d %d %lld\\n\", entry.row, entry.column, entry.value);\n    }\n}\n```",
+        "usage": {
+          "prompt_tokens": 1280,
+          "completion_tokens": 92,
+          "total_tokens": 1372
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 272,
+        "seconds": 50.172
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "3 2 2\n0 1 4\n1 0 7\n2 2 1\n1 0 3\n",
+            "stderr": "",
+            "input": "2\nTRANS 2 3 4\n0 1 2\n0 1 5\n1 2 0\n1 0 4\nADD 2 2 1 2\n0 1 8\n0 1 -8\n1 0 3\n",
+            "expected": "3 2 2\n0 1 4\n1 0 7\n2 2 1\n1 0 3",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "2 2 1\n1 0 8\n3 1 2\n0 0 1\n2 0 9\n",
+            "stderr": "",
+            "input": "2\nMUL 2 3 2 2 2\n0 2 3\n1 0 4\n2 1 5\n0 0 2\nTRANS 1 3 2\n0 2 9\n0 0 1\n",
+            "expected": "2 2 2\n0 1 15\n1 0 8\n3 1 2\n0 0 1\n2 0 9",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "3 2 4\n0 0 2\n0 1 9\n2 0 7\n2 1 3\n1 1 1\n0 0 10000000000\n",
+            "stderr": "",
+            "input": "2\nADD 3 2 3 2\n2 1 3\n0 1 4\n0 0 2\n0 1 5\n2 0 7\nMUL 1 1 1 1 1\n0 0 100000\n0 0 100000\n",
+            "expected": "3 2 4\n0 0 2\n0 1 9\n2 0 7\n2 1 3\n1 1 1\n0 0 10000000000",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "1 2 0\n2 3 0\n1 1 0\n",
+            "stderr": "",
+            "input": "3\nTRANS 2 1 0\nMUL 2 2 3 2 1\n0 0 2\n0 0 -2\n0 2 8\nADD 1 1 1 1\n0 0 0\n0 0 0\n",
+            "expected": "1 2 0\n2 3 0\n1 1 0",
+            "passed": true
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ENTRIES 2048\n\ntypedef struct {\n    int row;\n    int column;\n    long long value;\n} Entry;\n\ntypedef struct {\n    int rows;\n    int columns;\n    int count;\n    Entry entries[MAX_ENTRIES];\n} Matrix;\n\nstatic void initialize_matrix(Matrix *matrix, int rows, int columns)\n{\n    matrix->rows = rows;\n    matrix->columns = columns;\n    matrix->count = 0;\n    memset(matrix->entries, 0, sizeof(matrix->entries));\n}\n\nstatic int find_entry(const Matrix *matrix, int row, int column)\n{\n    int i;\n    for (i = 0; i < matrix->count; ++i) {\n        if (matrix->entries[i].row == row && matrix->entries[i].column == column) {\n            return i;\n        }\n    }\n    return -1;\n}\n\nstatic void add_entry(Matrix *matrix, int row, int column, long long value)\n{\n    int index = find_entry(matrix, row, column);\n    if (index >= 0) {\n        matrix->entries[index].value += value;\n        if (matrix->entries[index].value == 0) {\n            for (int i = index; i < matrix->count - 1; i++) {\n                matrix->entries[i] = matrix->entries[i + 1];\n            }\n            matrix->count--;\n        }\n    } else {\n        if (matrix->count < MAX_ENTRIES) {\n            Entry *entry = &matrix->entries[matrix->count++];\n            entry->row = row;\n            entry->column = column;\n            entry->value = value;\n        }\n    }\n}\n\nstatic int compare_entries(const void *left, const void *right)\n{\n    const Entry *a = (const Entry *) left;\n    const Entry *b = (const Entry *) right;\n    if (a->row != b->row) {\n        return a->row - b->row;\n    }\n    return a->column - b->column;\n}\n\nstatic void remove_zeros(Matrix *matrix)\n{\n    int read;\n    int write = 0;\n    for (read = 0; read < matrix->count; ++read) {\n        if (matrix->entries[read].value != 0) {\n            matrix->entries[write++] = matrix->entries[read];\n        }\n    }\n    matrix->count = write;\n}\n\nstatic void normalize(Matrix *matrix)\n{\n    remove_zeros(matrix);\n    qsort(matrix->entries, matrix->count, sizeof(Entry), compare_entries);\n}\n\nstatic void read_entries(Matrix *matrix, int number)\n{\n    int i;\n    for (i = 0; i < number; ++i) {\n        int row;\n        int column;\n        long long value;\n        scanf(\"%d%d%lld\", &row, &column, &value);\n        if (row >= 0 && row < matrix->rows && column >= 0 && column < matrix->columns) {\n            add_entry(matrix, row, column, value);\n        }\n    }\n}\n\nstatic void transpose_matrix(const Matrix *input, Matrix *output)\n{\n    int i;\n    initialize_matrix(output, input->columns, input->rows);\n    for (i = 0; i < input->count; ++i) {\n        Entry entry = input->entries[i];\n        add_entry(output, entry.column, entry.row, entry.value);\n    }\n}\n\nstatic void add_matrices(const Matrix *a, const Matrix *b, Matrix *output)\n{\n    int i;\n    initialize_matrix(output, a->rows, a->columns);\n    for (i = 0; i < a->count; ++i) {\n        Entry entry = a->entries[i];\n        add_entry(output, entry.row, entry.column, entry.value);\n    }\n    for (i = 0; i < b->count; ++i) {\n        Entry entry = b->entries[i];\n        add_entry(output, entry.row, entry.column, entry.value);\n    }\n}\n\nstatic void multiply_matrices(const Matrix *a, const Matrix *b, Matrix *output)\n{\n    int i;\n    int j;\n    initialize_matrix(output, a->rows, b->columns);\n    for (i = 0; i < a->count; ++i) {\n        for (j = 0; j < b->count; ++j) {\n            if (a->entries[i].column == b->entries[j].column) {\n                long long product = a->entries[i].value * b->entries[j].value;\n                add_entry(output, a->entries[i].row, b->entries[j].column, product);\n            }\n        }\n    }\n}\n\nstatic void print_matrix(Matrix *matrix)\n{\n    int i;\n    normalize(matrix);\n    printf(\"%d %d %d\\n\", matrix->rows, matrix->columns, matrix->count);\n    for (i = 0; i < matrix->count; ++i) {\n        Entry entry = matrix->entries[i];\n        printf(\"%d %d %lld\\n\", entry.row, entry.column, entry.value);\n    }\n}\n\nstatic void process_transpose(void)\n{\n    int rows;\n    int columns;\n    int count;\n    Matrix input;\n    Matrix result;\n    scanf(\"%d%d%d\", &rows, &columns, &count);\n    initialize_matrix(&input, rows, columns);\n    read_entries(&input, count);\n    transpose_matrix(&input, &result);\n    print_matrix(&result);\n}\n\nstatic void process_binary(const char *operation)\n{\n    int rows;\n    int inner;\n    int columns;\n    int first;\n    int second;\n    Matrix a;\n    Matrix b;\n    Matrix result;\n    if (strcmp(operation, \"ADD\") == 0) {\n        scanf(\"%d%d%d%d\", &rows, &columns, &first, &second);\n        inner = columns;\n        initialize_matrix(&b, rows, columns);\n    } else {\n        scanf(\"%d%d%d%d%d\", &rows, &inner, &columns, &first, &second);\n        initialize_matrix(&b, inner, columns);\n    }\n    initialize_matrix(&a, rows, inner);\n    read_entries(&a, first);\n    read_entries(&b, second);\n    if (strcmp(operation, \"ADD\") == 0) {\n        add_matrices(&a, &b, &result);\n    } else {\n        multiply_matrices(&a, &b, &result);\n    }\n    print_matrix(&result);\n}\n\nint main(void)\n{\n    int operations;\n    int i;\n    if (scanf(\"%d\", &operations) != 1) {\n        return 0;\n    }\n    for (i = 0; i < operations; ++i) {\n        char operation[16];\n        scanf(\"%15s\", operation);\n        if (strcmp(operation, \"TRANS\") == 0) {\n            process_transpose();\n        } else {\n            process_binary(operation);\n        }\n    }\n    return 0;\n}\n",
+      "reason": "unchanged"
+    },
+    {
+      "request": {
+        "name": "process_transpose",
+        "retry": 0,
+        "source_sha256": "6a83dafeaecb53485ec3a947410420ef2299e4b4bf8c2eb96521b02d164227cc",
+        "prompt": "Program behavior:\nSparse integer matrix service. Input q<=20 operations. TRANS r c na is followed by na triplets row col value for A; print A transpose. ADD r c na nb is followed by na triplets for A then nb for B (both r-by-c); print A+B. MUL r k c na nb is followed by A's na triplets (r-by-k) then B's nb triplets (k-by-c); print A*B. Dimensions 1..8, counts 0..100, coordinates zero-based and in range, entries magnitude <=100000. Duplicate coordinates in each input are SUMMED; explicit zero entries and zero sums must be omitted from output. Use exact 64-bit arithmetic. For every result print 'rows columns nnz', then nnz rows 'row col value' in increasing row then column order. Separate values by one space and end every record with newline.\nShared declarations:\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ENTRIES 2048\n\ntypedef struct {\n    int row;\n    int column;\n    long long value;\n} Entry;\n\ntypedef struct {\n    int rows;\n    int columns;\n    int count;\n    Entry entries[MAX_ENTRIES];\n} Matrix;\nRelated function interfaces (do not implement these):\nstatic void initialize_matrix(Matrix *matrix, int rows, int columns);\nint main(void);\nstatic void print_matrix(Matrix *matrix);\nstatic void read_entries(Matrix *matrix, int number);\nstatic void transpose_matrix(const Matrix *input, Matrix *output);\nAssigned function process_transpose:\n```c\nstatic void process_transpose(void)\n{\n    int rows;\n    int columns;\n    int count;\n    Matrix input;\n    Matrix result;\n    scanf(\"%d%d%d\", &rows, &columns, &count);\n    initialize_matrix(&input, rows, columns);\n    read_entries(&input, count);\n    transpose_matrix(&input, &result);\n    print_matrix(&result);\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"2\\nMUL 2 3 2 2 2\\n0 2 3\\n1 0 4\\n2 1 5\\n0 0 2\\nTRANS 1 3 2\\n0 2 9\\n0 0 1\\n\", \"expected\": \"2 2 2\\n0 1 15\\n1 0 8\\n3 1 2\\n0 0 1\\n2 0 9\", \"actual\": \"2 2 1\\n1 0 8\\n3 1 2\\n0 0 1\\n2 0 9\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void process_transpose(void)\n{\n    int rows;\n    int columns;\n    int count;\n    Matrix input;\n    Matrix result;\n    scanf(\"%d%d%d\", &rows, &columns, &count);\n    initialize_matrix(&input, rows, columns);\n    read_entries(&input, count);\n    transpose_matrix(&input, &result);\n    print_matrix(&result);\n}\n```",
+        "usage": {
+          "prompt_tokens": 692,
+          "completion_tokens": 82,
+          "total_tokens": 774
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 27.187
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "3 2 2\n0 1 4\n1 0 7\n2 2 1\n1 0 3\n",
+            "stderr": "",
+            "input": "2\nTRANS 2 3 4\n0 1 2\n0 1 5\n1 2 0\n1 0 4\nADD 2 2 1 2\n0 1 8\n0 1 -8\n1 0 3\n",
+            "expected": "3 2 2\n0 1 4\n1 0 7\n2 2 1\n1 0 3",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "2 2 1\n1 0 8\n3 1 2\n0 0 1\n2 0 9\n",
+            "stderr": "",
+            "input": "2\nMUL 2 3 2 2 2\n0 2 3\n1 0 4\n2 1 5\n0 0 2\nTRANS 1 3 2\n0 2 9\n0 0 1\n",
+            "expected": "2 2 2\n0 1 15\n1 0 8\n3 1 2\n0 0 1\n2 0 9",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "3 2 4\n0 0 2\n0 1 9\n2 0 7\n2 1 3\n1 1 1\n0 0 10000000000\n",
+            "stderr": "",
+            "input": "2\nADD 3 2 3 2\n2 1 3\n0 1 4\n0 0 2\n0 1 5\n2 0 7\nMUL 1 1 1 1 1\n0 0 100000\n0 0 100000\n",
+            "expected": "3 2 4\n0 0 2\n0 1 9\n2 0 7\n2 1 3\n1 1 1\n0 0 10000000000",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "1 2 0\n2 3 0\n1 1 0\n",
+            "stderr": "",
+            "input": "3\nTRANS 2 1 0\nMUL 2 2 3 2 1\n0 0 2\n0 0 -2\n0 2 8\nADD 1 1 1 1\n0 0 0\n0 0 0\n",
+            "expected": "1 2 0\n2 3 0\n1 1 0",
+            "passed": true
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ENTRIES 2048\n\ntypedef struct {\n    int row;\n    int column;\n    long long value;\n} Entry;\n\ntypedef struct {\n    int rows;\n    int columns;\n    int count;\n    Entry entries[MAX_ENTRIES];\n} Matrix;\n\nstatic void initialize_matrix(Matrix *matrix, int rows, int columns)\n{\n    matrix->rows = rows;\n    matrix->columns = columns;\n    matrix->count = 0;\n    memset(matrix->entries, 0, sizeof(matrix->entries));\n}\n\nstatic int find_entry(const Matrix *matrix, int row, int column)\n{\n    int i;\n    for (i = 0; i < matrix->count; ++i) {\n        if (matrix->entries[i].row == row && matrix->entries[i].column == column) {\n            return i;\n        }\n    }\n    return -1;\n}\n\nstatic void add_entry(Matrix *matrix, int row, int column, long long value)\n{\n    int index = find_entry(matrix, row, column);\n    if (index >= 0) {\n        matrix->entries[index].value += value;\n        if (matrix->entries[index].value == 0) {\n            for (int i = index; i < matrix->count - 1; i++) {\n                matrix->entries[i] = matrix->entries[i + 1];\n            }\n            matrix->count--;\n        }\n    } else {\n        if (matrix->count < MAX_ENTRIES) {\n            Entry *entry = &matrix->entries[matrix->count++];\n            entry->row = row;\n            entry->column = column;\n            entry->value = value;\n        }\n    }\n}\n\nstatic int compare_entries(const void *left, const void *right)\n{\n    const Entry *a = (const Entry *) left;\n    const Entry *b = (const Entry *) right;\n    if (a->row != b->row) {\n        return a->row - b->row;\n    }\n    return a->column - b->column;\n}\n\nstatic void remove_zeros(Matrix *matrix)\n{\n    int read;\n    int write = 0;\n    for (read = 0; read < matrix->count; ++read) {\n        if (matrix->entries[read].value != 0) {\n            matrix->entries[write++] = matrix->entries[read];\n        }\n    }\n    matrix->count = write;\n}\n\nstatic void normalize(Matrix *matrix)\n{\n    remove_zeros(matrix);\n    qsort(matrix->entries, matrix->count, sizeof(Entry), compare_entries);\n}\n\nstatic void read_entries(Matrix *matrix, int number)\n{\n    int i;\n    for (i = 0; i < number; ++i) {\n        int row;\n        int column;\n        long long value;\n        scanf(\"%d%d%lld\", &row, &column, &value);\n        if (row >= 0 && row < matrix->rows && column >= 0 && column < matrix->columns) {\n            add_entry(matrix, row, column, value);\n        }\n    }\n}\n\nstatic void transpose_matrix(const Matrix *input, Matrix *output)\n{\n    int i;\n    initialize_matrix(output, input->columns, input->rows);\n    for (i = 0; i < input->count; ++i) {\n        Entry entry = input->entries[i];\n        add_entry(output, entry.column, entry.row, entry.value);\n    }\n}\n\nstatic void add_matrices(const Matrix *a, const Matrix *b, Matrix *output)\n{\n    int i;\n    initialize_matrix(output, a->rows, a->columns);\n    for (i = 0; i < a->count; ++i) {\n        Entry entry = a->entries[i];\n        add_entry(output, entry.row, entry.column, entry.value);\n    }\n    for (i = 0; i < b->count; ++i) {\n        Entry entry = b->entries[i];\n        add_entry(output, entry.row, entry.column, entry.value);\n    }\n}\n\nstatic void multiply_matrices(const Matrix *a, const Matrix *b, Matrix *output)\n{\n    int i;\n    int j;\n    initialize_matrix(output, a->rows, b->columns);\n    for (i = 0; i < a->count; ++i) {\n        for (j = 0; j < b->count; ++j) {\n            if (a->entries[i].column == b->entries[j].column) {\n                long long product = a->entries[i].value * b->entries[j].value;\n                add_entry(output, a->entries[i].row, b->entries[j].column, product);\n            }\n        }\n    }\n}\n\nstatic void print_matrix(Matrix *matrix)\n{\n    int i;\n    normalize(matrix);\n    printf(\"%d %d %d\\n\", matrix->rows, matrix->columns, matrix->count);\n    for (i = 0; i < matrix->count; ++i) {\n        Entry entry = matrix->entries[i];\n        printf(\"%d %d %lld\\n\", entry.row, entry.column, entry.value);\n    }\n}\n\nstatic void process_transpose(void)\n{\n    int rows;\n    int columns;\n    int count;\n    Matrix input;\n    Matrix result;\n    scanf(\"%d%d%d\", &rows, &columns, &count);\n    initialize_matrix(&input, rows, columns);\n    read_entries(&input, count);\n    transpose_matrix(&input, &result);\n    print_matrix(&result);\n}\n\nstatic void process_binary(const char *operation)\n{\n    int rows;\n    int inner;\n    int columns;\n    int first;\n    int second;\n    Matrix a;\n    Matrix b;\n    Matrix result;\n    if (strcmp(operation, \"ADD\") == 0) {\n        scanf(\"%d%d%d%d\", &rows, &columns, &first, &second);\n        inner = columns;\n        initialize_matrix(&b, rows, columns);\n    } else {\n        scanf(\"%d%d%d%d%d\", &rows, &inner, &columns, &first, &second);\n        initialize_matrix(&b, inner, columns);\n    }\n    initialize_matrix(&a, rows, inner);\n    read_entries(&a, first);\n    read_entries(&b, second);\n    if (strcmp(operation, \"ADD\") == 0) {\n        add_matrices(&a, &b, &result);\n    } else {\n        multiply_matrices(&a, &b, &result);\n    }\n    print_matrix(&result);\n}\n\nint main(void)\n{\n    int operations;\n    int i;\n    if (scanf(\"%d\", &operations) != 1) {\n        return 0;\n    }\n    for (i = 0; i < operations; ++i) {\n        char operation[16];\n        scanf(\"%15s\", operation);\n        if (strcmp(operation, \"TRANS\") == 0) {\n            process_transpose();\n        } else {\n            process_binary(operation);\n        }\n    }\n    return 0;\n}\n",
+      "reason": "unchanged"
+    },
+    {
+      "request": {
+        "name": "process_binary",
+        "retry": 0,
+        "source_sha256": "6a83dafeaecb53485ec3a947410420ef2299e4b4bf8c2eb96521b02d164227cc",
+        "prompt": "Program behavior:\nSparse integer matrix service. Input q<=20 operations. TRANS r c na is followed by na triplets row col value for A; print A transpose. ADD r c na nb is followed by na triplets for A then nb for B (both r-by-c); print A+B. MUL r k c na nb is followed by A's na triplets (r-by-k) then B's nb triplets (k-by-c); print A*B. Dimensions 1..8, counts 0..100, coordinates zero-based and in range, entries magnitude <=100000. Duplicate coordinates in each input are SUMMED; explicit zero entries and zero sums must be omitted from output. Use exact 64-bit arithmetic. For every result print 'rows columns nnz', then nnz rows 'row col value' in increasing row then column order. Separate values by one space and end every record with newline.\nShared declarations:\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ENTRIES 2048\n\ntypedef struct {\n    int row;\n    int column;\n    long long value;\n} Entry;\n\ntypedef struct {\n    int rows;\n    int columns;\n    int count;\n    Entry entries[MAX_ENTRIES];\n} Matrix;\nRelated function interfaces (do not implement these):\nstatic void add_matrices(const Matrix *a, const Matrix *b, Matrix *output);\nstatic void initialize_matrix(Matrix *matrix, int rows, int columns);\nint main(void);\nstatic void multiply_matrices(const Matrix *a, const Matrix *b, Matrix *output);\nstatic void print_matrix(Matrix *matrix);\nstatic void read_entries(Matrix *matrix, int number);\nAssigned function process_binary:\n```c\nstatic void process_binary(const char *operation)\n{\n    int rows;\n    int inner;\n    int columns;\n    int first;\n    int second;\n    Matrix a;\n    Matrix b;\n    Matrix result;\n    if (strcmp(operation, \"ADD\") == 0) {\n        scanf(\"%d%d%d%d\", &rows, &columns, &first, &second);\n        inner = columns;\n        initialize_matrix(&b, rows, columns);\n    } else {\n        scanf(\"%d%d%d%d%d\", &rows, &inner, &columns, &first, &second);\n        initialize_matrix(&b, inner, columns);\n    }\n    initialize_matrix(&a, rows, inner);\n    read_entries(&a, first);\n    read_entries(&b, second);\n    if (strcmp(operation, \"ADD\") == 0) {\n        add_matrices(&a, &b, &result);\n    } else {\n        multiply_matrices(&a, &b, &result);\n    }\n    print_matrix(&result);\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"2\\nMUL 2 3 2 2 2\\n0 2 3\\n1 0 4\\n2 1 5\\n0 0 2\\nTRANS 1 3 2\\n0 2 9\\n0 0 1\\n\", \"expected\": \"2 2 2\\n0 1 15\\n1 0 8\\n3 1 2\\n0 0 1\\n2 0 9\", \"actual\": \"2 2 1\\n1 0 8\\n3 1 2\\n0 0 1\\n2 0 9\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void process_binary(const char *operation)\n{\n    int rows;\n    int inner;\n    int columns;\n    int first;\n    int second;\n    Matrix a;\n    Matrix b;\n    Matrix result;\n    if (strcmp(operation, \"ADD\") == 0) {\n        scanf(\"%d%d%d%d\", &rows, &columns, &first, &second);\n        inner = columns;\n        initialize_matrix(&b, rows, columns);\n    } else {\n        scanf(\"%d%d%d%d%d\", &rows, &inner, &columns, &first, &second);\n        initialize_matrix(&b, inner, columns);\n    }\n    initialize_matrix(&a, rows, inner);\n    read_entries(&a, first);\n    read_entries(&b, second);\n    if (strcmp(operation, \"ADD\") == 0) {\n        add_matrices(&a, &b, &result);\n    } else {\n        multiply_matrices(&a, &b, &result);\n    }\n    print_matrix(&result);\n}\n```",
+        "usage": {
+          "prompt_tokens": 844,
+          "completion_tokens": 212,
+          "total_tokens": 1056
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 512,
+        "seconds": 52.137
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "3 2 2\n0 1 4\n1 0 7\n2 2 1\n1 0 3\n",
+            "stderr": "",
+            "input": "2\nTRANS 2 3 4\n0 1 2\n0 1 5\n1 2 0\n1 0 4\nADD 2 2 1 2\n0 1 8\n0 1 -8\n1 0 3\n",
+            "expected": "3 2 2\n0 1 4\n1 0 7\n2 2 1\n1 0 3",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "2 2 1\n1 0 8\n3 1 2\n0 0 1\n2 0 9\n",
+            "stderr": "",
+            "input": "2\nMUL 2 3 2 2 2\n0 2 3\n1 0 4\n2 1 5\n0 0 2\nTRANS 1 3 2\n0 2 9\n0 0 1\n",
+            "expected": "2 2 2\n0 1 15\n1 0 8\n3 1 2\n0 0 1\n2 0 9",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "3 2 4\n0 0 2\n0 1 9\n2 0 7\n2 1 3\n1 1 1\n0 0 10000000000\n",
+            "stderr": "",
+            "input": "2\nADD 3 2 3 2\n2 1 3\n0 1 4\n0 0 2\n0 1 5\n2 0 7\nMUL 1 1 1 1 1\n0 0 100000\n0 0 100000\n",
+            "expected": "3 2 4\n0 0 2\n0 1 9\n2 0 7\n2 1 3\n1 1 1\n0 0 10000000000",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "1 2 0\n2 3 0\n1 1 0\n",
+            "stderr": "",
+            "input": "3\nTRANS 2 1 0\nMUL 2 2 3 2 1\n0 0 2\n0 0 -2\n0 2 8\nADD 1 1 1 1\n0 0 0\n0 0 0\n",
+            "expected": "1 2 0\n2 3 0\n1 1 0",
+            "passed": true
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ENTRIES 2048\n\ntypedef struct {\n    int row;\n    int column;\n    long long value;\n} Entry;\n\ntypedef struct {\n    int rows;\n    int columns;\n    int count;\n    Entry entries[MAX_ENTRIES];\n} Matrix;\n\nstatic void initialize_matrix(Matrix *matrix, int rows, int columns)\n{\n    matrix->rows = rows;\n    matrix->columns = columns;\n    matrix->count = 0;\n    memset(matrix->entries, 0, sizeof(matrix->entries));\n}\n\nstatic int find_entry(const Matrix *matrix, int row, int column)\n{\n    int i;\n    for (i = 0; i < matrix->count; ++i) {\n        if (matrix->entries[i].row == row && matrix->entries[i].column == column) {\n            return i;\n        }\n    }\n    return -1;\n}\n\nstatic void add_entry(Matrix *matrix, int row, int column, long long value)\n{\n    int index = find_entry(matrix, row, column);\n    if (index >= 0) {\n        matrix->entries[index].value += value;\n        if (matrix->entries[index].value == 0) {\n            for (int i = index; i < matrix->count - 1; i++) {\n                matrix->entries[i] = matrix->entries[i + 1];\n            }\n            matrix->count--;\n        }\n    } else {\n        if (matrix->count < MAX_ENTRIES) {\n            Entry *entry = &matrix->entries[matrix->count++];\n            entry->row = row;\n            entry->column = column;\n            entry->value = value;\n        }\n    }\n}\n\nstatic int compare_entries(const void *left, const void *right)\n{\n    const Entry *a = (const Entry *) left;\n    const Entry *b = (const Entry *) right;\n    if (a->row != b->row) {\n        return a->row - b->row;\n    }\n    return a->column - b->column;\n}\n\nstatic void remove_zeros(Matrix *matrix)\n{\n    int read;\n    int write = 0;\n    for (read = 0; read < matrix->count; ++read) {\n        if (matrix->entries[read].value != 0) {\n            matrix->entries[write++] = matrix->entries[read];\n        }\n    }\n    matrix->count = write;\n}\n\nstatic void normalize(Matrix *matrix)\n{\n    remove_zeros(matrix);\n    qsort(matrix->entries, matrix->count, sizeof(Entry), compare_entries);\n}\n\nstatic void read_entries(Matrix *matrix, int number)\n{\n    int i;\n    for (i = 0; i < number; ++i) {\n        int row;\n        int column;\n        long long value;\n        scanf(\"%d%d%lld\", &row, &column, &value);\n        if (row >= 0 && row < matrix->rows && column >= 0 && column < matrix->columns) {\n            add_entry(matrix, row, column, value);\n        }\n    }\n}\n\nstatic void transpose_matrix(const Matrix *input, Matrix *output)\n{\n    int i;\n    initialize_matrix(output, input->columns, input->rows);\n    for (i = 0; i < input->count; ++i) {\n        Entry entry = input->entries[i];\n        add_entry(output, entry.column, entry.row, entry.value);\n    }\n}\n\nstatic void add_matrices(const Matrix *a, const Matrix *b, Matrix *output)\n{\n    int i;\n    initialize_matrix(output, a->rows, a->columns);\n    for (i = 0; i < a->count; ++i) {\n        Entry entry = a->entries[i];\n        add_entry(output, entry.row, entry.column, entry.value);\n    }\n    for (i = 0; i < b->count; ++i) {\n        Entry entry = b->entries[i];\n        add_entry(output, entry.row, entry.column, entry.value);\n    }\n}\n\nstatic void multiply_matrices(const Matrix *a, const Matrix *b, Matrix *output)\n{\n    int i;\n    int j;\n    initialize_matrix(output, a->rows, b->columns);\n    for (i = 0; i < a->count; ++i) {\n        for (j = 0; j < b->count; ++j) {\n            if (a->entries[i].column == b->entries[j].column) {\n                long long product = a->entries[i].value * b->entries[j].value;\n                add_entry(output, a->entries[i].row, b->entries[j].column, product);\n            }\n        }\n    }\n}\n\nstatic void print_matrix(Matrix *matrix)\n{\n    int i;\n    normalize(matrix);\n    printf(\"%d %d %d\\n\", matrix->rows, matrix->columns, matrix->count);\n    for (i = 0; i < matrix->count; ++i) {\n        Entry entry = matrix->entries[i];\n        printf(\"%d %d %lld\\n\", entry.row, entry.column, entry.value);\n    }\n}\n\nstatic void process_transpose(void)\n{\n    int rows;\n    int columns;\n    int count;\n    Matrix input;\n    Matrix result;\n    scanf(\"%d%d%d\", &rows, &columns, &count);\n    initialize_matrix(&input, rows, columns);\n    read_entries(&input, count);\n    transpose_matrix(&input, &result);\n    print_matrix(&result);\n}\n\nstatic void process_binary(const char *operation)\n{\n    int rows;\n    int inner;\n    int columns;\n    int first;\n    int second;\n    Matrix a;\n    Matrix b;\n    Matrix result;\n    if (strcmp(operation, \"ADD\") == 0) {\n        scanf(\"%d%d%d%d\", &rows, &columns, &first, &second);\n        inner = columns;\n        initialize_matrix(&b, rows, columns);\n    } else {\n        scanf(\"%d%d%d%d%d\", &rows, &inner, &columns, &first, &second);\n        initialize_matrix(&b, inner, columns);\n    }\n    initialize_matrix(&a, rows, inner);\n    read_entries(&a, first);\n    read_entries(&b, second);\n    if (strcmp(operation, \"ADD\") == 0) {\n        add_matrices(&a, &b, &result);\n    } else {\n        multiply_matrices(&a, &b, &result);\n    }\n    print_matrix(&result);\n}\n\nint main(void)\n{\n    int operations;\n    int i;\n    if (scanf(\"%d\", &operations) != 1) {\n        return 0;\n    }\n    for (i = 0; i < operations; ++i) {\n        char operation[16];\n        scanf(\"%15s\", operation);\n        if (strcmp(operation, \"TRANS\") == 0) {\n            process_transpose();\n        } else {\n            process_binary(operation);\n        }\n    }\n    return 0;\n}\n",
+      "reason": "unchanged"
+    },
+    {
+      "request": {
+        "name": "main",
+        "retry": 0,
+        "source_sha256": "6a83dafeaecb53485ec3a947410420ef2299e4b4bf8c2eb96521b02d164227cc",
+        "prompt": "Program behavior:\nSparse integer matrix service. Input q<=20 operations. TRANS r c na is followed by na triplets row col value for A; print A transpose. ADD r c na nb is followed by na triplets for A then nb for B (both r-by-c); print A+B. MUL r k c na nb is followed by A's na triplets (r-by-k) then B's nb triplets (k-by-c); print A*B. Dimensions 1..8, counts 0..100, coordinates zero-based and in range, entries magnitude <=100000. Duplicate coordinates in each input are SUMMED; explicit zero entries and zero sums must be omitted from output. Use exact 64-bit arithmetic. For every result print 'rows columns nnz', then nnz rows 'row col value' in increasing row then column order. Separate values by one space and end every record with newline.\nShared declarations:\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ENTRIES 2048\n\ntypedef struct {\n    int row;\n    int column;\n    long long value;\n} Entry;\n\ntypedef struct {\n    int rows;\n    int columns;\n    int count;\n    Entry entries[MAX_ENTRIES];\n} Matrix;\nRelated function interfaces (do not implement these):\nstatic void process_binary(const char *operation);\nstatic void process_transpose(void);\nAssigned function main:\n```c\nint main(void)\n{\n    int operations;\n    int i;\n    if (scanf(\"%d\", &operations) != 1) {\n        return 0;\n    }\n    for (i = 0; i < operations; ++i) {\n        char operation[16];\n        scanf(\"%15s\", operation);\n        if (strcmp(operation, \"TRANS\") == 0) {\n            process_transpose();\n        } else {\n            process_binary(operation);\n        }\n    }\n    return 0;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"2\\nMUL 2 3 2 2 2\\n0 2 3\\n1 0 4\\n2 1 5\\n0 0 2\\nTRANS 1 3 2\\n0 2 9\\n0 0 1\\n\", \"expected\": \"2 2 2\\n0 1 15\\n1 0 8\\n3 1 2\\n0 0 1\\n2 0 9\", \"actual\": \"2 2 1\\n1 0 8\\n3 1 2\\n0 0 1\\n2 0 9\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nint main(void)\n{\n    int operations;\n    int i;\n    if (scanf(\"%d\", &operations) != 1) {\n        return 0;\n    }\n    for (i = 0; i < operations; ++i) {\n        char operation[16];\n        scanf(\"%15s\", operation);\n        if (strcmp(operation, \"TRANS\") == 0) {\n            process_transpose();\n        } else {\n            process_binary(operation);\n        }\n    }\n    return 0;\n}\n```",
+        "usage": {
+          "prompt_tokens": 683,
+          "completion_tokens": 109,
+          "total_tokens": 792
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 306,
+        "seconds": 31.637
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "3 2 2\n0 1 4\n1 0 7\n2 2 1\n1 0 3\n",
+            "stderr": "",
+            "input": "2\nTRANS 2 3 4\n0 1 2\n0 1 5\n1 2 0\n1 0 4\nADD 2 2 1 2\n0 1 8\n0 1 -8\n1 0 3\n",
+            "expected": "3 2 2\n0 1 4\n1 0 7\n2 2 1\n1 0 3",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "2 2 1\n1 0 8\n3 1 2\n0 0 1\n2 0 9\n",
+            "stderr": "",
+            "input": "2\nMUL 2 3 2 2 2\n0 2 3\n1 0 4\n2 1 5\n0 0 2\nTRANS 1 3 2\n0 2 9\n0 0 1\n",
+            "expected": "2 2 2\n0 1 15\n1 0 8\n3 1 2\n0 0 1\n2 0 9",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "3 2 4\n0 0 2\n0 1 9\n2 0 7\n2 1 3\n1 1 1\n0 0 10000000000\n",
+            "stderr": "",
+            "input": "2\nADD 3 2 3 2\n2 1 3\n0 1 4\n0 0 2\n0 1 5\n2 0 7\nMUL 1 1 1 1 1\n0 0 100000\n0 0 100000\n",
+            "expected": "3 2 4\n0 0 2\n0 1 9\n2 0 7\n2 1 3\n1 1 1\n0 0 10000000000",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "1 2 0\n2 3 0\n1 1 0\n",
+            "stderr": "",
+            "input": "3\nTRANS 2 1 0\nMUL 2 2 3 2 1\n0 0 2\n0 0 -2\n0 2 8\nADD 1 1 1 1\n0 0 0\n0 0 0\n",
+            "expected": "1 2 0\n2 3 0\n1 1 0",
+            "passed": true
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ENTRIES 2048\n\ntypedef struct {\n    int row;\n    int column;\n    long long value;\n} Entry;\n\ntypedef struct {\n    int rows;\n    int columns;\n    int count;\n    Entry entries[MAX_ENTRIES];\n} Matrix;\n\nstatic void initialize_matrix(Matrix *matrix, int rows, int columns)\n{\n    matrix->rows = rows;\n    matrix->columns = columns;\n    matrix->count = 0;\n    memset(matrix->entries, 0, sizeof(matrix->entries));\n}\n\nstatic int find_entry(const Matrix *matrix, int row, int column)\n{\n    int i;\n    for (i = 0; i < matrix->count; ++i) {\n        if (matrix->entries[i].row == row && matrix->entries[i].column == column) {\n            return i;\n        }\n    }\n    return -1;\n}\n\nstatic void add_entry(Matrix *matrix, int row, int column, long long value)\n{\n    int index = find_entry(matrix, row, column);\n    if (index >= 0) {\n        matrix->entries[index].value += value;\n        if (matrix->entries[index].value == 0) {\n            for (int i = index; i < matrix->count - 1; i++) {\n                matrix->entries[i] = matrix->entries[i + 1];\n            }\n            matrix->count--;\n        }\n    } else {\n        if (matrix->count < MAX_ENTRIES) {\n            Entry *entry = &matrix->entries[matrix->count++];\n            entry->row = row;\n            entry->column = column;\n            entry->value = value;\n        }\n    }\n}\n\nstatic int compare_entries(const void *left, const void *right)\n{\n    const Entry *a = (const Entry *) left;\n    const Entry *b = (const Entry *) right;\n    if (a->row != b->row) {\n        return a->row - b->row;\n    }\n    return a->column - b->column;\n}\n\nstatic void remove_zeros(Matrix *matrix)\n{\n    int read;\n    int write = 0;\n    for (read = 0; read < matrix->count; ++read) {\n        if (matrix->entries[read].value != 0) {\n            matrix->entries[write++] = matrix->entries[read];\n        }\n    }\n    matrix->count = write;\n}\n\nstatic void normalize(Matrix *matrix)\n{\n    remove_zeros(matrix);\n    qsort(matrix->entries, matrix->count, sizeof(Entry), compare_entries);\n}\n\nstatic void read_entries(Matrix *matrix, int number)\n{\n    int i;\n    for (i = 0; i < number; ++i) {\n        int row;\n        int column;\n        long long value;\n        scanf(\"%d%d%lld\", &row, &column, &value);\n        if (row >= 0 && row < matrix->rows && column >= 0 && column < matrix->columns) {\n            add_entry(matrix, row, column, value);\n        }\n    }\n}\n\nstatic void transpose_matrix(const Matrix *input, Matrix *output)\n{\n    int i;\n    initialize_matrix(output, input->columns, input->rows);\n    for (i = 0; i < input->count; ++i) {\n        Entry entry = input->entries[i];\n        add_entry(output, entry.column, entry.row, entry.value);\n    }\n}\n\nstatic void add_matrices(const Matrix *a, const Matrix *b, Matrix *output)\n{\n    int i;\n    initialize_matrix(output, a->rows, a->columns);\n    for (i = 0; i < a->count; ++i) {\n        Entry entry = a->entries[i];\n        add_entry(output, entry.row, entry.column, entry.value);\n    }\n    for (i = 0; i < b->count; ++i) {\n        Entry entry = b->entries[i];\n        add_entry(output, entry.row, entry.column, entry.value);\n    }\n}\n\nstatic void multiply_matrices(const Matrix *a, const Matrix *b, Matrix *output)\n{\n    int i;\n    int j;\n    initialize_matrix(output, a->rows, b->columns);\n    for (i = 0; i < a->count; ++i) {\n        for (j = 0; j < b->count; ++j) {\n            if (a->entries[i].column == b->entries[j].column) {\n                long long product = a->entries[i].value * b->entries[j].value;\n                add_entry(output, a->entries[i].row, b->entries[j].column, product);\n            }\n        }\n    }\n}\n\nstatic void print_matrix(Matrix *matrix)\n{\n    int i;\n    normalize(matrix);\n    printf(\"%d %d %d\\n\", matrix->rows, matrix->columns, matrix->count);\n    for (i = 0; i < matrix->count; ++i) {\n        Entry entry = matrix->entries[i];\n        printf(\"%d %d %lld\\n\", entry.row, entry.column, entry.value);\n    }\n}\n\nstatic void process_transpose(void)\n{\n    int rows;\n    int columns;\n    int count;\n    Matrix input;\n    Matrix result;\n    scanf(\"%d%d%d\", &rows, &columns, &count);\n    initialize_matrix(&input, rows, columns);\n    read_entries(&input, count);\n    transpose_matrix(&input, &result);\n    print_matrix(&result);\n}\n\nstatic void process_binary(const char *operation)\n{\n    int rows;\n    int inner;\n    int columns;\n    int first;\n    int second;\n    Matrix a;\n    Matrix b;\n    Matrix result;\n    if (strcmp(operation, \"ADD\") == 0) {\n        scanf(\"%d%d%d%d\", &rows, &columns, &first, &second);\n        inner = columns;\n        initialize_matrix(&b, rows, columns);\n    } else {\n        scanf(\"%d%d%d%d%d\", &rows, &inner, &columns, &first, &second);\n        initialize_matrix(&b, inner, columns);\n    }\n    initialize_matrix(&a, rows, inner);\n    read_entries(&a, first);\n    read_entries(&b, second);\n    if (strcmp(operation, \"ADD\") == 0) {\n        add_matrices(&a, &b, &result);\n    } else {\n        multiply_matrices(&a, &b, &result);\n    }\n    print_matrix(&result);\n}\n\nint main(void)\n{\n    int operations;\n    int i;\n    if (scanf(\"%d\", &operations) != 1) {\n        return 0;\n    }\n    for (i = 0; i < operations; ++i) {\n        char operation[16];\n        scanf(\"%15s\", operation);\n        if (strcmp(operation, \"TRANS\") == 0) {\n            process_transpose();\n        } else {\n            process_binary(operation);\n        }\n    }\n    return 0;\n}\n",
+      "reason": "unchanged"
+    }
+  ],
+  "calls": 15,
+  "function_count": 14,
+  "control_probe": false
+}

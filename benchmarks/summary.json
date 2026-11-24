@@ -1,0 +1,85 @@
+{
+  "passed": true,
+  "programs": 8,
+  "faulty_programs": 6,
+  "controls": 2,
+  "scenarios_per_compiler": 624,
+  "scenario_executions": 1248,
+  "fresh_final_seed": 2026112403,
+  "fresh_final_sha256": "14f3b8d865b1ed6d9f4ec90f6ee34e31ea7e2e98e15fb3fd607c2bf1361a6eb4",
+  "gcc_version": "gcc (Debian 14.2.0-19) 14.2.0",
+  "cases": [
+    {
+      "id": "inventory",
+      "kind": "faulty",
+      "scenarios_per_compiler": 78,
+      "tinycc_passed": 78,
+      "gcc_ubsan_passed": 78,
+      "passed": true,
+      "source_sha256": "029de4cd503e9a2456adda5b4442d464474667ea6e203bf29e6b70f069ac6e6a"
+    },
+    {
+      "id": "gradebook",
+      "kind": "faulty",
+      "scenarios_per_compiler": 78,
+      "tinycc_passed": 78,
+      "gcc_ubsan_passed": 78,
+      "passed": true,
+      "source_sha256": "63866744bb3ce32d6a21a26ffa3d7ec4d1979c6411fa64347213d3b816a5511f"
+    },
+    {
+      "id": "lru_cache",
+      "kind": "faulty",
+      "scenarios_per_compiler": 78,
+      "tinycc_passed": 78,
+      "gcc_ubsan_passed": 78,
+      "passed": true,
+      "source_sha256": "80ea77d65afdee471cc9993034f336a704f1bdcb4eed59710275e06ec6472093"
+    },
+    {
+      "id": "graph_engine",
+      "kind": "faulty",
+      "scenarios_per_compiler": 78,
+      "tinycc_passed": 78,
+      "gcc_ubsan_passed": 78,
+      "passed": true,
+      "source_sha256": "7a2b52a797cf3bbeaa9ad3c5edbcfd9688fe3cd2fc4d4d5371386094b0621324"
+    },
+    {
+      "id": "expression_parser",
+      "kind": "faulty",
+      "scenarios_per_compiler": 78,
+      "tinycc_passed": 78,
+      "gcc_ubsan_passed": 78,
+      "passed": true,
+      "source_sha256": "5b09a5cb385b09981ed9e89e2bf1e6c191e65fafec40015526651027f2761be4"
+    },
+    {
+      "id": "sparse_matrix",
+      "kind": "faulty",
+      "scenarios_per_compiler": 78,
+      "tinycc_passed": 78,
+      "gcc_ubsan_passed": 78,
+      "passed": true,
+      "source_sha256": "24611da6b613412fecc5a3cabf45e8831f12bf1f00ae617fb9ad87ea87d638b6"
+    },
+    {
+      "id": "inventory_correct_control",
+      "kind": "correct_control",
+      "scenarios_per_compiler": 78,
+      "tinycc_passed": 78,
+      "gcc_ubsan_passed": 78,
+      "passed": true,
+      "source_sha256": "6376fc62313679e8ec3450dad1b8293b2bb5a265951d73bb42b45078cece2def"
+    },
+    {
+      "id": "expression_parser_correct_control",
+      "kind": "correct_control",
+      "scenarios_per_compiler": 78,
+      "tinycc_passed": 78,
+      "gcc_ubsan_passed": 78,
+      "passed": true,
+      "source_sha256": "0a524c4221146710c2811957ef6c7e7d9532e04084c1e6bc4979ef00cf7c0167"
+    }
+  ]
+}

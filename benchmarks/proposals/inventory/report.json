@@ -1,0 +1,784 @@
+{
+  "policy": {
+    "version": 1,
+    "model": "Qwen2.5-Coder-7B-Instruct Q4_K_M",
+    "gpu_layers": 0,
+    "threads": 4,
+    "context_tokens": 8192,
+    "seed": 172,
+    "temperature": 0,
+    "passes": 1,
+    "extra_retry_budget": 3,
+    "output": "one_complete_C_function",
+    "preserve_passing_scenarios": true,
+    "accept_neutral_compiling_changes": true,
+    "heldout_feedback": false
+  },
+  "baseline": {
+    "compiled": false,
+    "diagnostics": "/tmp/aicc-function-zt3fdct2/candidate.c:42: error: ';' expected (got \"return\")\n",
+    "tests": [],
+    "passed": false
+  },
+  "final": {
+    "compiled": true,
+    "diagnostics": "",
+    "tests": [
+      {
+        "returncode": 0,
+        "stdout": "OK\nOK\nOK\n9 7 100\nOK\n9 0 100\nOK\n0\n0 700\n",
+        "stderr": "",
+        "input": "9\nADD 9 100\nRECEIVE 9 4\nRECEIVE 9 3\nGET 9\nSELL 9 7\nGET 9\nDROP 9\nLIST\nTOTAL\n",
+        "expected": "OK\nOK\nOK\n9 7 100\nOK\n9 0 100\nOK\n0\n0 700",
+        "passed": true
+      },
+      {
+        "returncode": 0,
+        "stdout": "OK\nOK\nOK\nOK\n999995000000 5000000\nOK\n2999985 5000000\n2\n2 0 17\n8 999995 3\nERR\n8 999995 3\n",
+        "stderr": "",
+        "input": "10\nADD 8 1000000\nADD 2 17\nRECEIVE 8 1000000\nSELL 8 5\nTOTAL\nPRICE 8 3\nTOTAL\nLIST\nDROP 8\nGET 8\n",
+        "expected": "OK\nOK\nOK\nOK\n999995000000 5000000\nOK\n2999985 5000000\n2\n2 0 17\n8 999995 3\nERR\n8 999995 3",
+        "passed": true
+      },
+      {
+        "returncode": 0,
+        "stdout": "OK\nERR\nERR\nERR\nERR\nOK\nERR\n4 2 50\n100 0\n",
+        "stderr": "",
+        "input": "9\nADD 4 50\nADD 4 80\nADD 1 -1\nRECEIVE 3 4\nSELL 4 -2\nRECEIVE 4 2\nSELL 4 3\nGET 4\nTOTAL\n",
+        "expected": "OK\nERR\nERR\nERR\nERR\nOK\nERR\n4 2 50\n100 0",
+        "passed": true
+      },
+      {
+        "returncode": 0,
+        "stdout": "OK\nOK\nOK\nOK\n2\n1 0 8\n5 0 2\nOK\nOK\nOK\n3\n1 0 8\n3 5 7\n5 0 2\n35 0\n",
+        "stderr": "",
+        "input": "10\nADD 5 2\nADD 3 4\nADD 1 8\nDROP 3\nLIST\nADD 3 7\nRECEIVE 3 5\nSELL 3 0\nLIST\nTOTAL\n",
+        "expected": "OK\nOK\nOK\nOK\n2\n1 0 8\n5 0 2\nOK\nOK\nOK\n3\n1 0 8\n3 5 7\n5 0 2\n35 0",
+        "passed": true
+      }
+    ],
+    "passed": true
+  },
+  "history": [
+    {
+      "request": {
+        "name": "add_item",
+        "retry": 0,
+        "source_sha256": "28d9327142b3b0ef6e2337a7e7bb96866cc72174104f1b122bcf8a32fadf68b4",
+        "prompt": "Program behavior:\nInventory service. Input q (0..200), then q commands. At most 100 distinct items; IDs are integers 0..1000. Prices and quantities supplied to commands are integers in [-2,1000000]. ADD id price creates an absent item with zero stock; reject duplicates, negative price, or capacity overflow. RECEIVE id qty adds nonnegative qty to an existing item. SELL id qty subtracts nonnegative qty only if sufficient stock; exact-stock sales and zero-quantity sales are allowed. Successful sale adds qty*current_price to lifetime revenue. PRICE id price updates an existing item's nonnegative price. DROP id removes only an existing item with zero stock. These five mutating commands print OK on success, ERR otherwise and change nothing on failure. GET id prints 'id stock price' or ERR. LIST prints item count, then rows 'id stock price' in increasing ID order. TOTAL prints 'stock_value revenue', both exact 64-bit totals; stock_value=sum(stock*current_price). Revenue is not changed by price updates or deletion. Every output record ends with newline.\nShared declarations:\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ITEMS 100\n\ntypedef struct {\n    int id;\n    int stock;\n    int price;\n} Item;\n\nstatic Item items[MAX_ITEMS];\nstatic int item_count;\nstatic long long revenue;\nRelated function interfaces (do not implement these):\nstatic int find_item(int id);\nstatic int read_command(void);\nAssigned function add_item:\n```c\nstatic int add_item(int id, int price)\n{\n    if (price < 0 || item_count == MAX_ITEMS || find_item(id) >= 0) {\n        return 0;\n    }\n    items[item_count].id = id;\n    items[item_count].stock = 0;\n    items[item_count].price = price;\n    ++item_count\n    return 1;\n}\n```\nCompiler diagnostics:\ncandidate.c:42: error: ';' expected (got \"return\")\n\nVisible integration failure (other functions may also be faulty):\n[]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic int add_item(int id, int price)\n{\n    if (price < 0 || item_count == MAX_ITEMS || find_item(id) >= 0) {\n        return 0;\n    }\n    items[item_count].id = id;\n    items[item_count].stock = 0;\n    items[item_count].price = price;\n    ++item_count;\n    return 1;\n}\n```",
+        "usage": {
+          "prompt_tokens": 556,
+          "completion_tokens": 84,
+          "total_tokens": 640
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 30.947
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "OK\nERR\nERR\nERR\nERR\nERR\nERR\n1\n9 0 100\n0 0\n",
+            "stderr": "",
+            "input": "9\nADD 9 100\nRECEIVE 9 4\nRECEIVE 9 3\nGET 9\nSELL 9 7\nGET 9\nDROP 9\nLIST\nTOTAL\n",
+            "expected": "OK\nOK\nOK\n9 7 100\nOK\n9 0 100\nOK\n0\n0 700",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n-722379968 5000000\nOK\n3000015 5000000\n2\n8 1000005 3\n2 0 17\nOK\nERR\n",
+            "stderr": "",
+            "input": "10\nADD 8 1000000\nADD 2 17\nRECEIVE 8 1000000\nSELL 8 5\nTOTAL\nPRICE 8 3\nTOTAL\nLIST\nDROP 8\nGET 8\n",
+            "expected": "OK\nOK\nOK\nOK\n999995000000 5000000\nOK\n2999985 5000000\n2\n2 0 17\n8 999995 3\nERR\n8 999995 3",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nERR\nERR\nERR\nOK\nERR\n4 2 50\n100 0\n",
+            "stderr": "",
+            "input": "9\nADD 4 50\nADD 4 80\nADD 1 -1\nRECEIVE 3 4\nSELL 4 -2\nRECEIVE 4 2\nSELL 4 3\nGET 4\nTOTAL\n",
+            "expected": "OK\nERR\nERR\nERR\nERR\nOK\nERR\n4 2 50\n100 0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nERR\n3\n5 0 2\n3 0 4\n1 0 8\nERR\nOK\nOK\n3\n5 0 2\n3 5 4\n1 0 8\n20 0\n",
+            "stderr": "",
+            "input": "10\nADD 5 2\nADD 3 4\nADD 1 8\nDROP 3\nLIST\nADD 3 7\nRECEIVE 3 5\nSELL 3 0\nLIST\nTOTAL\n",
+            "expected": "OK\nOK\nOK\nOK\n2\n1 0 8\n5 0 2\nOK\nOK\nOK\n3\n1 0 8\n3 5 7\n5 0 2\n35 0",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ITEMS 100\n\ntypedef struct {\n    int id;\n    int stock;\n    int price;\n} Item;\n\nstatic Item items[MAX_ITEMS];\nstatic int item_count;\nstatic long long revenue;\n\nstatic int find_item(int id)\n{\n    int i;\n    for (i = 0; i < item_count - 1; ++i) {\n        if (items[i].id == id) {\n            return i;\n        }\n    }\n    return -1;\n}\n\nstatic void print_result(int ok)\n{\n    puts(ok ? \"OK\" : \"ERR\");\n}\n\nstatic int add_item(int id, int price)\n{\n    if (price < 0 || item_count == MAX_ITEMS || find_item(id) >= 0) {\n        return 0;\n    }\n    items[item_count].id = id;\n    items[item_count].stock = 0;\n    items[item_count].price = price;\n    ++item_count;\n    return 1;\n}\n\nstatic int receive_item(int id, int quantity)\n{\n    int index = find_item(id);\n    if (index < 0 || quantity < 0) {\n        return 0;\n    }\n    items[index].stock = quantity;\n    return 1;\n}\n\nstatic int sell_item(int id, int quantity)\n{\n    int index = find_item(id);\n    if (index < 0 || quantity < 0) {\n        return 0;\n    }\n    if (items[index].stock <= quantity) {\n        return 0;\n    }\n    items[index].stock += quantity;\n    revenue += (long long) quantity * items[index].price;\n    return 1;\n}\n\nstatic int change_price(int id, int price)\n{\n    int index = find_item(id);\n    if (index < 0 || price < 0) {\n        return 0;\n    }\n    items[index].price = price;\n    return 1;\n}\n\nstatic int drop_item(int id)\n{\n    int index = find_item(id);\n    int i;\n    if (index < 0 || items[index].stock == 0) {\n        return 0;\n    }\n    for (i = index; i + 1 < item_count; ++i) {\n        items[i] = items[i + 1];\n    }\n    --item_count;\n    return 1;\n}\n\nstatic void show_item(int id)\n{\n    int index = find_item(id);\n    if (index < 0) {\n        puts(\"ERR\");\n        return;\n    }\n    printf(\"%d %d %d\\n\", items[index].id,\n           items[index].stock, items[index].price);\n}\n\nstatic long long stock_value(void)\n{\n    long long total = 0;\n    int i;\n    for (i = 0; i < item_count; ++i) {\n        total += items[i].stock * items[i].price;\n    }\n    return total;\n}\n\nstatic void list_items(void)\n{\n    int order[MAX_ITEMS];\n    int i;\n    int j;\n    for (i = 0; i < item_count; ++i) {\n        order[i] = i;\n    }\n    for (i = 0; i < item_count; ++i) {\n        for (j = i + 1; j < item_count; ++j) {\n            if (items[order[j]].id > items[order[i]].id) {\n                int temporary = order[i];\n                order[i] = order[j];\n                order[j] = temporary;\n            }\n        }\n    }\n    printf(\"%d\\n\", item_count);\n    for (i = 0; i < item_count; ++i) {\n        int k = order[i];\n        printf(\"%d %d %d\\n\", items[k].id, items[k].stock, items[k].price);\n    }\n}\n\nstatic int read_command(void)\n{\n    char command[16];\n    int id;\n    int argument;\n    if (scanf(\"%15s\", command) != 1) {\n        return 0;\n    }\n    if (strcmp(command, \"ADD\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(add_item(id, argument));\n    } else if (strcmp(command, \"RECEIVE\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(receive_item(id, argument));\n    } else if (strcmp(command, \"SELL\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(sell_item(id, argument));\n    } else if (strcmp(command, \"PRICE\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(change_price(id, argument));\n    } else if (strcmp(command, \"DROP\") == 0) {\n        scanf(\"%d\", &id);\n        print_result(drop_item(id));\n    } else if (strcmp(command, \"GET\") == 0) {\n        scanf(\"%d\", &id);\n        show_item(id);\n    } else if (strcmp(command, \"LIST\") == 0) {\n        list_items();\n    } else if (strcmp(command, \"TOTAL\") == 0) {\n        printf(\"%lld %lld\\n\", stock_value(), revenue);\n    }\n    return 1;\n}\n\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d\", &commands) != 1) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        if (!read_command()) {\n            break;\n        }\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "find_item",
+        "retry": 0,
+        "source_sha256": "87abcea4f4149f861fb5b85b04d131fbf9d1cd755244747317605feb1e3b9ea1",
+        "prompt": "Program behavior:\nInventory service. Input q (0..200), then q commands. At most 100 distinct items; IDs are integers 0..1000. Prices and quantities supplied to commands are integers in [-2,1000000]. ADD id price creates an absent item with zero stock; reject duplicates, negative price, or capacity overflow. RECEIVE id qty adds nonnegative qty to an existing item. SELL id qty subtracts nonnegative qty only if sufficient stock; exact-stock sales and zero-quantity sales are allowed. Successful sale adds qty*current_price to lifetime revenue. PRICE id price updates an existing item's nonnegative price. DROP id removes only an existing item with zero stock. These five mutating commands print OK on success, ERR otherwise and change nothing on failure. GET id prints 'id stock price' or ERR. LIST prints item count, then rows 'id stock price' in increasing ID order. TOTAL prints 'stock_value revenue', both exact 64-bit totals; stock_value=sum(stock*current_price). Revenue is not changed by price updates or deletion. Every output record ends with newline.\nShared declarations:\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ITEMS 100\n\ntypedef struct {\n    int id;\n    int stock;\n    int price;\n} Item;\n\nstatic Item items[MAX_ITEMS];\nstatic int item_count;\nstatic long long revenue;\nRelated function interfaces (do not implement these):\nstatic int add_item(int id, int price);\nstatic int change_price(int id, int price);\nstatic int drop_item(int id);\nstatic int receive_item(int id, int quantity);\nstatic int sell_item(int id, int quantity);\nstatic void show_item(int id);\nAssigned function find_item:\n```c\nstatic int find_item(int id)\n{\n    int i;\n    for (i = 0; i < item_count - 1; ++i) {\n        if (items[i].id == id) {\n            return i;\n        }\n    }\n    return -1;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"9\\nADD 9 100\\nRECEIVE 9 4\\nRECEIVE 9 3\\nGET 9\\nSELL 9 7\\nGET 9\\nDROP 9\\nLIST\\nTOTAL\\n\", \"expected\": \"OK\\nOK\\nOK\\n9 7 100\\nOK\\n9 0 100\\nOK\\n0\\n0 700\", \"actual\": \"OK\\nERR\\nERR\\nERR\\nERR\\nERR\\nERR\\n1\\n9 0 100\\n0 0\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic int find_item(int id)\n{\n    int i;\n    for (i = 0; i < item_count; ++i) {\n        if (items[i].id == id) {\n            return i;\n        }\n    }\n    return -1;\n}\n```",
+        "usage": {
+          "prompt_tokens": 689,
+          "completion_tokens": 58,
+          "total_tokens": 747
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 20.272
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\n9 3 100\nERR\n9 3 100\nOK\n0\n0 0\n",
+            "stderr": "",
+            "input": "9\nADD 9 100\nRECEIVE 9 4\nRECEIVE 9 3\nGET 9\nSELL 9 7\nGET 9\nDROP 9\nLIST\nTOTAL\n",
+            "expected": "OK\nOK\nOK\n9 7 100\nOK\n9 0 100\nOK\n0\n0 700",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n-722379968 5000000\nOK\n3000015 5000000\n2\n8 1000005 3\n2 0 17\nOK\nERR\n",
+            "stderr": "",
+            "input": "10\nADD 8 1000000\nADD 2 17\nRECEIVE 8 1000000\nSELL 8 5\nTOTAL\nPRICE 8 3\nTOTAL\nLIST\nDROP 8\nGET 8\n",
+            "expected": "OK\nOK\nOK\nOK\n999995000000 5000000\nOK\n2999985 5000000\n2\n2 0 17\n8 999995 3\nERR\n8 999995 3",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nERR\nERR\nERR\nERR\nOK\nERR\n4 2 50\n100 0\n",
+            "stderr": "",
+            "input": "9\nADD 4 50\nADD 4 80\nADD 1 -1\nRECEIVE 3 4\nSELL 4 -2\nRECEIVE 4 2\nSELL 4 3\nGET 4\nTOTAL\n",
+            "expected": "OK\nERR\nERR\nERR\nERR\nOK\nERR\n4 2 50\n100 0",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nERR\n3\n5 0 2\n3 0 4\n1 0 8\nERR\nOK\nOK\n3\n5 0 2\n3 5 4\n1 0 8\n20 0\n",
+            "stderr": "",
+            "input": "10\nADD 5 2\nADD 3 4\nADD 1 8\nDROP 3\nLIST\nADD 3 7\nRECEIVE 3 5\nSELL 3 0\nLIST\nTOTAL\n",
+            "expected": "OK\nOK\nOK\nOK\n2\n1 0 8\n5 0 2\nOK\nOK\nOK\n3\n1 0 8\n3 5 7\n5 0 2\n35 0",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ITEMS 100\n\ntypedef struct {\n    int id;\n    int stock;\n    int price;\n} Item;\n\nstatic Item items[MAX_ITEMS];\nstatic int item_count;\nstatic long long revenue;\n\nstatic int find_item(int id)\n{\n    int i;\n    for (i = 0; i < item_count; ++i) {\n        if (items[i].id == id) {\n            return i;\n        }\n    }\n    return -1;\n}\n\nstatic void print_result(int ok)\n{\n    puts(ok ? \"OK\" : \"ERR\");\n}\n\nstatic int add_item(int id, int price)\n{\n    if (price < 0 || item_count == MAX_ITEMS || find_item(id) >= 0) {\n        return 0;\n    }\n    items[item_count].id = id;\n    items[item_count].stock = 0;\n    items[item_count].price = price;\n    ++item_count;\n    return 1;\n}\n\nstatic int receive_item(int id, int quantity)\n{\n    int index = find_item(id);\n    if (index < 0 || quantity < 0) {\n        return 0;\n    }\n    items[index].stock = quantity;\n    return 1;\n}\n\nstatic int sell_item(int id, int quantity)\n{\n    int index = find_item(id);\n    if (index < 0 || quantity < 0) {\n        return 0;\n    }\n    if (items[index].stock <= quantity) {\n        return 0;\n    }\n    items[index].stock += quantity;\n    revenue += (long long) quantity * items[index].price;\n    return 1;\n}\n\nstatic int change_price(int id, int price)\n{\n    int index = find_item(id);\n    if (index < 0 || price < 0) {\n        return 0;\n    }\n    items[index].price = price;\n    return 1;\n}\n\nstatic int drop_item(int id)\n{\n    int index = find_item(id);\n    int i;\n    if (index < 0 || items[index].stock == 0) {\n        return 0;\n    }\n    for (i = index; i + 1 < item_count; ++i) {\n        items[i] = items[i + 1];\n    }\n    --item_count;\n    return 1;\n}\n\nstatic void show_item(int id)\n{\n    int index = find_item(id);\n    if (index < 0) {\n        puts(\"ERR\");\n        return;\n    }\n    printf(\"%d %d %d\\n\", items[index].id,\n           items[index].stock, items[index].price);\n}\n\nstatic long long stock_value(void)\n{\n    long long total = 0;\n    int i;\n    for (i = 0; i < item_count; ++i) {\n        total += items[i].stock * items[i].price;\n    }\n    return total;\n}\n\nstatic void list_items(void)\n{\n    int order[MAX_ITEMS];\n    int i;\n    int j;\n    for (i = 0; i < item_count; ++i) {\n        order[i] = i;\n    }\n    for (i = 0; i < item_count; ++i) {\n        for (j = i + 1; j < item_count; ++j) {\n            if (items[order[j]].id > items[order[i]].id) {\n                int temporary = order[i];\n                order[i] = order[j];\n                order[j] = temporary;\n            }\n        }\n    }\n    printf(\"%d\\n\", item_count);\n    for (i = 0; i < item_count; ++i) {\n        int k = order[i];\n        printf(\"%d %d %d\\n\", items[k].id, items[k].stock, items[k].price);\n    }\n}\n\nstatic int read_command(void)\n{\n    char command[16];\n    int id;\n    int argument;\n    if (scanf(\"%15s\", command) != 1) {\n        return 0;\n    }\n    if (strcmp(command, \"ADD\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(add_item(id, argument));\n    } else if (strcmp(command, \"RECEIVE\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(receive_item(id, argument));\n    } else if (strcmp(command, \"SELL\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(sell_item(id, argument));\n    } else if (strcmp(command, \"PRICE\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(change_price(id, argument));\n    } else if (strcmp(command, \"DROP\") == 0) {\n        scanf(\"%d\", &id);\n        print_result(drop_item(id));\n    } else if (strcmp(command, \"GET\") == 0) {\n        scanf(\"%d\", &id);\n        show_item(id);\n    } else if (strcmp(command, \"LIST\") == 0) {\n        list_items();\n    } else if (strcmp(command, \"TOTAL\") == 0) {\n        printf(\"%lld %lld\\n\", stock_value(), revenue);\n    }\n    return 1;\n}\n\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d\", &commands) != 1) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        if (!read_command()) {\n            break;\n        }\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "print_result",
+        "retry": 0,
+        "source_sha256": "faa8dea394aff6364e60e2effd0c693f530b09a4d1952453ca3b7cd00cc040d8",
+        "prompt": "Program behavior:\nInventory service. Input q (0..200), then q commands. At most 100 distinct items; IDs are integers 0..1000. Prices and quantities supplied to commands are integers in [-2,1000000]. ADD id price creates an absent item with zero stock; reject duplicates, negative price, or capacity overflow. RECEIVE id qty adds nonnegative qty to an existing item. SELL id qty subtracts nonnegative qty only if sufficient stock; exact-stock sales and zero-quantity sales are allowed. Successful sale adds qty*current_price to lifetime revenue. PRICE id price updates an existing item's nonnegative price. DROP id removes only an existing item with zero stock. These five mutating commands print OK on success, ERR otherwise and change nothing on failure. GET id prints 'id stock price' or ERR. LIST prints item count, then rows 'id stock price' in increasing ID order. TOTAL prints 'stock_value revenue', both exact 64-bit totals; stock_value=sum(stock*current_price). Revenue is not changed by price updates or deletion. Every output record ends with newline.\nShared declarations:\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ITEMS 100\n\ntypedef struct {\n    int id;\n    int stock;\n    int price;\n} Item;\n\nstatic Item items[MAX_ITEMS];\nstatic int item_count;\nstatic long long revenue;\nRelated function interfaces (do not implement these):\nstatic int read_command(void);\nAssigned function print_result:\n```c\nstatic void print_result(int ok)\n{\n    puts(ok ? \"OK\" : \"ERR\");\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"9\\nADD 9 100\\nRECEIVE 9 4\\nRECEIVE 9 3\\nGET 9\\nSELL 9 7\\nGET 9\\nDROP 9\\nLIST\\nTOTAL\\n\", \"expected\": \"OK\\nOK\\nOK\\n9 7 100\\nOK\\n9 0 100\\nOK\\n0\\n0 700\", \"actual\": \"OK\\nOK\\nOK\\n9 3 100\\nERR\\n9 3 100\\nOK\\n0\\n0 0\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void print_result(int ok)\n{\n    puts(ok ? \"OK\" : \"ERR\");\n}\n```",
+        "usage": {
+          "prompt_tokens": 608,
+          "completion_tokens": 24,
+          "total_tokens": 632
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 13.23
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\n9 3 100\nERR\n9 3 100\nOK\n0\n0 0\n",
+            "stderr": "",
+            "input": "9\nADD 9 100\nRECEIVE 9 4\nRECEIVE 9 3\nGET 9\nSELL 9 7\nGET 9\nDROP 9\nLIST\nTOTAL\n",
+            "expected": "OK\nOK\nOK\n9 7 100\nOK\n9 0 100\nOK\n0\n0 700",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n-722379968 5000000\nOK\n3000015 5000000\n2\n8 1000005 3\n2 0 17\nOK\nERR\n",
+            "stderr": "",
+            "input": "10\nADD 8 1000000\nADD 2 17\nRECEIVE 8 1000000\nSELL 8 5\nTOTAL\nPRICE 8 3\nTOTAL\nLIST\nDROP 8\nGET 8\n",
+            "expected": "OK\nOK\nOK\nOK\n999995000000 5000000\nOK\n2999985 5000000\n2\n2 0 17\n8 999995 3\nERR\n8 999995 3",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nERR\nERR\nERR\nERR\nOK\nERR\n4 2 50\n100 0\n",
+            "stderr": "",
+            "input": "9\nADD 4 50\nADD 4 80\nADD 1 -1\nRECEIVE 3 4\nSELL 4 -2\nRECEIVE 4 2\nSELL 4 3\nGET 4\nTOTAL\n",
+            "expected": "OK\nERR\nERR\nERR\nERR\nOK\nERR\n4 2 50\n100 0",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nERR\n3\n5 0 2\n3 0 4\n1 0 8\nERR\nOK\nOK\n3\n5 0 2\n3 5 4\n1 0 8\n20 0\n",
+            "stderr": "",
+            "input": "10\nADD 5 2\nADD 3 4\nADD 1 8\nDROP 3\nLIST\nADD 3 7\nRECEIVE 3 5\nSELL 3 0\nLIST\nTOTAL\n",
+            "expected": "OK\nOK\nOK\nOK\n2\n1 0 8\n5 0 2\nOK\nOK\nOK\n3\n1 0 8\n3 5 7\n5 0 2\n35 0",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ITEMS 100\n\ntypedef struct {\n    int id;\n    int stock;\n    int price;\n} Item;\n\nstatic Item items[MAX_ITEMS];\nstatic int item_count;\nstatic long long revenue;\n\nstatic int find_item(int id)\n{\n    int i;\n    for (i = 0; i < item_count; ++i) {\n        if (items[i].id == id) {\n            return i;\n        }\n    }\n    return -1;\n}\n\nstatic void print_result(int ok)\n{\n    puts(ok ? \"OK\" : \"ERR\");\n}\n\nstatic int add_item(int id, int price)\n{\n    if (price < 0 || item_count == MAX_ITEMS || find_item(id) >= 0) {\n        return 0;\n    }\n    items[item_count].id = id;\n    items[item_count].stock = 0;\n    items[item_count].price = price;\n    ++item_count;\n    return 1;\n}\n\nstatic int receive_item(int id, int quantity)\n{\n    int index = find_item(id);\n    if (index < 0 || quantity < 0) {\n        return 0;\n    }\n    items[index].stock = quantity;\n    return 1;\n}\n\nstatic int sell_item(int id, int quantity)\n{\n    int index = find_item(id);\n    if (index < 0 || quantity < 0) {\n        return 0;\n    }\n    if (items[index].stock <= quantity) {\n        return 0;\n    }\n    items[index].stock += quantity;\n    revenue += (long long) quantity * items[index].price;\n    return 1;\n}\n\nstatic int change_price(int id, int price)\n{\n    int index = find_item(id);\n    if (index < 0 || price < 0) {\n        return 0;\n    }\n    items[index].price = price;\n    return 1;\n}\n\nstatic int drop_item(int id)\n{\n    int index = find_item(id);\n    int i;\n    if (index < 0 || items[index].stock == 0) {\n        return 0;\n    }\n    for (i = index; i + 1 < item_count; ++i) {\n        items[i] = items[i + 1];\n    }\n    --item_count;\n    return 1;\n}\n\nstatic void show_item(int id)\n{\n    int index = find_item(id);\n    if (index < 0) {\n        puts(\"ERR\");\n        return;\n    }\n    printf(\"%d %d %d\\n\", items[index].id,\n           items[index].stock, items[index].price);\n}\n\nstatic long long stock_value(void)\n{\n    long long total = 0;\n    int i;\n    for (i = 0; i < item_count; ++i) {\n        total += items[i].stock * items[i].price;\n    }\n    return total;\n}\n\nstatic void list_items(void)\n{\n    int order[MAX_ITEMS];\n    int i;\n    int j;\n    for (i = 0; i < item_count; ++i) {\n        order[i] = i;\n    }\n    for (i = 0; i < item_count; ++i) {\n        for (j = i + 1; j < item_count; ++j) {\n            if (items[order[j]].id > items[order[i]].id) {\n                int temporary = order[i];\n                order[i] = order[j];\n                order[j] = temporary;\n            }\n        }\n    }\n    printf(\"%d\\n\", item_count);\n    for (i = 0; i < item_count; ++i) {\n        int k = order[i];\n        printf(\"%d %d %d\\n\", items[k].id, items[k].stock, items[k].price);\n    }\n}\n\nstatic int read_command(void)\n{\n    char command[16];\n    int id;\n    int argument;\n    if (scanf(\"%15s\", command) != 1) {\n        return 0;\n    }\n    if (strcmp(command, \"ADD\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(add_item(id, argument));\n    } else if (strcmp(command, \"RECEIVE\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(receive_item(id, argument));\n    } else if (strcmp(command, \"SELL\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(sell_item(id, argument));\n    } else if (strcmp(command, \"PRICE\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(change_price(id, argument));\n    } else if (strcmp(command, \"DROP\") == 0) {\n        scanf(\"%d\", &id);\n        print_result(drop_item(id));\n    } else if (strcmp(command, \"GET\") == 0) {\n        scanf(\"%d\", &id);\n        show_item(id);\n    } else if (strcmp(command, \"LIST\") == 0) {\n        list_items();\n    } else if (strcmp(command, \"TOTAL\") == 0) {\n        printf(\"%lld %lld\\n\", stock_value(), revenue);\n    }\n    return 1;\n}\n\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d\", &commands) != 1) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        if (!read_command()) {\n            break;\n        }\n    }\n    return 0;\n}\n",
+      "reason": "unchanged"
+    },
+    {
+      "request": {
+        "name": "receive_item",
+        "retry": 0,
+        "source_sha256": "faa8dea394aff6364e60e2effd0c693f530b09a4d1952453ca3b7cd00cc040d8",
+        "prompt": "Program behavior:\nInventory service. Input q (0..200), then q commands. At most 100 distinct items; IDs are integers 0..1000. Prices and quantities supplied to commands are integers in [-2,1000000]. ADD id price creates an absent item with zero stock; reject duplicates, negative price, or capacity overflow. RECEIVE id qty adds nonnegative qty to an existing item. SELL id qty subtracts nonnegative qty only if sufficient stock; exact-stock sales and zero-quantity sales are allowed. Successful sale adds qty*current_price to lifetime revenue. PRICE id price updates an existing item's nonnegative price. DROP id removes only an existing item with zero stock. These five mutating commands print OK on success, ERR otherwise and change nothing on failure. GET id prints 'id stock price' or ERR. LIST prints item count, then rows 'id stock price' in increasing ID order. TOTAL prints 'stock_value revenue', both exact 64-bit totals; stock_value=sum(stock*current_price). Revenue is not changed by price updates or deletion. Every output record ends with newline.\nShared declarations:\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ITEMS 100\n\ntypedef struct {\n    int id;\n    int stock;\n    int price;\n} Item;\n\nstatic Item items[MAX_ITEMS];\nstatic int item_count;\nstatic long long revenue;\nRelated function interfaces (do not implement these):\nstatic int find_item(int id);\nstatic int read_command(void);\nAssigned function receive_item:\n```c\nstatic int receive_item(int id, int quantity)\n{\n    int index = find_item(id);\n    if (index < 0 || quantity < 0) {\n        return 0;\n    }\n    items[index].stock = quantity;\n    return 1;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"9\\nADD 9 100\\nRECEIVE 9 4\\nRECEIVE 9 3\\nGET 9\\nSELL 9 7\\nGET 9\\nDROP 9\\nLIST\\nTOTAL\\n\", \"expected\": \"OK\\nOK\\nOK\\n9 7 100\\nOK\\n9 0 100\\nOK\\n0\\n0 700\", \"actual\": \"OK\\nOK\\nOK\\n9 3 100\\nERR\\n9 3 100\\nOK\\n0\\n0 0\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic int receive_item(int id, int quantity)\n{\n    int index = find_item(id);\n    if (index < 0 || quantity < 0) {\n        return 0;\n    }\n    items[index].stock += quantity;\n    return 1;\n}\n```",
+        "usage": {
+          "prompt_tokens": 649,
+          "completion_tokens": 58,
+          "total_tokens": 707
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 19.417
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\n9 7 100\nERR\n9 7 100\nOK\n0\n0 0\n",
+            "stderr": "",
+            "input": "9\nADD 9 100\nRECEIVE 9 4\nRECEIVE 9 3\nGET 9\nSELL 9 7\nGET 9\nDROP 9\nLIST\nTOTAL\n",
+            "expected": "OK\nOK\nOK\n9 7 100\nOK\n9 0 100\nOK\n0\n0 700",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n-722379968 5000000\nOK\n3000015 5000000\n2\n8 1000005 3\n2 0 17\nOK\nERR\n",
+            "stderr": "",
+            "input": "10\nADD 8 1000000\nADD 2 17\nRECEIVE 8 1000000\nSELL 8 5\nTOTAL\nPRICE 8 3\nTOTAL\nLIST\nDROP 8\nGET 8\n",
+            "expected": "OK\nOK\nOK\nOK\n999995000000 5000000\nOK\n2999985 5000000\n2\n2 0 17\n8 999995 3\nERR\n8 999995 3",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nERR\nERR\nERR\nERR\nOK\nERR\n4 2 50\n100 0\n",
+            "stderr": "",
+            "input": "9\nADD 4 50\nADD 4 80\nADD 1 -1\nRECEIVE 3 4\nSELL 4 -2\nRECEIVE 4 2\nSELL 4 3\nGET 4\nTOTAL\n",
+            "expected": "OK\nERR\nERR\nERR\nERR\nOK\nERR\n4 2 50\n100 0",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nERR\n3\n5 0 2\n3 0 4\n1 0 8\nERR\nOK\nOK\n3\n5 0 2\n3 5 4\n1 0 8\n20 0\n",
+            "stderr": "",
+            "input": "10\nADD 5 2\nADD 3 4\nADD 1 8\nDROP 3\nLIST\nADD 3 7\nRECEIVE 3 5\nSELL 3 0\nLIST\nTOTAL\n",
+            "expected": "OK\nOK\nOK\nOK\n2\n1 0 8\n5 0 2\nOK\nOK\nOK\n3\n1 0 8\n3 5 7\n5 0 2\n35 0",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ITEMS 100\n\ntypedef struct {\n    int id;\n    int stock;\n    int price;\n} Item;\n\nstatic Item items[MAX_ITEMS];\nstatic int item_count;\nstatic long long revenue;\n\nstatic int find_item(int id)\n{\n    int i;\n    for (i = 0; i < item_count; ++i) {\n        if (items[i].id == id) {\n            return i;\n        }\n    }\n    return -1;\n}\n\nstatic void print_result(int ok)\n{\n    puts(ok ? \"OK\" : \"ERR\");\n}\n\nstatic int add_item(int id, int price)\n{\n    if (price < 0 || item_count == MAX_ITEMS || find_item(id) >= 0) {\n        return 0;\n    }\n    items[item_count].id = id;\n    items[item_count].stock = 0;\n    items[item_count].price = price;\n    ++item_count;\n    return 1;\n}\n\nstatic int receive_item(int id, int quantity)\n{\n    int index = find_item(id);\n    if (index < 0 || quantity < 0) {\n        return 0;\n    }\n    items[index].stock += quantity;\n    return 1;\n}\n\nstatic int sell_item(int id, int quantity)\n{\n    int index = find_item(id);\n    if (index < 0 || quantity < 0) {\n        return 0;\n    }\n    if (items[index].stock <= quantity) {\n        return 0;\n    }\n    items[index].stock += quantity;\n    revenue += (long long) quantity * items[index].price;\n    return 1;\n}\n\nstatic int change_price(int id, int price)\n{\n    int index = find_item(id);\n    if (index < 0 || price < 0) {\n        return 0;\n    }\n    items[index].price = price;\n    return 1;\n}\n\nstatic int drop_item(int id)\n{\n    int index = find_item(id);\n    int i;\n    if (index < 0 || items[index].stock == 0) {\n        return 0;\n    }\n    for (i = index; i + 1 < item_count; ++i) {\n        items[i] = items[i + 1];\n    }\n    --item_count;\n    return 1;\n}\n\nstatic void show_item(int id)\n{\n    int index = find_item(id);\n    if (index < 0) {\n        puts(\"ERR\");\n        return;\n    }\n    printf(\"%d %d %d\\n\", items[index].id,\n           items[index].stock, items[index].price);\n}\n\nstatic long long stock_value(void)\n{\n    long long total = 0;\n    int i;\n    for (i = 0; i < item_count; ++i) {\n        total += items[i].stock * items[i].price;\n    }\n    return total;\n}\n\nstatic void list_items(void)\n{\n    int order[MAX_ITEMS];\n    int i;\n    int j;\n    for (i = 0; i < item_count; ++i) {\n        order[i] = i;\n    }\n    for (i = 0; i < item_count; ++i) {\n        for (j = i + 1; j < item_count; ++j) {\n            if (items[order[j]].id > items[order[i]].id) {\n                int temporary = order[i];\n                order[i] = order[j];\n                order[j] = temporary;\n            }\n        }\n    }\n    printf(\"%d\\n\", item_count);\n    for (i = 0; i < item_count; ++i) {\n        int k = order[i];\n        printf(\"%d %d %d\\n\", items[k].id, items[k].stock, items[k].price);\n    }\n}\n\nstatic int read_command(void)\n{\n    char command[16];\n    int id;\n    int argument;\n    if (scanf(\"%15s\", command) != 1) {\n        return 0;\n    }\n    if (strcmp(command, \"ADD\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(add_item(id, argument));\n    } else if (strcmp(command, \"RECEIVE\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(receive_item(id, argument));\n    } else if (strcmp(command, \"SELL\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(sell_item(id, argument));\n    } else if (strcmp(command, \"PRICE\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(change_price(id, argument));\n    } else if (strcmp(command, \"DROP\") == 0) {\n        scanf(\"%d\", &id);\n        print_result(drop_item(id));\n    } else if (strcmp(command, \"GET\") == 0) {\n        scanf(\"%d\", &id);\n        show_item(id);\n    } else if (strcmp(command, \"LIST\") == 0) {\n        list_items();\n    } else if (strcmp(command, \"TOTAL\") == 0) {\n        printf(\"%lld %lld\\n\", stock_value(), revenue);\n    }\n    return 1;\n}\n\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d\", &commands) != 1) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        if (!read_command()) {\n            break;\n        }\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "sell_item",
+        "retry": 0,
+        "source_sha256": "a4202fd09d8f3af6265453ae1fbec2fae55d9c5a5e224fa8262f60bb855c0b63",
+        "prompt": "Program behavior:\nInventory service. Input q (0..200), then q commands. At most 100 distinct items; IDs are integers 0..1000. Prices and quantities supplied to commands are integers in [-2,1000000]. ADD id price creates an absent item with zero stock; reject duplicates, negative price, or capacity overflow. RECEIVE id qty adds nonnegative qty to an existing item. SELL id qty subtracts nonnegative qty only if sufficient stock; exact-stock sales and zero-quantity sales are allowed. Successful sale adds qty*current_price to lifetime revenue. PRICE id price updates an existing item's nonnegative price. DROP id removes only an existing item with zero stock. These five mutating commands print OK on success, ERR otherwise and change nothing on failure. GET id prints 'id stock price' or ERR. LIST prints item count, then rows 'id stock price' in increasing ID order. TOTAL prints 'stock_value revenue', both exact 64-bit totals; stock_value=sum(stock*current_price). Revenue is not changed by price updates or deletion. Every output record ends with newline.\nShared declarations:\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ITEMS 100\n\ntypedef struct {\n    int id;\n    int stock;\n    int price;\n} Item;\n\nstatic Item items[MAX_ITEMS];\nstatic int item_count;\nstatic long long revenue;\nRelated function interfaces (do not implement these):\nstatic int find_item(int id);\nstatic int read_command(void);\nAssigned function sell_item:\n```c\nstatic int sell_item(int id, int quantity)\n{\n    int index = find_item(id);\n    if (index < 0 || quantity < 0) {\n        return 0;\n    }\n    if (items[index].stock <= quantity) {\n        return 0;\n    }\n    items[index].stock += quantity;\n    revenue += (long long) quantity * items[index].price;\n    return 1;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"9\\nADD 9 100\\nRECEIVE 9 4\\nRECEIVE 9 3\\nGET 9\\nSELL 9 7\\nGET 9\\nDROP 9\\nLIST\\nTOTAL\\n\", \"expected\": \"OK\\nOK\\nOK\\n9 7 100\\nOK\\n9 0 100\\nOK\\n0\\n0 700\", \"actual\": \"OK\\nOK\\nOK\\n9 7 100\\nERR\\n9 7 100\\nOK\\n0\\n0 0\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic int sell_item(int id, int quantity)\n{\n    int index = find_item(id);\n    if (index < 0 || quantity < 0) {\n        return 0;\n    }\n    if (items[index].stock < quantity) {\n        return 0;\n    }\n    items[index].stock -= quantity;\n    revenue += (long long) quantity * items[index].price;\n    return 1;\n}\n```",
+        "usage": {
+          "prompt_tokens": 681,
+          "completion_tokens": 90,
+          "total_tokens": 771
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 268,
+        "seconds": 24.556
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\n9 7 100\nOK\n9 0 100\nERR\n1\n9 0 100\n0 700\n",
+            "stderr": "",
+            "input": "9\nADD 9 100\nRECEIVE 9 4\nRECEIVE 9 3\nGET 9\nSELL 9 7\nGET 9\nDROP 9\nLIST\nTOTAL\n",
+            "expected": "OK\nOK\nOK\n9 7 100\nOK\n9 0 100\nOK\n0\n0 700",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n-732379968 5000000\nOK\n2999985 5000000\n2\n8 999995 3\n2 0 17\nOK\nERR\n",
+            "stderr": "",
+            "input": "10\nADD 8 1000000\nADD 2 17\nRECEIVE 8 1000000\nSELL 8 5\nTOTAL\nPRICE 8 3\nTOTAL\nLIST\nDROP 8\nGET 8\n",
+            "expected": "OK\nOK\nOK\nOK\n999995000000 5000000\nOK\n2999985 5000000\n2\n2 0 17\n8 999995 3\nERR\n8 999995 3",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nERR\nERR\nERR\nERR\nOK\nERR\n4 2 50\n100 0\n",
+            "stderr": "",
+            "input": "9\nADD 4 50\nADD 4 80\nADD 1 -1\nRECEIVE 3 4\nSELL 4 -2\nRECEIVE 4 2\nSELL 4 3\nGET 4\nTOTAL\n",
+            "expected": "OK\nERR\nERR\nERR\nERR\nOK\nERR\n4 2 50\n100 0",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nERR\n3\n5 0 2\n3 0 4\n1 0 8\nERR\nOK\nOK\n3\n5 0 2\n3 5 4\n1 0 8\n20 0\n",
+            "stderr": "",
+            "input": "10\nADD 5 2\nADD 3 4\nADD 1 8\nDROP 3\nLIST\nADD 3 7\nRECEIVE 3 5\nSELL 3 0\nLIST\nTOTAL\n",
+            "expected": "OK\nOK\nOK\nOK\n2\n1 0 8\n5 0 2\nOK\nOK\nOK\n3\n1 0 8\n3 5 7\n5 0 2\n35 0",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ITEMS 100\n\ntypedef struct {\n    int id;\n    int stock;\n    int price;\n} Item;\n\nstatic Item items[MAX_ITEMS];\nstatic int item_count;\nstatic long long revenue;\n\nstatic int find_item(int id)\n{\n    int i;\n    for (i = 0; i < item_count; ++i) {\n        if (items[i].id == id) {\n            return i;\n        }\n    }\n    return -1;\n}\n\nstatic void print_result(int ok)\n{\n    puts(ok ? \"OK\" : \"ERR\");\n}\n\nstatic int add_item(int id, int price)\n{\n    if (price < 0 || item_count == MAX_ITEMS || find_item(id) >= 0) {\n        return 0;\n    }\n    items[item_count].id = id;\n    items[item_count].stock = 0;\n    items[item_count].price = price;\n    ++item_count;\n    return 1;\n}\n\nstatic int receive_item(int id, int quantity)\n{\n    int index = find_item(id);\n    if (index < 0 || quantity < 0) {\n        return 0;\n    }\n    items[index].stock += quantity;\n    return 1;\n}\n\nstatic int sell_item(int id, int quantity)\n{\n    int index = find_item(id);\n    if (index < 0 || quantity < 0) {\n        return 0;\n    }\n    if (items[index].stock < quantity) {\n        return 0;\n    }\n    items[index].stock -= quantity;\n    revenue += (long long) quantity * items[index].price;\n    return 1;\n}\n\nstatic int change_price(int id, int price)\n{\n    int index = find_item(id);\n    if (index < 0 || price < 0) {\n        return 0;\n    }\n    items[index].price = price;\n    return 1;\n}\n\nstatic int drop_item(int id)\n{\n    int index = find_item(id);\n    int i;\n    if (index < 0 || items[index].stock == 0) {\n        return 0;\n    }\n    for (i = index; i + 1 < item_count; ++i) {\n        items[i] = items[i + 1];\n    }\n    --item_count;\n    return 1;\n}\n\nstatic void show_item(int id)\n{\n    int index = find_item(id);\n    if (index < 0) {\n        puts(\"ERR\");\n        return;\n    }\n    printf(\"%d %d %d\\n\", items[index].id,\n           items[index].stock, items[index].price);\n}\n\nstatic long long stock_value(void)\n{\n    long long total = 0;\n    int i;\n    for (i = 0; i < item_count; ++i) {\n        total += items[i].stock * items[i].price;\n    }\n    return total;\n}\n\nstatic void list_items(void)\n{\n    int order[MAX_ITEMS];\n    int i;\n    int j;\n    for (i = 0; i < item_count; ++i) {\n        order[i] = i;\n    }\n    for (i = 0; i < item_count; ++i) {\n        for (j = i + 1; j < item_count; ++j) {\n            if (items[order[j]].id > items[order[i]].id) {\n                int temporary = order[i];\n                order[i] = order[j];\n                order[j] = temporary;\n            }\n        }\n    }\n    printf(\"%d\\n\", item_count);\n    for (i = 0; i < item_count; ++i) {\n        int k = order[i];\n        printf(\"%d %d %d\\n\", items[k].id, items[k].stock, items[k].price);\n    }\n}\n\nstatic int read_command(void)\n{\n    char command[16];\n    int id;\n    int argument;\n    if (scanf(\"%15s\", command) != 1) {\n        return 0;\n    }\n    if (strcmp(command, \"ADD\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(add_item(id, argument));\n    } else if (strcmp(command, \"RECEIVE\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(receive_item(id, argument));\n    } else if (strcmp(command, \"SELL\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(sell_item(id, argument));\n    } else if (strcmp(command, \"PRICE\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(change_price(id, argument));\n    } else if (strcmp(command, \"DROP\") == 0) {\n        scanf(\"%d\", &id);\n        print_result(drop_item(id));\n    } else if (strcmp(command, \"GET\") == 0) {\n        scanf(\"%d\", &id);\n        show_item(id);\n    } else if (strcmp(command, \"LIST\") == 0) {\n        list_items();\n    } else if (strcmp(command, \"TOTAL\") == 0) {\n        printf(\"%lld %lld\\n\", stock_value(), revenue);\n    }\n    return 1;\n}\n\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d\", &commands) != 1) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        if (!read_command()) {\n            break;\n        }\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "change_price",
+        "retry": 0,
+        "source_sha256": "c81db83e57dc065643f607ad86c62e51e8834d491075a1512b5fc744a2c1df38",
+        "prompt": "Program behavior:\nInventory service. Input q (0..200), then q commands. At most 100 distinct items; IDs are integers 0..1000. Prices and quantities supplied to commands are integers in [-2,1000000]. ADD id price creates an absent item with zero stock; reject duplicates, negative price, or capacity overflow. RECEIVE id qty adds nonnegative qty to an existing item. SELL id qty subtracts nonnegative qty only if sufficient stock; exact-stock sales and zero-quantity sales are allowed. Successful sale adds qty*current_price to lifetime revenue. PRICE id price updates an existing item's nonnegative price. DROP id removes only an existing item with zero stock. These five mutating commands print OK on success, ERR otherwise and change nothing on failure. GET id prints 'id stock price' or ERR. LIST prints item count, then rows 'id stock price' in increasing ID order. TOTAL prints 'stock_value revenue', both exact 64-bit totals; stock_value=sum(stock*current_price). Revenue is not changed by price updates or deletion. Every output record ends with newline.\nShared declarations:\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ITEMS 100\n\ntypedef struct {\n    int id;\n    int stock;\n    int price;\n} Item;\n\nstatic Item items[MAX_ITEMS];\nstatic int item_count;\nstatic long long revenue;\nRelated function interfaces (do not implement these):\nstatic int find_item(int id);\nstatic int read_command(void);\nAssigned function change_price:\n```c\nstatic int change_price(int id, int price)\n{\n    int index = find_item(id);\n    if (index < 0 || price < 0) {\n        return 0;\n    }\n    items[index].price = price;\n    return 1;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"9\\nADD 9 100\\nRECEIVE 9 4\\nRECEIVE 9 3\\nGET 9\\nSELL 9 7\\nGET 9\\nDROP 9\\nLIST\\nTOTAL\\n\", \"expected\": \"OK\\nOK\\nOK\\n9 7 100\\nOK\\n9 0 100\\nOK\\n0\\n0 700\", \"actual\": \"OK\\nOK\\nOK\\n9 7 100\\nOK\\n9 0 100\\nERR\\n1\\n9 0 100\\n0 700\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic int change_price(int id, int price)\n{\n    int index = find_item(id);\n    if (index < 0 || price < 0) {\n        return 0;\n    }\n    items[index].price = price;\n    return 1;\n}\n```",
+        "usage": {
+          "prompt_tokens": 659,
+          "completion_tokens": 58,
+          "total_tokens": 717
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 19.051
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\n9 7 100\nOK\n9 0 100\nERR\n1\n9 0 100\n0 700\n",
+            "stderr": "",
+            "input": "9\nADD 9 100\nRECEIVE 9 4\nRECEIVE 9 3\nGET 9\nSELL 9 7\nGET 9\nDROP 9\nLIST\nTOTAL\n",
+            "expected": "OK\nOK\nOK\n9 7 100\nOK\n9 0 100\nOK\n0\n0 700",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n-732379968 5000000\nOK\n2999985 5000000\n2\n8 999995 3\n2 0 17\nOK\nERR\n",
+            "stderr": "",
+            "input": "10\nADD 8 1000000\nADD 2 17\nRECEIVE 8 1000000\nSELL 8 5\nTOTAL\nPRICE 8 3\nTOTAL\nLIST\nDROP 8\nGET 8\n",
+            "expected": "OK\nOK\nOK\nOK\n999995000000 5000000\nOK\n2999985 5000000\n2\n2 0 17\n8 999995 3\nERR\n8 999995 3",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nERR\nERR\nERR\nERR\nOK\nERR\n4 2 50\n100 0\n",
+            "stderr": "",
+            "input": "9\nADD 4 50\nADD 4 80\nADD 1 -1\nRECEIVE 3 4\nSELL 4 -2\nRECEIVE 4 2\nSELL 4 3\nGET 4\nTOTAL\n",
+            "expected": "OK\nERR\nERR\nERR\nERR\nOK\nERR\n4 2 50\n100 0",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nERR\n3\n5 0 2\n3 0 4\n1 0 8\nERR\nOK\nOK\n3\n5 0 2\n3 5 4\n1 0 8\n20 0\n",
+            "stderr": "",
+            "input": "10\nADD 5 2\nADD 3 4\nADD 1 8\nDROP 3\nLIST\nADD 3 7\nRECEIVE 3 5\nSELL 3 0\nLIST\nTOTAL\n",
+            "expected": "OK\nOK\nOK\nOK\n2\n1 0 8\n5 0 2\nOK\nOK\nOK\n3\n1 0 8\n3 5 7\n5 0 2\n35 0",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ITEMS 100\n\ntypedef struct {\n    int id;\n    int stock;\n    int price;\n} Item;\n\nstatic Item items[MAX_ITEMS];\nstatic int item_count;\nstatic long long revenue;\n\nstatic int find_item(int id)\n{\n    int i;\n    for (i = 0; i < item_count; ++i) {\n        if (items[i].id == id) {\n            return i;\n        }\n    }\n    return -1;\n}\n\nstatic void print_result(int ok)\n{\n    puts(ok ? \"OK\" : \"ERR\");\n}\n\nstatic int add_item(int id, int price)\n{\n    if (price < 0 || item_count == MAX_ITEMS || find_item(id) >= 0) {\n        return 0;\n    }\n    items[item_count].id = id;\n    items[item_count].stock = 0;\n    items[item_count].price = price;\n    ++item_count;\n    return 1;\n}\n\nstatic int receive_item(int id, int quantity)\n{\n    int index = find_item(id);\n    if (index < 0 || quantity < 0) {\n        return 0;\n    }\n    items[index].stock += quantity;\n    return 1;\n}\n\nstatic int sell_item(int id, int quantity)\n{\n    int index = find_item(id);\n    if (index < 0 || quantity < 0) {\n        return 0;\n    }\n    if (items[index].stock < quantity) {\n        return 0;\n    }\n    items[index].stock -= quantity;\n    revenue += (long long) quantity * items[index].price;\n    return 1;\n}\n\nstatic int change_price(int id, int price)\n{\n    int index = find_item(id);\n    if (index < 0 || price < 0) {\n        return 0;\n    }\n    items[index].price = price;\n    return 1;\n}\n\nstatic int drop_item(int id)\n{\n    int index = find_item(id);\n    int i;\n    if (index < 0 || items[index].stock == 0) {\n        return 0;\n    }\n    for (i = index; i + 1 < item_count; ++i) {\n        items[i] = items[i + 1];\n    }\n    --item_count;\n    return 1;\n}\n\nstatic void show_item(int id)\n{\n    int index = find_item(id);\n    if (index < 0) {\n        puts(\"ERR\");\n        return;\n    }\n    printf(\"%d %d %d\\n\", items[index].id,\n           items[index].stock, items[index].price);\n}\n\nstatic long long stock_value(void)\n{\n    long long total = 0;\n    int i;\n    for (i = 0; i < item_count; ++i) {\n        total += items[i].stock * items[i].price;\n    }\n    return total;\n}\n\nstatic void list_items(void)\n{\n    int order[MAX_ITEMS];\n    int i;\n    int j;\n    for (i = 0; i < item_count; ++i) {\n        order[i] = i;\n    }\n    for (i = 0; i < item_count; ++i) {\n        for (j = i + 1; j < item_count; ++j) {\n            if (items[order[j]].id > items[order[i]].id) {\n                int temporary = order[i];\n                order[i] = order[j];\n                order[j] = temporary;\n            }\n        }\n    }\n    printf(\"%d\\n\", item_count);\n    for (i = 0; i < item_count; ++i) {\n        int k = order[i];\n        printf(\"%d %d %d\\n\", items[k].id, items[k].stock, items[k].price);\n    }\n}\n\nstatic int read_command(void)\n{\n    char command[16];\n    int id;\n    int argument;\n    if (scanf(\"%15s\", command) != 1) {\n        return 0;\n    }\n    if (strcmp(command, \"ADD\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(add_item(id, argument));\n    } else if (strcmp(command, \"RECEIVE\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(receive_item(id, argument));\n    } else if (strcmp(command, \"SELL\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(sell_item(id, argument));\n    } else if (strcmp(command, \"PRICE\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(change_price(id, argument));\n    } else if (strcmp(command, \"DROP\") == 0) {\n        scanf(\"%d\", &id);\n        print_result(drop_item(id));\n    } else if (strcmp(command, \"GET\") == 0) {\n        scanf(\"%d\", &id);\n        show_item(id);\n    } else if (strcmp(command, \"LIST\") == 0) {\n        list_items();\n    } else if (strcmp(command, \"TOTAL\") == 0) {\n        printf(\"%lld %lld\\n\", stock_value(), revenue);\n    }\n    return 1;\n}\n\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d\", &commands) != 1) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        if (!read_command()) {\n            break;\n        }\n    }\n    return 0;\n}\n",
+      "reason": "unchanged"
+    },
+    {
+      "request": {
+        "name": "drop_item",
+        "retry": 0,
+        "source_sha256": "c81db83e57dc065643f607ad86c62e51e8834d491075a1512b5fc744a2c1df38",
+        "prompt": "Program behavior:\nInventory service. Input q (0..200), then q commands. At most 100 distinct items; IDs are integers 0..1000. Prices and quantities supplied to commands are integers in [-2,1000000]. ADD id price creates an absent item with zero stock; reject duplicates, negative price, or capacity overflow. RECEIVE id qty adds nonnegative qty to an existing item. SELL id qty subtracts nonnegative qty only if sufficient stock; exact-stock sales and zero-quantity sales are allowed. Successful sale adds qty*current_price to lifetime revenue. PRICE id price updates an existing item's nonnegative price. DROP id removes only an existing item with zero stock. These five mutating commands print OK on success, ERR otherwise and change nothing on failure. GET id prints 'id stock price' or ERR. LIST prints item count, then rows 'id stock price' in increasing ID order. TOTAL prints 'stock_value revenue', both exact 64-bit totals; stock_value=sum(stock*current_price). Revenue is not changed by price updates or deletion. Every output record ends with newline.\nShared declarations:\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ITEMS 100\n\ntypedef struct {\n    int id;\n    int stock;\n    int price;\n} Item;\n\nstatic Item items[MAX_ITEMS];\nstatic int item_count;\nstatic long long revenue;\nRelated function interfaces (do not implement these):\nstatic int find_item(int id);\nstatic int read_command(void);\nAssigned function drop_item:\n```c\nstatic int drop_item(int id)\n{\n    int index = find_item(id);\n    int i;\n    if (index < 0 || items[index].stock == 0) {\n        return 0;\n    }\n    for (i = index; i + 1 < item_count; ++i) {\n        items[i] = items[i + 1];\n    }\n    --item_count;\n    return 1;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"9\\nADD 9 100\\nRECEIVE 9 4\\nRECEIVE 9 3\\nGET 9\\nSELL 9 7\\nGET 9\\nDROP 9\\nLIST\\nTOTAL\\n\", \"expected\": \"OK\\nOK\\nOK\\n9 7 100\\nOK\\n9 0 100\\nOK\\n0\\n0 700\", \"actual\": \"OK\\nOK\\nOK\\n9 7 100\\nOK\\n9 0 100\\nERR\\n1\\n9 0 100\\n0 700\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic int drop_item(int id)\n{\n    int index = find_item(id);\n    if (index < 0 || items[index].stock != 0) {\n        return 0;\n    }\n    for (int i = index; i + 1 < item_count; ++i) {\n        items[i] = items[i + 1];\n    }\n    --item_count;\n    return 1;\n}\n```",
+        "usage": {
+          "prompt_tokens": 692,
+          "completion_tokens": 88,
+          "total_tokens": 780
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 270,
+        "seconds": 23.955
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\n9 7 100\nOK\n9 0 100\nOK\n0\n0 700\n",
+            "stderr": "",
+            "input": "9\nADD 9 100\nRECEIVE 9 4\nRECEIVE 9 3\nGET 9\nSELL 9 7\nGET 9\nDROP 9\nLIST\nTOTAL\n",
+            "expected": "OK\nOK\nOK\n9 7 100\nOK\n9 0 100\nOK\n0\n0 700",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n-732379968 5000000\nOK\n2999985 5000000\n2\n8 999995 3\n2 0 17\nERR\n8 999995 3\n",
+            "stderr": "",
+            "input": "10\nADD 8 1000000\nADD 2 17\nRECEIVE 8 1000000\nSELL 8 5\nTOTAL\nPRICE 8 3\nTOTAL\nLIST\nDROP 8\nGET 8\n",
+            "expected": "OK\nOK\nOK\nOK\n999995000000 5000000\nOK\n2999985 5000000\n2\n2 0 17\n8 999995 3\nERR\n8 999995 3",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nERR\nERR\nERR\nERR\nOK\nERR\n4 2 50\n100 0\n",
+            "stderr": "",
+            "input": "9\nADD 4 50\nADD 4 80\nADD 1 -1\nRECEIVE 3 4\nSELL 4 -2\nRECEIVE 4 2\nSELL 4 3\nGET 4\nTOTAL\n",
+            "expected": "OK\nERR\nERR\nERR\nERR\nOK\nERR\n4 2 50\n100 0",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n2\n5 0 2\n1 0 8\nOK\nOK\nOK\n3\n5 0 2\n3 5 7\n1 0 8\n35 0\n",
+            "stderr": "",
+            "input": "10\nADD 5 2\nADD 3 4\nADD 1 8\nDROP 3\nLIST\nADD 3 7\nRECEIVE 3 5\nSELL 3 0\nLIST\nTOTAL\n",
+            "expected": "OK\nOK\nOK\nOK\n2\n1 0 8\n5 0 2\nOK\nOK\nOK\n3\n1 0 8\n3 5 7\n5 0 2\n35 0",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ITEMS 100\n\ntypedef struct {\n    int id;\n    int stock;\n    int price;\n} Item;\n\nstatic Item items[MAX_ITEMS];\nstatic int item_count;\nstatic long long revenue;\n\nstatic int find_item(int id)\n{\n    int i;\n    for (i = 0; i < item_count; ++i) {\n        if (items[i].id == id) {\n            return i;\n        }\n    }\n    return -1;\n}\n\nstatic void print_result(int ok)\n{\n    puts(ok ? \"OK\" : \"ERR\");\n}\n\nstatic int add_item(int id, int price)\n{\n    if (price < 0 || item_count == MAX_ITEMS || find_item(id) >= 0) {\n        return 0;\n    }\n    items[item_count].id = id;\n    items[item_count].stock = 0;\n    items[item_count].price = price;\n    ++item_count;\n    return 1;\n}\n\nstatic int receive_item(int id, int quantity)\n{\n    int index = find_item(id);\n    if (index < 0 || quantity < 0) {\n        return 0;\n    }\n    items[index].stock += quantity;\n    return 1;\n}\n\nstatic int sell_item(int id, int quantity)\n{\n    int index = find_item(id);\n    if (index < 0 || quantity < 0) {\n        return 0;\n    }\n    if (items[index].stock < quantity) {\n        return 0;\n    }\n    items[index].stock -= quantity;\n    revenue += (long long) quantity * items[index].price;\n    return 1;\n}\n\nstatic int change_price(int id, int price)\n{\n    int index = find_item(id);\n    if (index < 0 || price < 0) {\n        return 0;\n    }\n    items[index].price = price;\n    return 1;\n}\n\nstatic int drop_item(int id)\n{\n    int index = find_item(id);\n    if (index < 0 || items[index].stock != 0) {\n        return 0;\n    }\n    for (int i = index; i + 1 < item_count; ++i) {\n        items[i] = items[i + 1];\n    }\n    --item_count;\n    return 1;\n}\n\nstatic void show_item(int id)\n{\n    int index = find_item(id);\n    if (index < 0) {\n        puts(\"ERR\");\n        return;\n    }\n    printf(\"%d %d %d\\n\", items[index].id,\n           items[index].stock, items[index].price);\n}\n\nstatic long long stock_value(void)\n{\n    long long total = 0;\n    int i;\n    for (i = 0; i < item_count; ++i) {\n        total += items[i].stock * items[i].price;\n    }\n    return total;\n}\n\nstatic void list_items(void)\n{\n    int order[MAX_ITEMS];\n    int i;\n    int j;\n    for (i = 0; i < item_count; ++i) {\n        order[i] = i;\n    }\n    for (i = 0; i < item_count; ++i) {\n        for (j = i + 1; j < item_count; ++j) {\n            if (items[order[j]].id > items[order[i]].id) {\n                int temporary = order[i];\n                order[i] = order[j];\n                order[j] = temporary;\n            }\n        }\n    }\n    printf(\"%d\\n\", item_count);\n    for (i = 0; i < item_count; ++i) {\n        int k = order[i];\n        printf(\"%d %d %d\\n\", items[k].id, items[k].stock, items[k].price);\n    }\n}\n\nstatic int read_command(void)\n{\n    char command[16];\n    int id;\n    int argument;\n    if (scanf(\"%15s\", command) != 1) {\n        return 0;\n    }\n    if (strcmp(command, \"ADD\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(add_item(id, argument));\n    } else if (strcmp(command, \"RECEIVE\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(receive_item(id, argument));\n    } else if (strcmp(command, \"SELL\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(sell_item(id, argument));\n    } else if (strcmp(command, \"PRICE\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(change_price(id, argument));\n    } else if (strcmp(command, \"DROP\") == 0) {\n        scanf(\"%d\", &id);\n        print_result(drop_item(id));\n    } else if (strcmp(command, \"GET\") == 0) {\n        scanf(\"%d\", &id);\n        show_item(id);\n    } else if (strcmp(command, \"LIST\") == 0) {\n        list_items();\n    } else if (strcmp(command, \"TOTAL\") == 0) {\n        printf(\"%lld %lld\\n\", stock_value(), revenue);\n    }\n    return 1;\n}\n\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d\", &commands) != 1) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        if (!read_command()) {\n            break;\n        }\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "show_item",
+        "retry": 0,
+        "source_sha256": "f91db1e8fbc18d33ee4fc327ea5b73db65732f5b102bb2257dc8175e800590ca",
+        "prompt": "Program behavior:\nInventory service. Input q (0..200), then q commands. At most 100 distinct items; IDs are integers 0..1000. Prices and quantities supplied to commands are integers in [-2,1000000]. ADD id price creates an absent item with zero stock; reject duplicates, negative price, or capacity overflow. RECEIVE id qty adds nonnegative qty to an existing item. SELL id qty subtracts nonnegative qty only if sufficient stock; exact-stock sales and zero-quantity sales are allowed. Successful sale adds qty*current_price to lifetime revenue. PRICE id price updates an existing item's nonnegative price. DROP id removes only an existing item with zero stock. These five mutating commands print OK on success, ERR otherwise and change nothing on failure. GET id prints 'id stock price' or ERR. LIST prints item count, then rows 'id stock price' in increasing ID order. TOTAL prints 'stock_value revenue', both exact 64-bit totals; stock_value=sum(stock*current_price). Revenue is not changed by price updates or deletion. Every output record ends with newline.\nShared declarations:\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ITEMS 100\n\ntypedef struct {\n    int id;\n    int stock;\n    int price;\n} Item;\n\nstatic Item items[MAX_ITEMS];\nstatic int item_count;\nstatic long long revenue;\nRelated function interfaces (do not implement these):\nstatic int find_item(int id);\nstatic int read_command(void);\nAssigned function show_item:\n```c\nstatic void show_item(int id)\n{\n    int index = find_item(id);\n    if (index < 0) {\n        puts(\"ERR\");\n        return;\n    }\n    printf(\"%d %d %d\\n\", items[index].id,\n           items[index].stock, items[index].price);\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"10\\nADD 8 1000000\\nADD 2 17\\nRECEIVE 8 1000000\\nSELL 8 5\\nTOTAL\\nPRICE 8 3\\nTOTAL\\nLIST\\nDROP 8\\nGET 8\\n\", \"expected\": \"OK\\nOK\\nOK\\nOK\\n999995000000 5000000\\nOK\\n2999985 5000000\\n2\\n2 0 17\\n8 999995 3\\nERR\\n8 999995 3\", \"actual\": \"OK\\nOK\\nOK\\nOK\\n-732379968 5000000\\nOK\\n2999985 5000000\\n2\\n8 999995 3\\n2 0 17\\nERR\\n8 999995 3\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void show_item(int id)\n{\n    int index = find_item(id);\n    if (index < 0) {\n        puts(\"ERR\");\n        return;\n    }\n    printf(\"%d %d %d\\n\", items[index].id,\n           items[index].stock, items[index].price);\n}\n```",
+        "usage": {
+          "prompt_tokens": 763,
+          "completion_tokens": 66,
+          "total_tokens": 829
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 23.105
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\n9 7 100\nOK\n9 0 100\nOK\n0\n0 700\n",
+            "stderr": "",
+            "input": "9\nADD 9 100\nRECEIVE 9 4\nRECEIVE 9 3\nGET 9\nSELL 9 7\nGET 9\nDROP 9\nLIST\nTOTAL\n",
+            "expected": "OK\nOK\nOK\n9 7 100\nOK\n9 0 100\nOK\n0\n0 700",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n-732379968 5000000\nOK\n2999985 5000000\n2\n8 999995 3\n2 0 17\nERR\n8 999995 3\n",
+            "stderr": "",
+            "input": "10\nADD 8 1000000\nADD 2 17\nRECEIVE 8 1000000\nSELL 8 5\nTOTAL\nPRICE 8 3\nTOTAL\nLIST\nDROP 8\nGET 8\n",
+            "expected": "OK\nOK\nOK\nOK\n999995000000 5000000\nOK\n2999985 5000000\n2\n2 0 17\n8 999995 3\nERR\n8 999995 3",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nERR\nERR\nERR\nERR\nOK\nERR\n4 2 50\n100 0\n",
+            "stderr": "",
+            "input": "9\nADD 4 50\nADD 4 80\nADD 1 -1\nRECEIVE 3 4\nSELL 4 -2\nRECEIVE 4 2\nSELL 4 3\nGET 4\nTOTAL\n",
+            "expected": "OK\nERR\nERR\nERR\nERR\nOK\nERR\n4 2 50\n100 0",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n2\n5 0 2\n1 0 8\nOK\nOK\nOK\n3\n5 0 2\n3 5 7\n1 0 8\n35 0\n",
+            "stderr": "",
+            "input": "10\nADD 5 2\nADD 3 4\nADD 1 8\nDROP 3\nLIST\nADD 3 7\nRECEIVE 3 5\nSELL 3 0\nLIST\nTOTAL\n",
+            "expected": "OK\nOK\nOK\nOK\n2\n1 0 8\n5 0 2\nOK\nOK\nOK\n3\n1 0 8\n3 5 7\n5 0 2\n35 0",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ITEMS 100\n\ntypedef struct {\n    int id;\n    int stock;\n    int price;\n} Item;\n\nstatic Item items[MAX_ITEMS];\nstatic int item_count;\nstatic long long revenue;\n\nstatic int find_item(int id)\n{\n    int i;\n    for (i = 0; i < item_count; ++i) {\n        if (items[i].id == id) {\n            return i;\n        }\n    }\n    return -1;\n}\n\nstatic void print_result(int ok)\n{\n    puts(ok ? \"OK\" : \"ERR\");\n}\n\nstatic int add_item(int id, int price)\n{\n    if (price < 0 || item_count == MAX_ITEMS || find_item(id) >= 0) {\n        return 0;\n    }\n    items[item_count].id = id;\n    items[item_count].stock = 0;\n    items[item_count].price = price;\n    ++item_count;\n    return 1;\n}\n\nstatic int receive_item(int id, int quantity)\n{\n    int index = find_item(id);\n    if (index < 0 || quantity < 0) {\n        return 0;\n    }\n    items[index].stock += quantity;\n    return 1;\n}\n\nstatic int sell_item(int id, int quantity)\n{\n    int index = find_item(id);\n    if (index < 0 || quantity < 0) {\n        return 0;\n    }\n    if (items[index].stock < quantity) {\n        return 0;\n    }\n    items[index].stock -= quantity;\n    revenue += (long long) quantity * items[index].price;\n    return 1;\n}\n\nstatic int change_price(int id, int price)\n{\n    int index = find_item(id);\n    if (index < 0 || price < 0) {\n        return 0;\n    }\n    items[index].price = price;\n    return 1;\n}\n\nstatic int drop_item(int id)\n{\n    int index = find_item(id);\n    if (index < 0 || items[index].stock != 0) {\n        return 0;\n    }\n    for (int i = index; i + 1 < item_count; ++i) {\n        items[i] = items[i + 1];\n    }\n    --item_count;\n    return 1;\n}\n\nstatic void show_item(int id)\n{\n    int index = find_item(id);\n    if (index < 0) {\n        puts(\"ERR\");\n        return;\n    }\n    printf(\"%d %d %d\\n\", items[index].id,\n           items[index].stock, items[index].price);\n}\n\nstatic long long stock_value(void)\n{\n    long long total = 0;\n    int i;\n    for (i = 0; i < item_count; ++i) {\n        total += items[i].stock * items[i].price;\n    }\n    return total;\n}\n\nstatic void list_items(void)\n{\n    int order[MAX_ITEMS];\n    int i;\n    int j;\n    for (i = 0; i < item_count; ++i) {\n        order[i] = i;\n    }\n    for (i = 0; i < item_count; ++i) {\n        for (j = i + 1; j < item_count; ++j) {\n            if (items[order[j]].id > items[order[i]].id) {\n                int temporary = order[i];\n                order[i] = order[j];\n                order[j] = temporary;\n            }\n        }\n    }\n    printf(\"%d\\n\", item_count);\n    for (i = 0; i < item_count; ++i) {\n        int k = order[i];\n        printf(\"%d %d %d\\n\", items[k].id, items[k].stock, items[k].price);\n    }\n}\n\nstatic int read_command(void)\n{\n    char command[16];\n    int id;\n    int argument;\n    if (scanf(\"%15s\", command) != 1) {\n        return 0;\n    }\n    if (strcmp(command, \"ADD\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(add_item(id, argument));\n    } else if (strcmp(command, \"RECEIVE\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(receive_item(id, argument));\n    } else if (strcmp(command, \"SELL\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(sell_item(id, argument));\n    } else if (strcmp(command, \"PRICE\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(change_price(id, argument));\n    } else if (strcmp(command, \"DROP\") == 0) {\n        scanf(\"%d\", &id);\n        print_result(drop_item(id));\n    } else if (strcmp(command, \"GET\") == 0) {\n        scanf(\"%d\", &id);\n        show_item(id);\n    } else if (strcmp(command, \"LIST\") == 0) {\n        list_items();\n    } else if (strcmp(command, \"TOTAL\") == 0) {\n        printf(\"%lld %lld\\n\", stock_value(), revenue);\n    }\n    return 1;\n}\n\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d\", &commands) != 1) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        if (!read_command()) {\n            break;\n        }\n    }\n    return 0;\n}\n",
+      "reason": "unchanged"
+    },
+    {
+      "request": {
+        "name": "stock_value",
+        "retry": 0,
+        "source_sha256": "f91db1e8fbc18d33ee4fc327ea5b73db65732f5b102bb2257dc8175e800590ca",
+        "prompt": "Program behavior:\nInventory service. Input q (0..200), then q commands. At most 100 distinct items; IDs are integers 0..1000. Prices and quantities supplied to commands are integers in [-2,1000000]. ADD id price creates an absent item with zero stock; reject duplicates, negative price, or capacity overflow. RECEIVE id qty adds nonnegative qty to an existing item. SELL id qty subtracts nonnegative qty only if sufficient stock; exact-stock sales and zero-quantity sales are allowed. Successful sale adds qty*current_price to lifetime revenue. PRICE id price updates an existing item's nonnegative price. DROP id removes only an existing item with zero stock. These five mutating commands print OK on success, ERR otherwise and change nothing on failure. GET id prints 'id stock price' or ERR. LIST prints item count, then rows 'id stock price' in increasing ID order. TOTAL prints 'stock_value revenue', both exact 64-bit totals; stock_value=sum(stock*current_price). Revenue is not changed by price updates or deletion. Every output record ends with newline.\nShared declarations:\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ITEMS 100\n\ntypedef struct {\n    int id;\n    int stock;\n    int price;\n} Item;\n\nstatic Item items[MAX_ITEMS];\nstatic int item_count;\nstatic long long revenue;\nRelated function interfaces (do not implement these):\nstatic int read_command(void);\nAssigned function stock_value:\n```c\nstatic long long stock_value(void)\n{\n    long long total = 0;\n    int i;\n    for (i = 0; i < item_count; ++i) {\n        total += items[i].stock * items[i].price;\n    }\n    return total;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"10\\nADD 8 1000000\\nADD 2 17\\nRECEIVE 8 1000000\\nSELL 8 5\\nTOTAL\\nPRICE 8 3\\nTOTAL\\nLIST\\nDROP 8\\nGET 8\\n\", \"expected\": \"OK\\nOK\\nOK\\nOK\\n999995000000 5000000\\nOK\\n2999985 5000000\\n2\\n2 0 17\\n8 999995 3\\nERR\\n8 999995 3\", \"actual\": \"OK\\nOK\\nOK\\nOK\\n-732379968 5000000\\nOK\\n2999985 5000000\\n2\\n8 999995 3\\n2 0 17\\nERR\\n8 999995 3\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic long long stock_value(void)\n{\n    long long total = 0;\n    int i;\n    for (i = 0; i < item_count; ++i) {\n        total += (long long)items[i].stock * items[i].price;\n    }\n    return total;\n}\n```",
+        "usage": {
+          "prompt_tokens": 751,
+          "completion_tokens": 65,
+          "total_tokens": 816
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 23.427
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\n9 7 100\nOK\n9 0 100\nOK\n0\n0 700\n",
+            "stderr": "",
+            "input": "9\nADD 9 100\nRECEIVE 9 4\nRECEIVE 9 3\nGET 9\nSELL 9 7\nGET 9\nDROP 9\nLIST\nTOTAL\n",
+            "expected": "OK\nOK\nOK\n9 7 100\nOK\n9 0 100\nOK\n0\n0 700",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n999995000000 5000000\nOK\n2999985 5000000\n2\n8 999995 3\n2 0 17\nERR\n8 999995 3\n",
+            "stderr": "",
+            "input": "10\nADD 8 1000000\nADD 2 17\nRECEIVE 8 1000000\nSELL 8 5\nTOTAL\nPRICE 8 3\nTOTAL\nLIST\nDROP 8\nGET 8\n",
+            "expected": "OK\nOK\nOK\nOK\n999995000000 5000000\nOK\n2999985 5000000\n2\n2 0 17\n8 999995 3\nERR\n8 999995 3",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nERR\nERR\nERR\nERR\nOK\nERR\n4 2 50\n100 0\n",
+            "stderr": "",
+            "input": "9\nADD 4 50\nADD 4 80\nADD 1 -1\nRECEIVE 3 4\nSELL 4 -2\nRECEIVE 4 2\nSELL 4 3\nGET 4\nTOTAL\n",
+            "expected": "OK\nERR\nERR\nERR\nERR\nOK\nERR\n4 2 50\n100 0",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n2\n5 0 2\n1 0 8\nOK\nOK\nOK\n3\n5 0 2\n3 5 7\n1 0 8\n35 0\n",
+            "stderr": "",
+            "input": "10\nADD 5 2\nADD 3 4\nADD 1 8\nDROP 3\nLIST\nADD 3 7\nRECEIVE 3 5\nSELL 3 0\nLIST\nTOTAL\n",
+            "expected": "OK\nOK\nOK\nOK\n2\n1 0 8\n5 0 2\nOK\nOK\nOK\n3\n1 0 8\n3 5 7\n5 0 2\n35 0",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ITEMS 100\n\ntypedef struct {\n    int id;\n    int stock;\n    int price;\n} Item;\n\nstatic Item items[MAX_ITEMS];\nstatic int item_count;\nstatic long long revenue;\n\nstatic int find_item(int id)\n{\n    int i;\n    for (i = 0; i < item_count; ++i) {\n        if (items[i].id == id) {\n            return i;\n        }\n    }\n    return -1;\n}\n\nstatic void print_result(int ok)\n{\n    puts(ok ? \"OK\" : \"ERR\");\n}\n\nstatic int add_item(int id, int price)\n{\n    if (price < 0 || item_count == MAX_ITEMS || find_item(id) >= 0) {\n        return 0;\n    }\n    items[item_count].id = id;\n    items[item_count].stock = 0;\n    items[item_count].price = price;\n    ++item_count;\n    return 1;\n}\n\nstatic int receive_item(int id, int quantity)\n{\n    int index = find_item(id);\n    if (index < 0 || quantity < 0) {\n        return 0;\n    }\n    items[index].stock += quantity;\n    return 1;\n}\n\nstatic int sell_item(int id, int quantity)\n{\n    int index = find_item(id);\n    if (index < 0 || quantity < 0) {\n        return 0;\n    }\n    if (items[index].stock < quantity) {\n        return 0;\n    }\n    items[index].stock -= quantity;\n    revenue += (long long) quantity * items[index].price;\n    return 1;\n}\n\nstatic int change_price(int id, int price)\n{\n    int index = find_item(id);\n    if (index < 0 || price < 0) {\n        return 0;\n    }\n    items[index].price = price;\n    return 1;\n}\n\nstatic int drop_item(int id)\n{\n    int index = find_item(id);\n    if (index < 0 || items[index].stock != 0) {\n        return 0;\n    }\n    for (int i = index; i + 1 < item_count; ++i) {\n        items[i] = items[i + 1];\n    }\n    --item_count;\n    return 1;\n}\n\nstatic void show_item(int id)\n{\n    int index = find_item(id);\n    if (index < 0) {\n        puts(\"ERR\");\n        return;\n    }\n    printf(\"%d %d %d\\n\", items[index].id,\n           items[index].stock, items[index].price);\n}\n\nstatic long long stock_value(void)\n{\n    long long total = 0;\n    int i;\n    for (i = 0; i < item_count; ++i) {\n        total += (long long)items[i].stock * items[i].price;\n    }\n    return total;\n}\n\nstatic void list_items(void)\n{\n    int order[MAX_ITEMS];\n    int i;\n    int j;\n    for (i = 0; i < item_count; ++i) {\n        order[i] = i;\n    }\n    for (i = 0; i < item_count; ++i) {\n        for (j = i + 1; j < item_count; ++j) {\n            if (items[order[j]].id > items[order[i]].id) {\n                int temporary = order[i];\n                order[i] = order[j];\n                order[j] = temporary;\n            }\n        }\n    }\n    printf(\"%d\\n\", item_count);\n    for (i = 0; i < item_count; ++i) {\n        int k = order[i];\n        printf(\"%d %d %d\\n\", items[k].id, items[k].stock, items[k].price);\n    }\n}\n\nstatic int read_command(void)\n{\n    char command[16];\n    int id;\n    int argument;\n    if (scanf(\"%15s\", command) != 1) {\n        return 0;\n    }\n    if (strcmp(command, \"ADD\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(add_item(id, argument));\n    } else if (strcmp(command, \"RECEIVE\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(receive_item(id, argument));\n    } else if (strcmp(command, \"SELL\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(sell_item(id, argument));\n    } else if (strcmp(command, \"PRICE\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(change_price(id, argument));\n    } else if (strcmp(command, \"DROP\") == 0) {\n        scanf(\"%d\", &id);\n        print_result(drop_item(id));\n    } else if (strcmp(command, \"GET\") == 0) {\n        scanf(\"%d\", &id);\n        show_item(id);\n    } else if (strcmp(command, \"LIST\") == 0) {\n        list_items();\n    } else if (strcmp(command, \"TOTAL\") == 0) {\n        printf(\"%lld %lld\\n\", stock_value(), revenue);\n    }\n    return 1;\n}\n\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d\", &commands) != 1) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        if (!read_command()) {\n            break;\n        }\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "list_items",
+        "retry": 0,
+        "source_sha256": "6460cb5418e990327c65b76dc343c417d05d8f7d5b2725da6a5078ead70d0879",
+        "prompt": "Program behavior:\nInventory service. Input q (0..200), then q commands. At most 100 distinct items; IDs are integers 0..1000. Prices and quantities supplied to commands are integers in [-2,1000000]. ADD id price creates an absent item with zero stock; reject duplicates, negative price, or capacity overflow. RECEIVE id qty adds nonnegative qty to an existing item. SELL id qty subtracts nonnegative qty only if sufficient stock; exact-stock sales and zero-quantity sales are allowed. Successful sale adds qty*current_price to lifetime revenue. PRICE id price updates an existing item's nonnegative price. DROP id removes only an existing item with zero stock. These five mutating commands print OK on success, ERR otherwise and change nothing on failure. GET id prints 'id stock price' or ERR. LIST prints item count, then rows 'id stock price' in increasing ID order. TOTAL prints 'stock_value revenue', both exact 64-bit totals; stock_value=sum(stock*current_price). Revenue is not changed by price updates or deletion. Every output record ends with newline.\nShared declarations:\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ITEMS 100\n\ntypedef struct {\n    int id;\n    int stock;\n    int price;\n} Item;\n\nstatic Item items[MAX_ITEMS];\nstatic int item_count;\nstatic long long revenue;\nRelated function interfaces (do not implement these):\nstatic int read_command(void);\nAssigned function list_items:\n```c\nstatic void list_items(void)\n{\n    int order[MAX_ITEMS];\n    int i;\n    int j;\n    for (i = 0; i < item_count; ++i) {\n        order[i] = i;\n    }\n    for (i = 0; i < item_count; ++i) {\n        for (j = i + 1; j < item_count; ++j) {\n            if (items[order[j]].id > items[order[i]].id) {\n                int temporary = order[i];\n                order[i] = order[j];\n                order[j] = temporary;\n            }\n        }\n    }\n    printf(\"%d\\n\", item_count);\n    for (i = 0; i < item_count; ++i) {\n        int k = order[i];\n        printf(\"%d %d %d\\n\", items[k].id, items[k].stock, items[k].price);\n    }\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"10\\nADD 8 1000000\\nADD 2 17\\nRECEIVE 8 1000000\\nSELL 8 5\\nTOTAL\\nPRICE 8 3\\nTOTAL\\nLIST\\nDROP 8\\nGET 8\\n\", \"expected\": \"OK\\nOK\\nOK\\nOK\\n999995000000 5000000\\nOK\\n2999985 5000000\\n2\\n2 0 17\\n8 999995 3\\nERR\\n8 999995 3\", \"actual\": \"OK\\nOK\\nOK\\nOK\\n999995000000 5000000\\nOK\\n2999985 5000000\\n2\\n8 999995 3\\n2 0 17\\nERR\\n8 999995 3\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void list_items(void)\n{\n    int order[MAX_ITEMS];\n    int i;\n    int j;\n    for (i = 0; i < item_count; ++i) {\n        order[i] = i;\n    }\n    for (i = 0; i < item_count; ++i) {\n        for (j = i + 1; j < item_count; ++j) {\n            if (items[order[j]].id < items[order[i]].id) {\n                int temporary = order[i];\n                order[i] = order[j];\n                order[j] = temporary;\n            }\n        }\n    }\n    printf(\"%d\\n\", item_count);\n    for (i = 0; i < item_count; ++i) {\n        int k = order[i];\n        printf(\"%d %d %d\\n\", items[k].id, items[k].stock, items[k].price);\n    }\n}\n```",
+        "usage": {
+          "prompt_tokens": 886,
+          "completion_tokens": 194,
+          "total_tokens": 1080
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 476,
+        "seconds": 44.928
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\n9 7 100\nOK\n9 0 100\nOK\n0\n0 700\n",
+            "stderr": "",
+            "input": "9\nADD 9 100\nRECEIVE 9 4\nRECEIVE 9 3\nGET 9\nSELL 9 7\nGET 9\nDROP 9\nLIST\nTOTAL\n",
+            "expected": "OK\nOK\nOK\n9 7 100\nOK\n9 0 100\nOK\n0\n0 700",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n999995000000 5000000\nOK\n2999985 5000000\n2\n2 0 17\n8 999995 3\nERR\n8 999995 3\n",
+            "stderr": "",
+            "input": "10\nADD 8 1000000\nADD 2 17\nRECEIVE 8 1000000\nSELL 8 5\nTOTAL\nPRICE 8 3\nTOTAL\nLIST\nDROP 8\nGET 8\n",
+            "expected": "OK\nOK\nOK\nOK\n999995000000 5000000\nOK\n2999985 5000000\n2\n2 0 17\n8 999995 3\nERR\n8 999995 3",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nERR\nERR\nERR\nERR\nOK\nERR\n4 2 50\n100 0\n",
+            "stderr": "",
+            "input": "9\nADD 4 50\nADD 4 80\nADD 1 -1\nRECEIVE 3 4\nSELL 4 -2\nRECEIVE 4 2\nSELL 4 3\nGET 4\nTOTAL\n",
+            "expected": "OK\nERR\nERR\nERR\nERR\nOK\nERR\n4 2 50\n100 0",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n2\n1 0 8\n5 0 2\nOK\nOK\nOK\n3\n1 0 8\n3 5 7\n5 0 2\n35 0\n",
+            "stderr": "",
+            "input": "10\nADD 5 2\nADD 3 4\nADD 1 8\nDROP 3\nLIST\nADD 3 7\nRECEIVE 3 5\nSELL 3 0\nLIST\nTOTAL\n",
+            "expected": "OK\nOK\nOK\nOK\n2\n1 0 8\n5 0 2\nOK\nOK\nOK\n3\n1 0 8\n3 5 7\n5 0 2\n35 0",
+            "passed": true
+          }
+        ],
+        "passed": true
+      },
+      "candidate": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ITEMS 100\n\ntypedef struct {\n    int id;\n    int stock;\n    int price;\n} Item;\n\nstatic Item items[MAX_ITEMS];\nstatic int item_count;\nstatic long long revenue;\n\nstatic int find_item(int id)\n{\n    int i;\n    for (i = 0; i < item_count; ++i) {\n        if (items[i].id == id) {\n            return i;\n        }\n    }\n    return -1;\n}\n\nstatic void print_result(int ok)\n{\n    puts(ok ? \"OK\" : \"ERR\");\n}\n\nstatic int add_item(int id, int price)\n{\n    if (price < 0 || item_count == MAX_ITEMS || find_item(id) >= 0) {\n        return 0;\n    }\n    items[item_count].id = id;\n    items[item_count].stock = 0;\n    items[item_count].price = price;\n    ++item_count;\n    return 1;\n}\n\nstatic int receive_item(int id, int quantity)\n{\n    int index = find_item(id);\n    if (index < 0 || quantity < 0) {\n        return 0;\n    }\n    items[index].stock += quantity;\n    return 1;\n}\n\nstatic int sell_item(int id, int quantity)\n{\n    int index = find_item(id);\n    if (index < 0 || quantity < 0) {\n        return 0;\n    }\n    if (items[index].stock < quantity) {\n        return 0;\n    }\n    items[index].stock -= quantity;\n    revenue += (long long) quantity * items[index].price;\n    return 1;\n}\n\nstatic int change_price(int id, int price)\n{\n    int index = find_item(id);\n    if (index < 0 || price < 0) {\n        return 0;\n    }\n    items[index].price = price;\n    return 1;\n}\n\nstatic int drop_item(int id)\n{\n    int index = find_item(id);\n    if (index < 0 || items[index].stock != 0) {\n        return 0;\n    }\n    for (int i = index; i + 1 < item_count; ++i) {\n        items[i] = items[i + 1];\n    }\n    --item_count;\n    return 1;\n}\n\nstatic void show_item(int id)\n{\n    int index = find_item(id);\n    if (index < 0) {\n        puts(\"ERR\");\n        return;\n    }\n    printf(\"%d %d %d\\n\", items[index].id,\n           items[index].stock, items[index].price);\n}\n\nstatic long long stock_value(void)\n{\n    long long total = 0;\n    int i;\n    for (i = 0; i < item_count; ++i) {\n        total += (long long)items[i].stock * items[i].price;\n    }\n    return total;\n}\n\nstatic void list_items(void)\n{\n    int order[MAX_ITEMS];\n    int i;\n    int j;\n    for (i = 0; i < item_count; ++i) {\n        order[i] = i;\n    }\n    for (i = 0; i < item_count; ++i) {\n        for (j = i + 1; j < item_count; ++j) {\n            if (items[order[j]].id < items[order[i]].id) {\n                int temporary = order[i];\n                order[i] = order[j];\n                order[j] = temporary;\n            }\n        }\n    }\n    printf(\"%d\\n\", item_count);\n    for (i = 0; i < item_count; ++i) {\n        int k = order[i];\n        printf(\"%d %d %d\\n\", items[k].id, items[k].stock, items[k].price);\n    }\n}\n\nstatic int read_command(void)\n{\n    char command[16];\n    int id;\n    int argument;\n    if (scanf(\"%15s\", command) != 1) {\n        return 0;\n    }\n    if (strcmp(command, \"ADD\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(add_item(id, argument));\n    } else if (strcmp(command, \"RECEIVE\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(receive_item(id, argument));\n    } else if (strcmp(command, \"SELL\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(sell_item(id, argument));\n    } else if (strcmp(command, \"PRICE\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(change_price(id, argument));\n    } else if (strcmp(command, \"DROP\") == 0) {\n        scanf(\"%d\", &id);\n        print_result(drop_item(id));\n    } else if (strcmp(command, \"GET\") == 0) {\n        scanf(\"%d\", &id);\n        show_item(id);\n    } else if (strcmp(command, \"LIST\") == 0) {\n        list_items();\n    } else if (strcmp(command, \"TOTAL\") == 0) {\n        printf(\"%lld %lld\\n\", stock_value(), revenue);\n    }\n    return 1;\n}\n\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d\", &commands) != 1) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        if (!read_command()) {\n            break;\n        }\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "read_command",
+        "retry": 0,
+        "source_sha256": "029de4cd503e9a2456adda5b4442d464474667ea6e203bf29e6b70f069ac6e6a",
+        "prompt": "Program behavior:\nInventory service. Input q (0..200), then q commands. At most 100 distinct items; IDs are integers 0..1000. Prices and quantities supplied to commands are integers in [-2,1000000]. ADD id price creates an absent item with zero stock; reject duplicates, negative price, or capacity overflow. RECEIVE id qty adds nonnegative qty to an existing item. SELL id qty subtracts nonnegative qty only if sufficient stock; exact-stock sales and zero-quantity sales are allowed. Successful sale adds qty*current_price to lifetime revenue. PRICE id price updates an existing item's nonnegative price. DROP id removes only an existing item with zero stock. These five mutating commands print OK on success, ERR otherwise and change nothing on failure. GET id prints 'id stock price' or ERR. LIST prints item count, then rows 'id stock price' in increasing ID order. TOTAL prints 'stock_value revenue', both exact 64-bit totals; stock_value=sum(stock*current_price). Revenue is not changed by price updates or deletion. Every output record ends with newline.\nShared declarations:\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ITEMS 100\n\ntypedef struct {\n    int id;\n    int stock;\n    int price;\n} Item;\n\nstatic Item items[MAX_ITEMS];\nstatic int item_count;\nstatic long long revenue;\nRelated function interfaces (do not implement these):\nstatic int add_item(int id, int price);\nstatic int change_price(int id, int price);\nstatic int drop_item(int id);\nstatic void list_items(void);\nint main(void);\nstatic void print_result(int ok);\nstatic int receive_item(int id, int quantity);\nstatic int sell_item(int id, int quantity);\nstatic void show_item(int id);\nstatic long long stock_value(void);\nAssigned function read_command:\n```c\nstatic int read_command(void)\n{\n    char command[16];\n    int id;\n    int argument;\n    if (scanf(\"%15s\", command) != 1) {\n        return 0;\n    }\n    if (strcmp(command, \"ADD\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(add_item(id, argument));\n    } else if (strcmp(command, \"RECEIVE\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(receive_item(id, argument));\n    } else if (strcmp(command, \"SELL\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(sell_item(id, argument));\n    } else if (strcmp(command, \"PRICE\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(change_price(id, argument));\n    } else if (strcmp(command, \"DROP\") == 0) {\n        scanf(\"%d\", &id);\n        print_result(drop_item(id));\n    } else if (strcmp(command, \"GET\") == 0) {\n        scanf(\"%d\", &id);\n        show_item(id);\n    } else if (strcmp(command, \"LIST\") == 0) {\n        list_items();\n    } else if (strcmp(command, \"TOTAL\") == 0) {\n        printf(\"%lld %lld\\n\", stock_value(), revenue);\n    }\n    return 1;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic int read_command(void)\n{\n    char command[16];\n    int id;\n    int argument;\n    if (scanf(\"%15s\", command) != 1) {\n        return 0;\n    }\n    if (strcmp(command, \"ADD\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        if (id < 0 || id > 1000 || argument < 0 || item_count >= MAX_ITEMS) {\n            print_result(0);\n        } else {\n            for (int i = 0; i < item_count; i++) {\n                if (items[i].id == id) {\n                    print_result(0);\n                    return 1;\n                }\n            }\n            items[item_count].id = id;\n            items[item_count].stock = 0;\n            items[item_count].price = argument;\n            item_count++;\n            print_result(1);\n        }\n    } else if (strcmp(command, \"RECEIVE\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        if (id < 0 || id > 1000 || argument < 0) {\n            print_result(0);\n        } else {\n            for (int i = 0; i < item_count; i++) {\n                if (items[i].id == id) {\n                    items[i].stock += argument;\n                    print_result(1);\n                    return 1;\n                }\n            }\n            print_result(0);\n        }\n    } else if (strcmp(command, \"SELL\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        if (id < 0 || id > 1000 || argument < 0) {\n            print_result(0);\n        } else {\n            for (int i = 0; i < item_count; i++) {\n                if (items[i].id == id) {\n                    if (items[i].stock >= argument) {\n                        items[i].stock -= argument;\n                        revenue += (long long)argument * items[i].price;\n                        print_result(1);\n                    } else {\n                        print_result(0);\n                    }\n                    return 1;\n                }\n            }\n            print_result(0);\n        }\n    } else if (strcmp(command, \"PRICE\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        if (id < 0 || id > 1000 || argument < 0) {\n            print_result(0);\n        } else {\n            for (int i = 0; i < item_count; i++) {\n                if (items[i].id == id) {\n                    items[i].price = argument;\n                    print_result(1);\n                    return 1;\n                }\n            }\n            print_result(0);\n        }\n    } else if (strcmp(command, \"DROP\") == 0) {\n        scanf(\"%d\", &id);\n        if (id < 0 || id > 1000) {\n            print_result(0);\n        } else {\n            for (int i = 0; i < item_count; i++) {\n                if (items[i].id == id && items[i].stock == 0) {\n                    for (int j = i; j < item_count - 1; j++) {\n                        items[j] = items[j + 1];\n                    }\n                    item_count--;\n                    print_result(1);\n",
+        "usage": {
+          "prompt_tokens": 838,
+          "completion_tokens": 720,
+          "total_tokens": 1558
+        },
+        "finish_reason": "length",
+        "max_output_tokens": 720,
+        "seconds": 112.407
+      },
+      "accepted": false,
+      "check": null,
+      "reason": "structure_rejected",
+      "error": "Truncated function"
+    },
+    {
+      "request": {
+        "name": "read_command",
+        "retry": 1,
+        "source_sha256": "029de4cd503e9a2456adda5b4442d464474667ea6e203bf29e6b70f069ac6e6a",
+        "prompt": "Program behavior:\nInventory service. Input q (0..200), then q commands. At most 100 distinct items; IDs are integers 0..1000. Prices and quantities supplied to commands are integers in [-2,1000000]. ADD id price creates an absent item with zero stock; reject duplicates, negative price, or capacity overflow. RECEIVE id qty adds nonnegative qty to an existing item. SELL id qty subtracts nonnegative qty only if sufficient stock; exact-stock sales and zero-quantity sales are allowed. Successful sale adds qty*current_price to lifetime revenue. PRICE id price updates an existing item's nonnegative price. DROP id removes only an existing item with zero stock. These five mutating commands print OK on success, ERR otherwise and change nothing on failure. GET id prints 'id stock price' or ERR. LIST prints item count, then rows 'id stock price' in increasing ID order. TOTAL prints 'stock_value revenue', both exact 64-bit totals; stock_value=sum(stock*current_price). Revenue is not changed by price updates or deletion. Every output record ends with newline.\nShared declarations:\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ITEMS 100\n\ntypedef struct {\n    int id;\n    int stock;\n    int price;\n} Item;\n\nstatic Item items[MAX_ITEMS];\nstatic int item_count;\nstatic long long revenue;\nRelated function interfaces (do not implement these):\nstatic int add_item(int id, int price);\nstatic int change_price(int id, int price);\nstatic int drop_item(int id);\nstatic void list_items(void);\nint main(void);\nstatic void print_result(int ok);\nstatic int receive_item(int id, int quantity);\nstatic int sell_item(int id, int quantity);\nstatic void show_item(int id);\nstatic long long stock_value(void);\nRead-only dependency bodies:\nstatic int add_item(int id, int price)\n{\n    if (price < 0 || item_count == MAX_ITEMS || find_item(id) >= 0) {\n        return 0;\n    }\n    items[item_count].id = id;\n    items[item_count].stock = 0;\n    items[item_count].price = price;\n    ++item_count;\n    return 1;\n}\n\nstatic int change_price(int id, int price)\n{\n    int index = find_item(id);\n    if (index < 0 || price < 0) {\n        return 0;\n    }\n    items[index].price = price;\n    return 1;\n}\n\nstatic int drop_item(int id)\n{\n    int index = find_item(id);\n    if (index < 0 || items[index].stock != 0) {\n        return 0;\n    }\n    for (int i = index; i + 1 < item_count; ++i) {\n        items[i] = items[i + 1];\n    }\n    --item_count;\n    return 1;\n}\n\nstatic void list_items(void)\n{\n    int order[MAX_ITEMS];\n    int i;\n    int j;\n    for (i = 0; i < item_count; ++i) {\n        order[i] = i;\n    }\n    for (i = 0; i < item_count; ++i) {\n        for (j = i + 1; j < item_count; ++j) {\n            if (items[order[j]].id < items[order[i]].id) {\n                int temporary = order[i];\n                order[i] = order[j];\n                order[j] = temporary;\n            }\n        }\n    }\n    printf(\"%d\\n\", item_count);\n    for (i = 0; i < item_count; ++i) {\n        int k = order[i];\n        printf(\"%d %d %d\\n\", items[k].id, items[k].stock, items[k].price);\n    }\n}\n\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d\", &commands) != 1) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        if (!read_command()) {\n            break;\n        }\n    }\n    return 0;\n}\n\nstatic void print_result(int ok)\n{\n    puts(ok ? \"OK\" : \"ERR\");\n}\n\nstatic int receive_item(int id, int quantity)\n{\n    int index = find_item(id);\n    if (index < 0 || quantity < 0) {\n        return 0;\n    }\n    items[index].stock += quantity;\n    return 1;\n}\n\nstatic int sell_item(int id, int quantity)\n{\n    int index = find_item(id);\n    if (index < 0 || quantity < 0) {\n        return 0;\n    }\n    if (items[index].stock < quantity) {\n        return 0;\n    }\n    items[index].stock -= quantity;\n    revenue += (long long) quantity * items[index].price;\n    return 1;\n}\n\nstatic void show_item(int id)\n{\n    int index = find_item(id);\n    if (index < 0) {\n        puts(\"ERR\");\n        return;\n    }\n    printf(\"%d %d %d\\n\", items[index].id,\n           items[index].stock, items[index].price);\n}\n\nstatic long long stock_value(void)\n{\n    long long total = 0;\n    int i;\n    for (i = 0; i < item_count; ++i) {\n        total += (long long)items[i].stock * items[i].price;\n    }\n    return total;\n}\nAssigned function read_command:\n```c\nstatic int read_command(void)\n{\n    char command[16];\n    int id;\n    int argument;\n    if (scanf(\"%15s\", command) != 1) {\n        return 0;\n    }\n    if (strcmp(command, \"ADD\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(add_item(id, argument));\n    } else if (strcmp(command, \"RECEIVE\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(receive_item(id, argument));\n    } else if (strcmp(command, \"SELL\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(sell_item(id, argument));\n    } else if (strcmp(command, \"PRICE\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(change_price(id, argument));\n    } else if (strcmp(command, \"DROP\") == 0) {\n        scanf(\"%d\", &id);\n        print_result(drop_item(id));\n    } else if (strcmp(command, \"GET\") == 0) {\n        scanf(\"%d\", &id);\n        show_item(id);\n    } else if (strcmp(command, \"LIST\") == 0) {\n        list_items();\n    } else if (strcmp(command, \"TOTAL\") == 0) {\n        printf(\"%lld %lld\\n\", stock_value(), revenue);\n    }\n    return 1;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[]\nPrevious replacement failed:\n{\"reason\": \"structure_rejected\", \"error\": \"Truncated function\", \"diagnostics\": \"\", \"replacement\": \"ommand, \\\"SELL\\\") == 0) {\\n        scanf(\\\"%d%d\\\", &id, &argument);\\n        if (id < 0 || id > 1000 || argument < 0) {\\n            print_result(0);\\n        } else {\\n            for (int i = 0; i < item_count; i++) {\\n                if (items[i].id == id) {\\n                    if (items[i].stock >= argument) {\\n                        items[i].stock -= argument;\\n                        revenue += (long long)argument * items[i].price;\\n                        print_result(1);\\n                    } else {\\n                        print_result(0);\\n                    }\\n                    return 1;\\n                }\\n            }\\n            print_result(0);\\n        }\\n    } else if (strcmp(command, \\\"PRICE\\\") == 0) {\\n        scanf(\\\"%d%d\\\", &id, &argument);\\n        if (id < 0 || id > 1000 || argument < 0) {\\n            print_result(0);\\n        } else {\\n            for (int i = 0; i < item_count; i++) {\\n                if (items[i].id == id) {\\n                    items[i].price = argument;\\n                    print_result(1);\\n                    return 1;\\n                }\\n            }\\n            print_result(0);\\n        }\\n    } else if (strcmp(command, \\\"DROP\\\") == 0) {\\n        scanf(\\\"%d\\\", &id);\\n        if (id < 0 || id > 1000) {\\n            print_result(0);\\n        } else {\\n            for (int i = 0; i < item_count; i++) {\\n                if (items[i].id == id && items[i].stock == 0) {\\n                    for (int j = i; j < item_count - 1; j++) {\\n                        items[j] = items[j + 1];\\n                    }\\n                    item_count--;\\n                    print_result(1);\\n\", \"failed_outputs\": []}\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic int read_command(void)\n{\n    char command[16];\n    int id;\n    int argument;\n    if (scanf(\"%15s\", command) != 1) {\n        return 0;\n    }\n    if (strcmp(command, \"ADD\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        if (id < 0 || id > 1000 || argument < 0 || item_count == MAX_ITEMS || find_item(id) >= 0) {\n            print_result(0);\n        } else {\n            items[item_count].id = id;\n            items[item_count].stock = 0;\n            items[item_count].price = argument;\n            ++item_count;\n            print_result(1);\n        }\n    } else if (strcmp(command, \"RECEIVE\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        if (id < 0 || id > 1000 || argument < 0) {\n            print_result(0);\n        } else {\n            for (int i = 0; i < item_count; i++) {\n                if (items[i].id == id) {\n                    items[i].stock += argument;\n                    print_result(1);\n                    return 1;\n                }\n            }\n            print_result(0);\n        }\n    } else if (strcmp(command, \"SELL\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        if (id < 0 || id > 1000 || argument < 0) {\n            print_result(0);\n        } else {\n            for (int i = 0; i < item_count; i++) {\n                if (items[i].id == id) {\n                    if (items[i].stock >= argument) {\n                        items[i].stock -= argument;\n                        revenue += (long long)argument * items[i].price;\n                        print_result(1);\n                    } else {\n                        print_result(0);\n                    }\n                    return 1;\n                }\n            }\n            print_result(0);\n        }\n    } else if (strcmp(command, \"PRICE\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        if (id < 0 || id > 1000 || argument < 0) {\n            print_result(0);\n        } else {\n            for (int i = 0; i < item_count; i++) {\n                if (items[i].id == id) {\n                    items[i].price = argument;\n                    print_result(1);\n                    return 1;\n                }\n            }\n            print_result(0);\n        }\n    } else if (strcmp(command, \"DROP\") == 0) {\n        scanf(\"%d\", &id);\n        if (id < 0 || id > 1000) {\n            print_result(0);\n        } else {\n            for (int i = 0; i < item_count; i++) {\n                if (items[i].id == id && items[i].stock == 0) {\n                    for (int j = i; j < item_count - 1; j++) {\n                        items[j] = items[j + 1];\n                    }\n                    item_count--;\n                    print_result(1);\n                    return 1;\n                }\n            }\n            print_result(0);\n        }\n    } else if (strcmp(command, \"GET\") == 0) {\n       ",
+        "usage": {
+          "prompt_tokens": 2090,
+          "completion_tokens": 720,
+          "total_tokens": 2810
+        },
+        "finish_reason": "length",
+        "max_output_tokens": 720,
+        "seconds": 164.835
+      },
+      "accepted": false,
+      "check": null,
+      "reason": "structure_rejected",
+      "error": "Truncated function"
+    },
+    {
+      "request": {
+        "name": "main",
+        "retry": 0,
+        "source_sha256": "029de4cd503e9a2456adda5b4442d464474667ea6e203bf29e6b70f069ac6e6a",
+        "prompt": "Program behavior:\nInventory service. Input q (0..200), then q commands. At most 100 distinct items; IDs are integers 0..1000. Prices and quantities supplied to commands are integers in [-2,1000000]. ADD id price creates an absent item with zero stock; reject duplicates, negative price, or capacity overflow. RECEIVE id qty adds nonnegative qty to an existing item. SELL id qty subtracts nonnegative qty only if sufficient stock; exact-stock sales and zero-quantity sales are allowed. Successful sale adds qty*current_price to lifetime revenue. PRICE id price updates an existing item's nonnegative price. DROP id removes only an existing item with zero stock. These five mutating commands print OK on success, ERR otherwise and change nothing on failure. GET id prints 'id stock price' or ERR. LIST prints item count, then rows 'id stock price' in increasing ID order. TOTAL prints 'stock_value revenue', both exact 64-bit totals; stock_value=sum(stock*current_price). Revenue is not changed by price updates or deletion. Every output record ends with newline.\nShared declarations:\n#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ITEMS 100\n\ntypedef struct {\n    int id;\n    int stock;\n    int price;\n} Item;\n\nstatic Item items[MAX_ITEMS];\nstatic int item_count;\nstatic long long revenue;\nRelated function interfaces (do not implement these):\nstatic int read_command(void);\nAssigned function main:\n```c\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d\", &commands) != 1) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        if (!read_command()) {\n            break;\n        }\n    }\n    return 0;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d\", &commands) != 1) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        if (!read_command()) {\n            break;\n        }\n    }\n    return 0;\n}\n```",
+        "usage": {
+          "prompt_tokens": 524,
+          "completion_tokens": 75,
+          "total_tokens": 599
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 17.387
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\n9 7 100\nOK\n9 0 100\nOK\n0\n0 700\n",
+            "stderr": "",
+            "input": "9\nADD 9 100\nRECEIVE 9 4\nRECEIVE 9 3\nGET 9\nSELL 9 7\nGET 9\nDROP 9\nLIST\nTOTAL\n",
+            "expected": "OK\nOK\nOK\n9 7 100\nOK\n9 0 100\nOK\n0\n0 700",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n999995000000 5000000\nOK\n2999985 5000000\n2\n2 0 17\n8 999995 3\nERR\n8 999995 3\n",
+            "stderr": "",
+            "input": "10\nADD 8 1000000\nADD 2 17\nRECEIVE 8 1000000\nSELL 8 5\nTOTAL\nPRICE 8 3\nTOTAL\nLIST\nDROP 8\nGET 8\n",
+            "expected": "OK\nOK\nOK\nOK\n999995000000 5000000\nOK\n2999985 5000000\n2\n2 0 17\n8 999995 3\nERR\n8 999995 3",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nERR\nERR\nERR\nERR\nOK\nERR\n4 2 50\n100 0\n",
+            "stderr": "",
+            "input": "9\nADD 4 50\nADD 4 80\nADD 1 -1\nRECEIVE 3 4\nSELL 4 -2\nRECEIVE 4 2\nSELL 4 3\nGET 4\nTOTAL\n",
+            "expected": "OK\nERR\nERR\nERR\nERR\nOK\nERR\n4 2 50\n100 0",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n2\n1 0 8\n5 0 2\nOK\nOK\nOK\n3\n1 0 8\n3 5 7\n5 0 2\n35 0\n",
+            "stderr": "",
+            "input": "10\nADD 5 2\nADD 3 4\nADD 1 8\nDROP 3\nLIST\nADD 3 7\nRECEIVE 3 5\nSELL 3 0\nLIST\nTOTAL\n",
+            "expected": "OK\nOK\nOK\nOK\n2\n1 0 8\n5 0 2\nOK\nOK\nOK\n3\n1 0 8\n3 5 7\n5 0 2\n35 0",
+            "passed": true
+          }
+        ],
+        "passed": true
+      },
+      "candidate": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ITEMS 100\n\ntypedef struct {\n    int id;\n    int stock;\n    int price;\n} Item;\n\nstatic Item items[MAX_ITEMS];\nstatic int item_count;\nstatic long long revenue;\n\nstatic int find_item(int id)\n{\n    int i;\n    for (i = 0; i < item_count; ++i) {\n        if (items[i].id == id) {\n            return i;\n        }\n    }\n    return -1;\n}\n\nstatic void print_result(int ok)\n{\n    puts(ok ? \"OK\" : \"ERR\");\n}\n\nstatic int add_item(int id, int price)\n{\n    if (price < 0 || item_count == MAX_ITEMS || find_item(id) >= 0) {\n        return 0;\n    }\n    items[item_count].id = id;\n    items[item_count].stock = 0;\n    items[item_count].price = price;\n    ++item_count;\n    return 1;\n}\n\nstatic int receive_item(int id, int quantity)\n{\n    int index = find_item(id);\n    if (index < 0 || quantity < 0) {\n        return 0;\n    }\n    items[index].stock += quantity;\n    return 1;\n}\n\nstatic int sell_item(int id, int quantity)\n{\n    int index = find_item(id);\n    if (index < 0 || quantity < 0) {\n        return 0;\n    }\n    if (items[index].stock < quantity) {\n        return 0;\n    }\n    items[index].stock -= quantity;\n    revenue += (long long) quantity * items[index].price;\n    return 1;\n}\n\nstatic int change_price(int id, int price)\n{\n    int index = find_item(id);\n    if (index < 0 || price < 0) {\n        return 0;\n    }\n    items[index].price = price;\n    return 1;\n}\n\nstatic int drop_item(int id)\n{\n    int index = find_item(id);\n    if (index < 0 || items[index].stock != 0) {\n        return 0;\n    }\n    for (int i = index; i + 1 < item_count; ++i) {\n        items[i] = items[i + 1];\n    }\n    --item_count;\n    return 1;\n}\n\nstatic void show_item(int id)\n{\n    int index = find_item(id);\n    if (index < 0) {\n        puts(\"ERR\");\n        return;\n    }\n    printf(\"%d %d %d\\n\", items[index].id,\n           items[index].stock, items[index].price);\n}\n\nstatic long long stock_value(void)\n{\n    long long total = 0;\n    int i;\n    for (i = 0; i < item_count; ++i) {\n        total += (long long)items[i].stock * items[i].price;\n    }\n    return total;\n}\n\nstatic void list_items(void)\n{\n    int order[MAX_ITEMS];\n    int i;\n    int j;\n    for (i = 0; i < item_count; ++i) {\n        order[i] = i;\n    }\n    for (i = 0; i < item_count; ++i) {\n        for (j = i + 1; j < item_count; ++j) {\n            if (items[order[j]].id < items[order[i]].id) {\n                int temporary = order[i];\n                order[i] = order[j];\n                order[j] = temporary;\n            }\n        }\n    }\n    printf(\"%d\\n\", item_count);\n    for (i = 0; i < item_count; ++i) {\n        int k = order[i];\n        printf(\"%d %d %d\\n\", items[k].id, items[k].stock, items[k].price);\n    }\n}\n\nstatic int read_command(void)\n{\n    char command[16];\n    int id;\n    int argument;\n    if (scanf(\"%15s\", command) != 1) {\n        return 0;\n    }\n    if (strcmp(command, \"ADD\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(add_item(id, argument));\n    } else if (strcmp(command, \"RECEIVE\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(receive_item(id, argument));\n    } else if (strcmp(command, \"SELL\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(sell_item(id, argument));\n    } else if (strcmp(command, \"PRICE\") == 0) {\n        scanf(\"%d%d\", &id, &argument);\n        print_result(change_price(id, argument));\n    } else if (strcmp(command, \"DROP\") == 0) {\n        scanf(\"%d\", &id);\n        print_result(drop_item(id));\n    } else if (strcmp(command, \"GET\") == 0) {\n        scanf(\"%d\", &id);\n        show_item(id);\n    } else if (strcmp(command, \"LIST\") == 0) {\n        list_items();\n    } else if (strcmp(command, \"TOTAL\") == 0) {\n        printf(\"%lld %lld\\n\", stock_value(), revenue);\n    }\n    return 1;\n}\n\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d\", &commands) != 1) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        if (!read_command()) {\n            break;\n        }\n    }\n    return 0;\n}\n",
+      "reason": "unchanged"
+    }
+  ],
+  "calls": 13,
+  "function_count": 12,
+  "control_probe": false
+}

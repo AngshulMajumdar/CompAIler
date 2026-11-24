@@ -1,0 +1,985 @@
+{
+  "policy": {
+    "version": 1,
+    "model": "Qwen2.5-Coder-7B-Instruct Q4_K_M",
+    "gpu_layers": 0,
+    "threads": 4,
+    "context_tokens": 8192,
+    "seed": 172,
+    "temperature": 0,
+    "passes": 1,
+    "extra_retry_budget": 3,
+    "output": "one_complete_C_function",
+    "preserve_passing_scenarios": true,
+    "accept_neutral_compiling_changes": true,
+    "heldout_feedback": false
+  },
+  "baseline": {
+    "compiled": true,
+    "diagnostics": "",
+    "tests": [
+      {
+        "returncode": 0,
+        "stdout": "ERROR\nERROR\nERROR\nERROR\nERROR\n3\n",
+        "stderr": "",
+        "input": "6\n12+3*4\n(2+3)*4\n-7/3\n8-3-2\n5/0\n1+2x\n",
+        "expected": "24\n20\n-2\n3\nERROR\nERROR",
+        "passed": false
+      },
+      {
+        "returncode": 136,
+        "stdout": "",
+        "stderr": "",
+        "input": "7\n--4\n2*-3\n+(8-10)\n20/(3+2)\n(4+5\n1+2)\n0/4\n",
+        "expected": "4\n-6\n-2\n4\nERROR\nERROR\n0",
+        "passed": false
+      },
+      {
+        "returncode": 0,
+        "stdout": "ERROR\nERROR\nERROR\nERROR\nERROR\nERROR\n1\n",
+        "stderr": "",
+        "input": "7\n  7 + 8 * 2 \n100-20/3\n4*(2+(3*5))\n5/-2\n3**2\n\n1 2\n",
+        "expected": "23\n94\n68\n-2\nERROR\nERROR\nERROR",
+        "passed": false
+      },
+      {
+        "returncode": 0,
+        "stdout": "ERROR\nERROR\nERROR\nERROR\nERROR\nERROR\nERROR\nERROR\n",
+        "stderr": "",
+        "input": "8\n999\n-(4+3)*2\n3--2\n2++3\n0-0\n()\n7/(-3)\n(1+2)/(2-2)\n",
+        "expected": "999\n-14\n5\n5\n0\nERROR\n-2\nERROR",
+        "passed": false
+      }
+    ],
+    "passed": false
+  },
+  "final": {
+    "compiled": true,
+    "diagnostics": "",
+    "tests": [
+      {
+        "returncode": 0,
+        "stdout": "24\n20\n-2\n3\nERROR\nERROR\nERROR\n",
+        "stderr": "",
+        "input": "6\n12+3*4\n(2+3)*4\n-7/3\n8-3-2\n5/0\n1+2x\n",
+        "expected": "24\n20\n-2\n3\nERROR\nERROR",
+        "passed": false
+      },
+      {
+        "returncode": 0,
+        "stdout": "4\n-6\n-2\n4\nERROR\nERROR\n0\n",
+        "stderr": "",
+        "input": "7\n--4\n2*-3\n+(8-10)\n20/(3+2)\n(4+5\n1+2)\n0/4\n",
+        "expected": "4\n-6\n-2\n4\nERROR\nERROR\n0",
+        "passed": true
+      },
+      {
+        "returncode": 0,
+        "stdout": "23\n94\n68\n-2\nERROR\nERROR\nERROR\n",
+        "stderr": "",
+        "input": "7\n  7 + 8 * 2 \n100-20/3\n4*(2+(3*5))\n5/-2\n3**2\n\n1 2\n",
+        "expected": "23\n94\n68\n-2\nERROR\nERROR\nERROR",
+        "passed": true
+      },
+      {
+        "returncode": 0,
+        "stdout": "999\n-14\n5\n5\n0\nERROR\n-2\nERROR\nERROR\n",
+        "stderr": "",
+        "input": "8\n999\n-(4+3)*2\n3--2\n2++3\n0-0\n()\n7/(-3)\n(1+2)/(2-2)\n",
+        "expected": "999\n-14\n5\n5\n0\nERROR\n-2\nERROR",
+        "passed": false
+      }
+    ],
+    "passed": false
+  },
+  "history": [
+    {
+      "request": {
+        "name": "skip_spaces",
+        "retry": 0,
+        "source_sha256": "47d8ecec6ecacc765aeec82fd0fbd5b7c6797b2e2a71b9f9cf2ede05be0d5fa6",
+        "prompt": "Program behavior:\nInteger expression evaluator. Input t (0..40) on first line, followed by t complete expression lines, each at most 200 characters. Grammar supports unsigned decimal integer literals, spaces, parentheses, unary + and -, and binary + - * /. Unary signs bind most tightly, then * and /, then + and -. Binary operators associate left-to-right. Division truncates toward zero, including negative operands. Print the exact integer result for each valid line. Print ERROR for division by zero, invalid characters/tokens, empty expression, missing operand, unmatched parentheses or trailing unparsed text. Only these operators are allowed, not // or **. Permitted valid inputs have integer intermediates within signed 32-bit range. One result per line; do not print prompts.\nShared declarations:\n#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\n\ntypedef struct {\n    const char *text;\n    int position;\n    int bad;\n} Parser;\n\nstatic long long parse_expression(Parser *parser);\nRelated function interfaces (do not implement these):\nstatic char current(Parser *parser);\nAssigned function skip_spaces:\n```c\nstatic void skip_spaces(Parser *parser)\n{\n    while (isspace((unsigned char) parser->text[parser->position])) {\n        ++parser->position;\n    }\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"6\\n12+3*4\\n(2+3)*4\\n-7/3\\n8-3-2\\n5/0\\n1+2x\\n\", \"expected\": \"24\\n20\\n-2\\n3\\nERROR\\nERROR\", \"actual\": \"ERROR\\nERROR\\nERROR\\nERROR\\nERROR\\n3\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void skip_spaces(Parser *parser)\n{\n    while (isspace((unsigned char) parser->text[parser->position])) {\n        ++parser->position;\n    }\n}\n```",
+        "usage": {
+          "prompt_tokens": 485,
+          "completion_tokens": 39,
+          "total_tokens": 524
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 20.854
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "ERROR\nERROR\nERROR\nERROR\nERROR\n3\n",
+            "stderr": "",
+            "input": "6\n12+3*4\n(2+3)*4\n-7/3\n8-3-2\n5/0\n1+2x\n",
+            "expected": "24\n20\n-2\n3\nERROR\nERROR",
+            "passed": false
+          },
+          {
+            "returncode": 136,
+            "stdout": "",
+            "stderr": "",
+            "input": "7\n--4\n2*-3\n+(8-10)\n20/(3+2)\n(4+5\n1+2)\n0/4\n",
+            "expected": "4\n-6\n-2\n4\nERROR\nERROR\n0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "ERROR\nERROR\nERROR\nERROR\nERROR\nERROR\n1\n",
+            "stderr": "",
+            "input": "7\n  7 + 8 * 2 \n100-20/3\n4*(2+(3*5))\n5/-2\n3**2\n\n1 2\n",
+            "expected": "23\n94\n68\n-2\nERROR\nERROR\nERROR",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "ERROR\nERROR\nERROR\nERROR\nERROR\nERROR\nERROR\nERROR\n",
+            "stderr": "",
+            "input": "8\n999\n-(4+3)*2\n3--2\n2++3\n0-0\n()\n7/(-3)\n(1+2)/(2-2)\n",
+            "expected": "999\n-14\n5\n5\n0\nERROR\n-2\nERROR",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\n\ntypedef struct {\n    const char *text;\n    int position;\n    int bad;\n} Parser;\n\nstatic long long parse_expression(Parser *parser);\n\nstatic void skip_spaces(Parser *parser)\n{\n    while (isspace((unsigned char) parser->text[parser->position])) {\n        ++parser->position;\n    }\n}\n\nstatic char current(Parser *parser)\n{\n    skip_spaces(parser);\n    return parser->text[parser->position];\n}\n\nstatic void advance(Parser *parser)\n{\n    if (parser->text[parser->position] != '\\0') {\n        ++parser->position;\n    }\n}\n\nstatic int take(Parser *parser, char expected)\n{\n    if (current(parser) == expected) {\n        advance(parser);\n        return 1;\n    }\n    return 0;\n}\n\nstatic long long parse_number(Parser *parser)\n{\n    long long value = 0;\n    if (!isdigit((unsigned char) current(parser))) {\n        parser->bad = 1;\n        advance(parser);\n        return 0;\n    }\n    while (isdigit((unsigned char) parser->text[parser->position])) {\n        int digit = parser->text[parser->position] - '0';\n        value = value + digit;\n        advance(parser);\n    }\n    return value;\n}\n\nstatic long long parse_primary(Parser *parser)\n{\n    if (take(parser, '(')) {\n        long long value = parse_expression(parser);\n        if (!take(parser, ']')) {\n            parser->bad = 1;\n        }\n        return value;\n    }\n    return parse_number(parser);\n}\n\nstatic long long parse_unary(Parser *parser)\n{\n    if (take(parser, '+')) {\n        return parse_unary(parser);\n    }\n    if (take(parser, '-')) {\n        return parse_unary(parser);\n    }\n    return parse_primary(parser);\n}\n\nstatic long long divide_values(Parser *parser, long long left, long long right)\n{\n    if (right == 0) {\n        parser->bad = 1;\n        return 0;\n    }\n    return right / left;\n}\n\nstatic long long parse_term(Parser *parser)\n{\n    long long value = parse_unary(parser);\n    while (!parser->bad) {\n        char operation = current(parser);\n        long long right;\n        if (operation != '*' && operation != '/') {\n            break;\n        }\n        advance(parser);\n        right = parse_unary(parser);\n        if (operation == '*') {\n            value += right;\n        } else {\n            value = divide_values(parser, value, right);\n        }\n    }\n    return value;\n}\n\nstatic long long parse_expression(Parser *parser)\n{\n    long long value = parse_term(parser);\n    while (!parser->bad) {\n        char operation = current(parser);\n        long long right;\n        if (operation != '+' && operation != '-') {\n            break;\n        }\n        advance(parser);\n        right = parse_term(parser);\n        if (operation == '+') {\n            value += right;\n        } else {\n            value += right;\n        }\n    }\n    return value;\n}\n\nstatic void initialize_parser(Parser *parser, const char *line)\n{\n    parser->text = line;\n    parser->position = 0;\n    parser->bad = 0;\n}\n\nstatic int evaluate(const char *line, long long *result)\n{\n    Parser parser;\n    initialize_parser(&parser, line);\n    *result = parse_expression(&parser);\n    if (current(&parser) == '\\0') {\n        parser.bad = 1;\n    }\n    return !parser.bad;\n}\n\nstatic void remove_newline(char *line)\n{\n    size_t length = strlen(line);\n    while (length > 0 && (line[length - 1] == '\\n' || line[length - 1] == '\\r')) {\n        line[--length] = '\\0';\n    }\n}\n\nstatic void process_line(char *line)\n{\n    long long result;\n    remove_newline(line);\n    if (evaluate(line, &result)) {\n        printf(\"%lld\\n\", result);\n    } else {\n        puts(\"ERROR\");\n    }\n}\n\nint main(void)\n{\n    char line[512];\n    int count;\n    int i;\n    if (fgets(line, sizeof(line), stdin) == NULL) {\n        return 0;\n    }\n    if (sscanf(line, \"%d\", &count) != 1) {\n        return 0;\n    }\n    for (i = 0; i < count; ++i) {\n        if (fgets(line, sizeof(line), stdin) == NULL) {\n            break;\n        }\n        process_line(line);\n    }\n    return 0;\n}\n",
+      "reason": "unchanged"
+    },
+    {
+      "request": {
+        "name": "current",
+        "retry": 0,
+        "source_sha256": "47d8ecec6ecacc765aeec82fd0fbd5b7c6797b2e2a71b9f9cf2ede05be0d5fa6",
+        "prompt": "Program behavior:\nInteger expression evaluator. Input t (0..40) on first line, followed by t complete expression lines, each at most 200 characters. Grammar supports unsigned decimal integer literals, spaces, parentheses, unary + and -, and binary + - * /. Unary signs bind most tightly, then * and /, then + and -. Binary operators associate left-to-right. Division truncates toward zero, including negative operands. Print the exact integer result for each valid line. Print ERROR for division by zero, invalid characters/tokens, empty expression, missing operand, unmatched parentheses or trailing unparsed text. Only these operators are allowed, not // or **. Permitted valid inputs have integer intermediates within signed 32-bit range. One result per line; do not print prompts.\nShared declarations:\n#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\n\ntypedef struct {\n    const char *text;\n    int position;\n    int bad;\n} Parser;\n\nstatic long long parse_expression(Parser *parser);\nRelated function interfaces (do not implement these):\nstatic int evaluate(const char *line, long long *result);\nstatic long long parse_expression(Parser *parser);\nstatic long long parse_number(Parser *parser);\nstatic long long parse_term(Parser *parser);\nstatic void skip_spaces(Parser *parser);\nstatic int take(Parser *parser, char expected);\nAssigned function current:\n```c\nstatic char current(Parser *parser)\n{\n    skip_spaces(parser);\n    return parser->text[parser->position];\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"6\\n12+3*4\\n(2+3)*4\\n-7/3\\n8-3-2\\n5/0\\n1+2x\\n\", \"expected\": \"24\\n20\\n-2\\n3\\nERROR\\nERROR\", \"actual\": \"ERROR\\nERROR\\nERROR\\nERROR\\nERROR\\n3\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic char current(Parser *parser)\n{\n    skip_spaces(parser);\n    return parser->text[parser->position];\n}\n```",
+        "usage": {
+          "prompt_tokens": 524,
+          "completion_tokens": 28,
+          "total_tokens": 552
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 13.542
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "ERROR\nERROR\nERROR\nERROR\nERROR\n3\n",
+            "stderr": "",
+            "input": "6\n12+3*4\n(2+3)*4\n-7/3\n8-3-2\n5/0\n1+2x\n",
+            "expected": "24\n20\n-2\n3\nERROR\nERROR",
+            "passed": false
+          },
+          {
+            "returncode": 136,
+            "stdout": "",
+            "stderr": "",
+            "input": "7\n--4\n2*-3\n+(8-10)\n20/(3+2)\n(4+5\n1+2)\n0/4\n",
+            "expected": "4\n-6\n-2\n4\nERROR\nERROR\n0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "ERROR\nERROR\nERROR\nERROR\nERROR\nERROR\n1\n",
+            "stderr": "",
+            "input": "7\n  7 + 8 * 2 \n100-20/3\n4*(2+(3*5))\n5/-2\n3**2\n\n1 2\n",
+            "expected": "23\n94\n68\n-2\nERROR\nERROR\nERROR",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "ERROR\nERROR\nERROR\nERROR\nERROR\nERROR\nERROR\nERROR\n",
+            "stderr": "",
+            "input": "8\n999\n-(4+3)*2\n3--2\n2++3\n0-0\n()\n7/(-3)\n(1+2)/(2-2)\n",
+            "expected": "999\n-14\n5\n5\n0\nERROR\n-2\nERROR",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\n\ntypedef struct {\n    const char *text;\n    int position;\n    int bad;\n} Parser;\n\nstatic long long parse_expression(Parser *parser);\n\nstatic void skip_spaces(Parser *parser)\n{\n    while (isspace((unsigned char) parser->text[parser->position])) {\n        ++parser->position;\n    }\n}\n\nstatic char current(Parser *parser)\n{\n    skip_spaces(parser);\n    return parser->text[parser->position];\n}\n\nstatic void advance(Parser *parser)\n{\n    if (parser->text[parser->position] != '\\0') {\n        ++parser->position;\n    }\n}\n\nstatic int take(Parser *parser, char expected)\n{\n    if (current(parser) == expected) {\n        advance(parser);\n        return 1;\n    }\n    return 0;\n}\n\nstatic long long parse_number(Parser *parser)\n{\n    long long value = 0;\n    if (!isdigit((unsigned char) current(parser))) {\n        parser->bad = 1;\n        advance(parser);\n        return 0;\n    }\n    while (isdigit((unsigned char) parser->text[parser->position])) {\n        int digit = parser->text[parser->position] - '0';\n        value = value + digit;\n        advance(parser);\n    }\n    return value;\n}\n\nstatic long long parse_primary(Parser *parser)\n{\n    if (take(parser, '(')) {\n        long long value = parse_expression(parser);\n        if (!take(parser, ']')) {\n            parser->bad = 1;\n        }\n        return value;\n    }\n    return parse_number(parser);\n}\n\nstatic long long parse_unary(Parser *parser)\n{\n    if (take(parser, '+')) {\n        return parse_unary(parser);\n    }\n    if (take(parser, '-')) {\n        return parse_unary(parser);\n    }\n    return parse_primary(parser);\n}\n\nstatic long long divide_values(Parser *parser, long long left, long long right)\n{\n    if (right == 0) {\n        parser->bad = 1;\n        return 0;\n    }\n    return right / left;\n}\n\nstatic long long parse_term(Parser *parser)\n{\n    long long value = parse_unary(parser);\n    while (!parser->bad) {\n        char operation = current(parser);\n        long long right;\n        if (operation != '*' && operation != '/') {\n            break;\n        }\n        advance(parser);\n        right = parse_unary(parser);\n        if (operation == '*') {\n            value += right;\n        } else {\n            value = divide_values(parser, value, right);\n        }\n    }\n    return value;\n}\n\nstatic long long parse_expression(Parser *parser)\n{\n    long long value = parse_term(parser);\n    while (!parser->bad) {\n        char operation = current(parser);\n        long long right;\n        if (operation != '+' && operation != '-') {\n            break;\n        }\n        advance(parser);\n        right = parse_term(parser);\n        if (operation == '+') {\n            value += right;\n        } else {\n            value += right;\n        }\n    }\n    return value;\n}\n\nstatic void initialize_parser(Parser *parser, const char *line)\n{\n    parser->text = line;\n    parser->position = 0;\n    parser->bad = 0;\n}\n\nstatic int evaluate(const char *line, long long *result)\n{\n    Parser parser;\n    initialize_parser(&parser, line);\n    *result = parse_expression(&parser);\n    if (current(&parser) == '\\0') {\n        parser.bad = 1;\n    }\n    return !parser.bad;\n}\n\nstatic void remove_newline(char *line)\n{\n    size_t length = strlen(line);\n    while (length > 0 && (line[length - 1] == '\\n' || line[length - 1] == '\\r')) {\n        line[--length] = '\\0';\n    }\n}\n\nstatic void process_line(char *line)\n{\n    long long result;\n    remove_newline(line);\n    if (evaluate(line, &result)) {\n        printf(\"%lld\\n\", result);\n    } else {\n        puts(\"ERROR\");\n    }\n}\n\nint main(void)\n{\n    char line[512];\n    int count;\n    int i;\n    if (fgets(line, sizeof(line), stdin) == NULL) {\n        return 0;\n    }\n    if (sscanf(line, \"%d\", &count) != 1) {\n        return 0;\n    }\n    for (i = 0; i < count; ++i) {\n        if (fgets(line, sizeof(line), stdin) == NULL) {\n            break;\n        }\n        process_line(line);\n    }\n    return 0;\n}\n",
+      "reason": "unchanged"
+    },
+    {
+      "request": {
+        "name": "advance",
+        "retry": 0,
+        "source_sha256": "47d8ecec6ecacc765aeec82fd0fbd5b7c6797b2e2a71b9f9cf2ede05be0d5fa6",
+        "prompt": "Program behavior:\nInteger expression evaluator. Input t (0..40) on first line, followed by t complete expression lines, each at most 200 characters. Grammar supports unsigned decimal integer literals, spaces, parentheses, unary + and -, and binary + - * /. Unary signs bind most tightly, then * and /, then + and -. Binary operators associate left-to-right. Division truncates toward zero, including negative operands. Print the exact integer result for each valid line. Print ERROR for division by zero, invalid characters/tokens, empty expression, missing operand, unmatched parentheses or trailing unparsed text. Only these operators are allowed, not // or **. Permitted valid inputs have integer intermediates within signed 32-bit range. One result per line; do not print prompts.\nShared declarations:\n#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\n\ntypedef struct {\n    const char *text;\n    int position;\n    int bad;\n} Parser;\n\nstatic long long parse_expression(Parser *parser);\nRelated function interfaces (do not implement these):\nstatic long long parse_expression(Parser *parser);\nstatic long long parse_number(Parser *parser);\nstatic long long parse_term(Parser *parser);\nstatic int take(Parser *parser, char expected);\nAssigned function advance:\n```c\nstatic void advance(Parser *parser)\n{\n    if (parser->text[parser->position] != '\\0') {\n        ++parser->position;\n    }\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"6\\n12+3*4\\n(2+3)*4\\n-7/3\\n8-3-2\\n5/0\\n1+2x\\n\", \"expected\": \"24\\n20\\n-2\\n3\\nERROR\\nERROR\", \"actual\": \"ERROR\\nERROR\\nERROR\\nERROR\\nERROR\\n3\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void advance(Parser *parser)\n{\n    if (parser->text[parser->position] != '\\0') {\n        ++parser->position;\n    }\n}\n```",
+        "usage": {
+          "prompt_tokens": 512,
+          "completion_tokens": 37,
+          "total_tokens": 549
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 15.437
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "ERROR\nERROR\nERROR\nERROR\nERROR\n3\n",
+            "stderr": "",
+            "input": "6\n12+3*4\n(2+3)*4\n-7/3\n8-3-2\n5/0\n1+2x\n",
+            "expected": "24\n20\n-2\n3\nERROR\nERROR",
+            "passed": false
+          },
+          {
+            "returncode": 136,
+            "stdout": "",
+            "stderr": "",
+            "input": "7\n--4\n2*-3\n+(8-10)\n20/(3+2)\n(4+5\n1+2)\n0/4\n",
+            "expected": "4\n-6\n-2\n4\nERROR\nERROR\n0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "ERROR\nERROR\nERROR\nERROR\nERROR\nERROR\n1\n",
+            "stderr": "",
+            "input": "7\n  7 + 8 * 2 \n100-20/3\n4*(2+(3*5))\n5/-2\n3**2\n\n1 2\n",
+            "expected": "23\n94\n68\n-2\nERROR\nERROR\nERROR",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "ERROR\nERROR\nERROR\nERROR\nERROR\nERROR\nERROR\nERROR\n",
+            "stderr": "",
+            "input": "8\n999\n-(4+3)*2\n3--2\n2++3\n0-0\n()\n7/(-3)\n(1+2)/(2-2)\n",
+            "expected": "999\n-14\n5\n5\n0\nERROR\n-2\nERROR",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\n\ntypedef struct {\n    const char *text;\n    int position;\n    int bad;\n} Parser;\n\nstatic long long parse_expression(Parser *parser);\n\nstatic void skip_spaces(Parser *parser)\n{\n    while (isspace((unsigned char) parser->text[parser->position])) {\n        ++parser->position;\n    }\n}\n\nstatic char current(Parser *parser)\n{\n    skip_spaces(parser);\n    return parser->text[parser->position];\n}\n\nstatic void advance(Parser *parser)\n{\n    if (parser->text[parser->position] != '\\0') {\n        ++parser->position;\n    }\n}\n\nstatic int take(Parser *parser, char expected)\n{\n    if (current(parser) == expected) {\n        advance(parser);\n        return 1;\n    }\n    return 0;\n}\n\nstatic long long parse_number(Parser *parser)\n{\n    long long value = 0;\n    if (!isdigit((unsigned char) current(parser))) {\n        parser->bad = 1;\n        advance(parser);\n        return 0;\n    }\n    while (isdigit((unsigned char) parser->text[parser->position])) {\n        int digit = parser->text[parser->position] - '0';\n        value = value + digit;\n        advance(parser);\n    }\n    return value;\n}\n\nstatic long long parse_primary(Parser *parser)\n{\n    if (take(parser, '(')) {\n        long long value = parse_expression(parser);\n        if (!take(parser, ']')) {\n            parser->bad = 1;\n        }\n        return value;\n    }\n    return parse_number(parser);\n}\n\nstatic long long parse_unary(Parser *parser)\n{\n    if (take(parser, '+')) {\n        return parse_unary(parser);\n    }\n    if (take(parser, '-')) {\n        return parse_unary(parser);\n    }\n    return parse_primary(parser);\n}\n\nstatic long long divide_values(Parser *parser, long long left, long long right)\n{\n    if (right == 0) {\n        parser->bad = 1;\n        return 0;\n    }\n    return right / left;\n}\n\nstatic long long parse_term(Parser *parser)\n{\n    long long value = parse_unary(parser);\n    while (!parser->bad) {\n        char operation = current(parser);\n        long long right;\n        if (operation != '*' && operation != '/') {\n            break;\n        }\n        advance(parser);\n        right = parse_unary(parser);\n        if (operation == '*') {\n            value += right;\n        } else {\n            value = divide_values(parser, value, right);\n        }\n    }\n    return value;\n}\n\nstatic long long parse_expression(Parser *parser)\n{\n    long long value = parse_term(parser);\n    while (!parser->bad) {\n        char operation = current(parser);\n        long long right;\n        if (operation != '+' && operation != '-') {\n            break;\n        }\n        advance(parser);\n        right = parse_term(parser);\n        if (operation == '+') {\n            value += right;\n        } else {\n            value += right;\n        }\n    }\n    return value;\n}\n\nstatic void initialize_parser(Parser *parser, const char *line)\n{\n    parser->text = line;\n    parser->position = 0;\n    parser->bad = 0;\n}\n\nstatic int evaluate(const char *line, long long *result)\n{\n    Parser parser;\n    initialize_parser(&parser, line);\n    *result = parse_expression(&parser);\n    if (current(&parser) == '\\0') {\n        parser.bad = 1;\n    }\n    return !parser.bad;\n}\n\nstatic void remove_newline(char *line)\n{\n    size_t length = strlen(line);\n    while (length > 0 && (line[length - 1] == '\\n' || line[length - 1] == '\\r')) {\n        line[--length] = '\\0';\n    }\n}\n\nstatic void process_line(char *line)\n{\n    long long result;\n    remove_newline(line);\n    if (evaluate(line, &result)) {\n        printf(\"%lld\\n\", result);\n    } else {\n        puts(\"ERROR\");\n    }\n}\n\nint main(void)\n{\n    char line[512];\n    int count;\n    int i;\n    if (fgets(line, sizeof(line), stdin) == NULL) {\n        return 0;\n    }\n    if (sscanf(line, \"%d\", &count) != 1) {\n        return 0;\n    }\n    for (i = 0; i < count; ++i) {\n        if (fgets(line, sizeof(line), stdin) == NULL) {\n            break;\n        }\n        process_line(line);\n    }\n    return 0;\n}\n",
+      "reason": "unchanged"
+    },
+    {
+      "request": {
+        "name": "take",
+        "retry": 0,
+        "source_sha256": "47d8ecec6ecacc765aeec82fd0fbd5b7c6797b2e2a71b9f9cf2ede05be0d5fa6",
+        "prompt": "Program behavior:\nInteger expression evaluator. Input t (0..40) on first line, followed by t complete expression lines, each at most 200 characters. Grammar supports unsigned decimal integer literals, spaces, parentheses, unary + and -, and binary + - * /. Unary signs bind most tightly, then * and /, then + and -. Binary operators associate left-to-right. Division truncates toward zero, including negative operands. Print the exact integer result for each valid line. Print ERROR for division by zero, invalid characters/tokens, empty expression, missing operand, unmatched parentheses or trailing unparsed text. Only these operators are allowed, not // or **. Permitted valid inputs have integer intermediates within signed 32-bit range. One result per line; do not print prompts.\nShared declarations:\n#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\n\ntypedef struct {\n    const char *text;\n    int position;\n    int bad;\n} Parser;\n\nstatic long long parse_expression(Parser *parser);\nRelated function interfaces (do not implement these):\nstatic void advance(Parser *parser);\nstatic char current(Parser *parser);\nstatic long long parse_primary(Parser *parser);\nstatic long long parse_unary(Parser *parser);\nAssigned function take:\n```c\nstatic int take(Parser *parser, char expected)\n{\n    if (current(parser) == expected) {\n        advance(parser);\n        return 1;\n    }\n    return 0;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"6\\n12+3*4\\n(2+3)*4\\n-7/3\\n8-3-2\\n5/0\\n1+2x\\n\", \"expected\": \"24\\n20\\n-2\\n3\\nERROR\\nERROR\", \"actual\": \"ERROR\\nERROR\\nERROR\\nERROR\\nERROR\\n3\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic int take(Parser *parser, char expected)\n{\n    if (current(parser) == expected) {\n        advance(parser);\n        return 1;\n    }\n    return 0;\n}\n```",
+        "usage": {
+          "prompt_tokens": 513,
+          "completion_tokens": 42,
+          "total_tokens": 555
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 15.238
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "ERROR\nERROR\nERROR\nERROR\nERROR\n3\n",
+            "stderr": "",
+            "input": "6\n12+3*4\n(2+3)*4\n-7/3\n8-3-2\n5/0\n1+2x\n",
+            "expected": "24\n20\n-2\n3\nERROR\nERROR",
+            "passed": false
+          },
+          {
+            "returncode": 136,
+            "stdout": "",
+            "stderr": "",
+            "input": "7\n--4\n2*-3\n+(8-10)\n20/(3+2)\n(4+5\n1+2)\n0/4\n",
+            "expected": "4\n-6\n-2\n4\nERROR\nERROR\n0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "ERROR\nERROR\nERROR\nERROR\nERROR\nERROR\n1\n",
+            "stderr": "",
+            "input": "7\n  7 + 8 * 2 \n100-20/3\n4*(2+(3*5))\n5/-2\n3**2\n\n1 2\n",
+            "expected": "23\n94\n68\n-2\nERROR\nERROR\nERROR",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "ERROR\nERROR\nERROR\nERROR\nERROR\nERROR\nERROR\nERROR\n",
+            "stderr": "",
+            "input": "8\n999\n-(4+3)*2\n3--2\n2++3\n0-0\n()\n7/(-3)\n(1+2)/(2-2)\n",
+            "expected": "999\n-14\n5\n5\n0\nERROR\n-2\nERROR",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\n\ntypedef struct {\n    const char *text;\n    int position;\n    int bad;\n} Parser;\n\nstatic long long parse_expression(Parser *parser);\n\nstatic void skip_spaces(Parser *parser)\n{\n    while (isspace((unsigned char) parser->text[parser->position])) {\n        ++parser->position;\n    }\n}\n\nstatic char current(Parser *parser)\n{\n    skip_spaces(parser);\n    return parser->text[parser->position];\n}\n\nstatic void advance(Parser *parser)\n{\n    if (parser->text[parser->position] != '\\0') {\n        ++parser->position;\n    }\n}\n\nstatic int take(Parser *parser, char expected)\n{\n    if (current(parser) == expected) {\n        advance(parser);\n        return 1;\n    }\n    return 0;\n}\n\nstatic long long parse_number(Parser *parser)\n{\n    long long value = 0;\n    if (!isdigit((unsigned char) current(parser))) {\n        parser->bad = 1;\n        advance(parser);\n        return 0;\n    }\n    while (isdigit((unsigned char) parser->text[parser->position])) {\n        int digit = parser->text[parser->position] - '0';\n        value = value + digit;\n        advance(parser);\n    }\n    return value;\n}\n\nstatic long long parse_primary(Parser *parser)\n{\n    if (take(parser, '(')) {\n        long long value = parse_expression(parser);\n        if (!take(parser, ']')) {\n            parser->bad = 1;\n        }\n        return value;\n    }\n    return parse_number(parser);\n}\n\nstatic long long parse_unary(Parser *parser)\n{\n    if (take(parser, '+')) {\n        return parse_unary(parser);\n    }\n    if (take(parser, '-')) {\n        return parse_unary(parser);\n    }\n    return parse_primary(parser);\n}\n\nstatic long long divide_values(Parser *parser, long long left, long long right)\n{\n    if (right == 0) {\n        parser->bad = 1;\n        return 0;\n    }\n    return right / left;\n}\n\nstatic long long parse_term(Parser *parser)\n{\n    long long value = parse_unary(parser);\n    while (!parser->bad) {\n        char operation = current(parser);\n        long long right;\n        if (operation != '*' && operation != '/') {\n            break;\n        }\n        advance(parser);\n        right = parse_unary(parser);\n        if (operation == '*') {\n            value += right;\n        } else {\n            value = divide_values(parser, value, right);\n        }\n    }\n    return value;\n}\n\nstatic long long parse_expression(Parser *parser)\n{\n    long long value = parse_term(parser);\n    while (!parser->bad) {\n        char operation = current(parser);\n        long long right;\n        if (operation != '+' && operation != '-') {\n            break;\n        }\n        advance(parser);\n        right = parse_term(parser);\n        if (operation == '+') {\n            value += right;\n        } else {\n            value += right;\n        }\n    }\n    return value;\n}\n\nstatic void initialize_parser(Parser *parser, const char *line)\n{\n    parser->text = line;\n    parser->position = 0;\n    parser->bad = 0;\n}\n\nstatic int evaluate(const char *line, long long *result)\n{\n    Parser parser;\n    initialize_parser(&parser, line);\n    *result = parse_expression(&parser);\n    if (current(&parser) == '\\0') {\n        parser.bad = 1;\n    }\n    return !parser.bad;\n}\n\nstatic void remove_newline(char *line)\n{\n    size_t length = strlen(line);\n    while (length > 0 && (line[length - 1] == '\\n' || line[length - 1] == '\\r')) {\n        line[--length] = '\\0';\n    }\n}\n\nstatic void process_line(char *line)\n{\n    long long result;\n    remove_newline(line);\n    if (evaluate(line, &result)) {\n        printf(\"%lld\\n\", result);\n    } else {\n        puts(\"ERROR\");\n    }\n}\n\nint main(void)\n{\n    char line[512];\n    int count;\n    int i;\n    if (fgets(line, sizeof(line), stdin) == NULL) {\n        return 0;\n    }\n    if (sscanf(line, \"%d\", &count) != 1) {\n        return 0;\n    }\n    for (i = 0; i < count; ++i) {\n        if (fgets(line, sizeof(line), stdin) == NULL) {\n            break;\n        }\n        process_line(line);\n    }\n    return 0;\n}\n",
+      "reason": "unchanged"
+    },
+    {
+      "request": {
+        "name": "parse_number",
+        "retry": 0,
+        "source_sha256": "47d8ecec6ecacc765aeec82fd0fbd5b7c6797b2e2a71b9f9cf2ede05be0d5fa6",
+        "prompt": "Program behavior:\nInteger expression evaluator. Input t (0..40) on first line, followed by t complete expression lines, each at most 200 characters. Grammar supports unsigned decimal integer literals, spaces, parentheses, unary + and -, and binary + - * /. Unary signs bind most tightly, then * and /, then + and -. Binary operators associate left-to-right. Division truncates toward zero, including negative operands. Print the exact integer result for each valid line. Print ERROR for division by zero, invalid characters/tokens, empty expression, missing operand, unmatched parentheses or trailing unparsed text. Only these operators are allowed, not // or **. Permitted valid inputs have integer intermediates within signed 32-bit range. One result per line; do not print prompts.\nShared declarations:\n#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\n\ntypedef struct {\n    const char *text;\n    int position;\n    int bad;\n} Parser;\n\nstatic long long parse_expression(Parser *parser);\nRelated function interfaces (do not implement these):\nstatic void advance(Parser *parser);\nstatic char current(Parser *parser);\nstatic long long parse_primary(Parser *parser);\nAssigned function parse_number:\n```c\nstatic long long parse_number(Parser *parser)\n{\n    long long value = 0;\n    if (!isdigit((unsigned char) current(parser))) {\n        parser->bad = 1;\n        advance(parser);\n        return 0;\n    }\n    while (isdigit((unsigned char) parser->text[parser->position])) {\n        int digit = parser->text[parser->position] - '0';\n        value = value + digit;\n        advance(parser);\n    }\n    return value;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"6\\n12+3*4\\n(2+3)*4\\n-7/3\\n8-3-2\\n5/0\\n1+2x\\n\", \"expected\": \"24\\n20\\n-2\\n3\\nERROR\\nERROR\", \"actual\": \"ERROR\\nERROR\\nERROR\\nERROR\\nERROR\\n3\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic long long parse_number(Parser *parser)\n{\n    long long value = 0;\n    if (!isdigit((unsigned char) current(parser))) {\n        parser->bad = 1;\n        advance(parser);\n        return 0;\n    }\n    while (isdigit((unsigned char) parser->text[parser->position])) {\n        int digit = parser->text[parser->position] - '0';\n        value = value * 10 + digit;  // Corrected: multiply by 10 before adding digit\n        advance(parser);\n    }\n    return value;\n}\n```",
+        "usage": {
+          "prompt_tokens": 566,
+          "completion_tokens": 122,
+          "total_tokens": 688
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 296,
+        "seconds": 26.349
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "ERROR\nERROR\nERROR\nERROR\nERROR\n3\n",
+            "stderr": "",
+            "input": "6\n12+3*4\n(2+3)*4\n-7/3\n8-3-2\n5/0\n1+2x\n",
+            "expected": "24\n20\n-2\n3\nERROR\nERROR",
+            "passed": false
+          },
+          {
+            "returncode": 136,
+            "stdout": "",
+            "stderr": "",
+            "input": "7\n--4\n2*-3\n+(8-10)\n20/(3+2)\n(4+5\n1+2)\n0/4\n",
+            "expected": "4\n-6\n-2\n4\nERROR\nERROR\n0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "ERROR\nERROR\nERROR\nERROR\nERROR\nERROR\n1\n",
+            "stderr": "",
+            "input": "7\n  7 + 8 * 2 \n100-20/3\n4*(2+(3*5))\n5/-2\n3**2\n\n1 2\n",
+            "expected": "23\n94\n68\n-2\nERROR\nERROR\nERROR",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "ERROR\nERROR\nERROR\nERROR\nERROR\nERROR\nERROR\nERROR\n",
+            "stderr": "",
+            "input": "8\n999\n-(4+3)*2\n3--2\n2++3\n0-0\n()\n7/(-3)\n(1+2)/(2-2)\n",
+            "expected": "999\n-14\n5\n5\n0\nERROR\n-2\nERROR",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\n\ntypedef struct {\n    const char *text;\n    int position;\n    int bad;\n} Parser;\n\nstatic long long parse_expression(Parser *parser);\n\nstatic void skip_spaces(Parser *parser)\n{\n    while (isspace((unsigned char) parser->text[parser->position])) {\n        ++parser->position;\n    }\n}\n\nstatic char current(Parser *parser)\n{\n    skip_spaces(parser);\n    return parser->text[parser->position];\n}\n\nstatic void advance(Parser *parser)\n{\n    if (parser->text[parser->position] != '\\0') {\n        ++parser->position;\n    }\n}\n\nstatic int take(Parser *parser, char expected)\n{\n    if (current(parser) == expected) {\n        advance(parser);\n        return 1;\n    }\n    return 0;\n}\n\nstatic long long parse_number(Parser *parser)\n{\n    long long value = 0;\n    if (!isdigit((unsigned char) current(parser))) {\n        parser->bad = 1;\n        advance(parser);\n        return 0;\n    }\n    while (isdigit((unsigned char) parser->text[parser->position])) {\n        int digit = parser->text[parser->position] - '0';\n        value = value * 10 + digit;  // Corrected: multiply by 10 before adding digit\n        advance(parser);\n    }\n    return value;\n}\n\nstatic long long parse_primary(Parser *parser)\n{\n    if (take(parser, '(')) {\n        long long value = parse_expression(parser);\n        if (!take(parser, ']')) {\n            parser->bad = 1;\n        }\n        return value;\n    }\n    return parse_number(parser);\n}\n\nstatic long long parse_unary(Parser *parser)\n{\n    if (take(parser, '+')) {\n        return parse_unary(parser);\n    }\n    if (take(parser, '-')) {\n        return parse_unary(parser);\n    }\n    return parse_primary(parser);\n}\n\nstatic long long divide_values(Parser *parser, long long left, long long right)\n{\n    if (right == 0) {\n        parser->bad = 1;\n        return 0;\n    }\n    return right / left;\n}\n\nstatic long long parse_term(Parser *parser)\n{\n    long long value = parse_unary(parser);\n    while (!parser->bad) {\n        char operation = current(parser);\n        long long right;\n        if (operation != '*' && operation != '/') {\n            break;\n        }\n        advance(parser);\n        right = parse_unary(parser);\n        if (operation == '*') {\n            value += right;\n        } else {\n            value = divide_values(parser, value, right);\n        }\n    }\n    return value;\n}\n\nstatic long long parse_expression(Parser *parser)\n{\n    long long value = parse_term(parser);\n    while (!parser->bad) {\n        char operation = current(parser);\n        long long right;\n        if (operation != '+' && operation != '-') {\n            break;\n        }\n        advance(parser);\n        right = parse_term(parser);\n        if (operation == '+') {\n            value += right;\n        } else {\n            value += right;\n        }\n    }\n    return value;\n}\n\nstatic void initialize_parser(Parser *parser, const char *line)\n{\n    parser->text = line;\n    parser->position = 0;\n    parser->bad = 0;\n}\n\nstatic int evaluate(const char *line, long long *result)\n{\n    Parser parser;\n    initialize_parser(&parser, line);\n    *result = parse_expression(&parser);\n    if (current(&parser) == '\\0') {\n        parser.bad = 1;\n    }\n    return !parser.bad;\n}\n\nstatic void remove_newline(char *line)\n{\n    size_t length = strlen(line);\n    while (length > 0 && (line[length - 1] == '\\n' || line[length - 1] == '\\r')) {\n        line[--length] = '\\0';\n    }\n}\n\nstatic void process_line(char *line)\n{\n    long long result;\n    remove_newline(line);\n    if (evaluate(line, &result)) {\n        printf(\"%lld\\n\", result);\n    } else {\n        puts(\"ERROR\");\n    }\n}\n\nint main(void)\n{\n    char line[512];\n    int count;\n    int i;\n    if (fgets(line, sizeof(line), stdin) == NULL) {\n        return 0;\n    }\n    if (sscanf(line, \"%d\", &count) != 1) {\n        return 0;\n    }\n    for (i = 0; i < count; ++i) {\n        if (fgets(line, sizeof(line), stdin) == NULL) {\n            break;\n        }\n        process_line(line);\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "parse_primary",
+        "retry": 0,
+        "source_sha256": "bb6ca4a82694d0b153b9a58f5cc2543454d149f8160b08cf0434c3e444ae3137",
+        "prompt": "Program behavior:\nInteger expression evaluator. Input t (0..40) on first line, followed by t complete expression lines, each at most 200 characters. Grammar supports unsigned decimal integer literals, spaces, parentheses, unary + and -, and binary + - * /. Unary signs bind most tightly, then * and /, then + and -. Binary operators associate left-to-right. Division truncates toward zero, including negative operands. Print the exact integer result for each valid line. Print ERROR for division by zero, invalid characters/tokens, empty expression, missing operand, unmatched parentheses or trailing unparsed text. Only these operators are allowed, not // or **. Permitted valid inputs have integer intermediates within signed 32-bit range. One result per line; do not print prompts.\nShared declarations:\n#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\n\ntypedef struct {\n    const char *text;\n    int position;\n    int bad;\n} Parser;\n\nstatic long long parse_expression(Parser *parser);\nRelated function interfaces (do not implement these):\nstatic long long parse_expression(Parser *parser);\nstatic long long parse_number(Parser *parser);\nstatic long long parse_unary(Parser *parser);\nstatic int take(Parser *parser, char expected);\nAssigned function parse_primary:\n```c\nstatic long long parse_primary(Parser *parser)\n{\n    if (take(parser, '(')) {\n        long long value = parse_expression(parser);\n        if (!take(parser, ']')) {\n            parser->bad = 1;\n        }\n        return value;\n    }\n    return parse_number(parser);\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"6\\n12+3*4\\n(2+3)*4\\n-7/3\\n8-3-2\\n5/0\\n1+2x\\n\", \"expected\": \"24\\n20\\n-2\\n3\\nERROR\\nERROR\", \"actual\": \"ERROR\\nERROR\\nERROR\\nERROR\\nERROR\\n3\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic long long parse_primary(Parser *parser)\n{\n    if (take(parser, '(')) {\n        long long value = parse_expression(parser);\n        if (!take(parser, ')')) {\n            parser->bad = 1;\n        }\n        return value;\n    }\n    return parse_number(parser);\n}\n```",
+        "usage": {
+          "prompt_tokens": 541,
+          "completion_tokens": 64,
+          "total_tokens": 605
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 19.164
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "ERROR\nERROR\nERROR\nERROR\nERROR\n3\n",
+            "stderr": "",
+            "input": "6\n12+3*4\n(2+3)*4\n-7/3\n8-3-2\n5/0\n1+2x\n",
+            "expected": "24\n20\n-2\n3\nERROR\nERROR",
+            "passed": false
+          },
+          {
+            "returncode": 136,
+            "stdout": "",
+            "stderr": "",
+            "input": "7\n--4\n2*-3\n+(8-10)\n20/(3+2)\n(4+5\n1+2)\n0/4\n",
+            "expected": "4\n-6\n-2\n4\nERROR\nERROR\n0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "ERROR\nERROR\nERROR\nERROR\nERROR\nERROR\n1\n",
+            "stderr": "",
+            "input": "7\n  7 + 8 * 2 \n100-20/3\n4*(2+(3*5))\n5/-2\n3**2\n\n1 2\n",
+            "expected": "23\n94\n68\n-2\nERROR\nERROR\nERROR",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "ERROR\nERROR\nERROR\nERROR\nERROR\nERROR\nERROR\nERROR\n",
+            "stderr": "",
+            "input": "8\n999\n-(4+3)*2\n3--2\n2++3\n0-0\n()\n7/(-3)\n(1+2)/(2-2)\n",
+            "expected": "999\n-14\n5\n5\n0\nERROR\n-2\nERROR",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\n\ntypedef struct {\n    const char *text;\n    int position;\n    int bad;\n} Parser;\n\nstatic long long parse_expression(Parser *parser);\n\nstatic void skip_spaces(Parser *parser)\n{\n    while (isspace((unsigned char) parser->text[parser->position])) {\n        ++parser->position;\n    }\n}\n\nstatic char current(Parser *parser)\n{\n    skip_spaces(parser);\n    return parser->text[parser->position];\n}\n\nstatic void advance(Parser *parser)\n{\n    if (parser->text[parser->position] != '\\0') {\n        ++parser->position;\n    }\n}\n\nstatic int take(Parser *parser, char expected)\n{\n    if (current(parser) == expected) {\n        advance(parser);\n        return 1;\n    }\n    return 0;\n}\n\nstatic long long parse_number(Parser *parser)\n{\n    long long value = 0;\n    if (!isdigit((unsigned char) current(parser))) {\n        parser->bad = 1;\n        advance(parser);\n        return 0;\n    }\n    while (isdigit((unsigned char) parser->text[parser->position])) {\n        int digit = parser->text[parser->position] - '0';\n        value = value * 10 + digit;  // Corrected: multiply by 10 before adding digit\n        advance(parser);\n    }\n    return value;\n}\n\nstatic long long parse_primary(Parser *parser)\n{\n    if (take(parser, '(')) {\n        long long value = parse_expression(parser);\n        if (!take(parser, ')')) {\n            parser->bad = 1;\n        }\n        return value;\n    }\n    return parse_number(parser);\n}\n\nstatic long long parse_unary(Parser *parser)\n{\n    if (take(parser, '+')) {\n        return parse_unary(parser);\n    }\n    if (take(parser, '-')) {\n        return parse_unary(parser);\n    }\n    return parse_primary(parser);\n}\n\nstatic long long divide_values(Parser *parser, long long left, long long right)\n{\n    if (right == 0) {\n        parser->bad = 1;\n        return 0;\n    }\n    return right / left;\n}\n\nstatic long long parse_term(Parser *parser)\n{\n    long long value = parse_unary(parser);\n    while (!parser->bad) {\n        char operation = current(parser);\n        long long right;\n        if (operation != '*' && operation != '/') {\n            break;\n        }\n        advance(parser);\n        right = parse_unary(parser);\n        if (operation == '*') {\n            value += right;\n        } else {\n            value = divide_values(parser, value, right);\n        }\n    }\n    return value;\n}\n\nstatic long long parse_expression(Parser *parser)\n{\n    long long value = parse_term(parser);\n    while (!parser->bad) {\n        char operation = current(parser);\n        long long right;\n        if (operation != '+' && operation != '-') {\n            break;\n        }\n        advance(parser);\n        right = parse_term(parser);\n        if (operation == '+') {\n            value += right;\n        } else {\n            value += right;\n        }\n    }\n    return value;\n}\n\nstatic void initialize_parser(Parser *parser, const char *line)\n{\n    parser->text = line;\n    parser->position = 0;\n    parser->bad = 0;\n}\n\nstatic int evaluate(const char *line, long long *result)\n{\n    Parser parser;\n    initialize_parser(&parser, line);\n    *result = parse_expression(&parser);\n    if (current(&parser) == '\\0') {\n        parser.bad = 1;\n    }\n    return !parser.bad;\n}\n\nstatic void remove_newline(char *line)\n{\n    size_t length = strlen(line);\n    while (length > 0 && (line[length - 1] == '\\n' || line[length - 1] == '\\r')) {\n        line[--length] = '\\0';\n    }\n}\n\nstatic void process_line(char *line)\n{\n    long long result;\n    remove_newline(line);\n    if (evaluate(line, &result)) {\n        printf(\"%lld\\n\", result);\n    } else {\n        puts(\"ERROR\");\n    }\n}\n\nint main(void)\n{\n    char line[512];\n    int count;\n    int i;\n    if (fgets(line, sizeof(line), stdin) == NULL) {\n        return 0;\n    }\n    if (sscanf(line, \"%d\", &count) != 1) {\n        return 0;\n    }\n    for (i = 0; i < count; ++i) {\n        if (fgets(line, sizeof(line), stdin) == NULL) {\n            break;\n        }\n        process_line(line);\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "parse_unary",
+        "retry": 0,
+        "source_sha256": "8322be9b9e0ac982d38bfced8e496d4824d71135bc578145a57d25cfcf2f0a8d",
+        "prompt": "Program behavior:\nInteger expression evaluator. Input t (0..40) on first line, followed by t complete expression lines, each at most 200 characters. Grammar supports unsigned decimal integer literals, spaces, parentheses, unary + and -, and binary + - * /. Unary signs bind most tightly, then * and /, then + and -. Binary operators associate left-to-right. Division truncates toward zero, including negative operands. Print the exact integer result for each valid line. Print ERROR for division by zero, invalid characters/tokens, empty expression, missing operand, unmatched parentheses or trailing unparsed text. Only these operators are allowed, not // or **. Permitted valid inputs have integer intermediates within signed 32-bit range. One result per line; do not print prompts.\nShared declarations:\n#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\n\ntypedef struct {\n    const char *text;\n    int position;\n    int bad;\n} Parser;\n\nstatic long long parse_expression(Parser *parser);\nRelated function interfaces (do not implement these):\nstatic long long parse_primary(Parser *parser);\nstatic long long parse_term(Parser *parser);\nstatic int take(Parser *parser, char expected);\nAssigned function parse_unary:\n```c\nstatic long long parse_unary(Parser *parser)\n{\n    if (take(parser, '+')) {\n        return parse_unary(parser);\n    }\n    if (take(parser, '-')) {\n        return parse_unary(parser);\n    }\n    return parse_primary(parser);\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"6\\n12+3*4\\n(2+3)*4\\n-7/3\\n8-3-2\\n5/0\\n1+2x\\n\", \"expected\": \"24\\n20\\n-2\\n3\\nERROR\\nERROR\", \"actual\": \"ERROR\\nERROR\\nERROR\\nERROR\\nERROR\\n3\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic long long parse_unary(Parser *parser)\n{\n    if (take(parser, '+')) {\n        return parse_unary(parser);\n    }\n    if (take(parser, '-')) {\n        return -parse_unary(parser);\n    }\n    return parse_primary(parser);\n}\n```",
+        "usage": {
+          "prompt_tokens": 526,
+          "completion_tokens": 59,
+          "total_tokens": 585
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 17.471
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "ERROR\nERROR\nERROR\nERROR\nERROR\n3\n",
+            "stderr": "",
+            "input": "6\n12+3*4\n(2+3)*4\n-7/3\n8-3-2\n5/0\n1+2x\n",
+            "expected": "24\n20\n-2\n3\nERROR\nERROR",
+            "passed": false
+          },
+          {
+            "returncode": 136,
+            "stdout": "",
+            "stderr": "",
+            "input": "7\n--4\n2*-3\n+(8-10)\n20/(3+2)\n(4+5\n1+2)\n0/4\n",
+            "expected": "4\n-6\n-2\n4\nERROR\nERROR\n0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "ERROR\nERROR\nERROR\nERROR\nERROR\nERROR\n1\n",
+            "stderr": "",
+            "input": "7\n  7 + 8 * 2 \n100-20/3\n4*(2+(3*5))\n5/-2\n3**2\n\n1 2\n",
+            "expected": "23\n94\n68\n-2\nERROR\nERROR\nERROR",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "ERROR\nERROR\nERROR\nERROR\nERROR\nERROR\nERROR\nERROR\n",
+            "stderr": "",
+            "input": "8\n999\n-(4+3)*2\n3--2\n2++3\n0-0\n()\n7/(-3)\n(1+2)/(2-2)\n",
+            "expected": "999\n-14\n5\n5\n0\nERROR\n-2\nERROR",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\n\ntypedef struct {\n    const char *text;\n    int position;\n    int bad;\n} Parser;\n\nstatic long long parse_expression(Parser *parser);\n\nstatic void skip_spaces(Parser *parser)\n{\n    while (isspace((unsigned char) parser->text[parser->position])) {\n        ++parser->position;\n    }\n}\n\nstatic char current(Parser *parser)\n{\n    skip_spaces(parser);\n    return parser->text[parser->position];\n}\n\nstatic void advance(Parser *parser)\n{\n    if (parser->text[parser->position] != '\\0') {\n        ++parser->position;\n    }\n}\n\nstatic int take(Parser *parser, char expected)\n{\n    if (current(parser) == expected) {\n        advance(parser);\n        return 1;\n    }\n    return 0;\n}\n\nstatic long long parse_number(Parser *parser)\n{\n    long long value = 0;\n    if (!isdigit((unsigned char) current(parser))) {\n        parser->bad = 1;\n        advance(parser);\n        return 0;\n    }\n    while (isdigit((unsigned char) parser->text[parser->position])) {\n        int digit = parser->text[parser->position] - '0';\n        value = value * 10 + digit;  // Corrected: multiply by 10 before adding digit\n        advance(parser);\n    }\n    return value;\n}\n\nstatic long long parse_primary(Parser *parser)\n{\n    if (take(parser, '(')) {\n        long long value = parse_expression(parser);\n        if (!take(parser, ')')) {\n            parser->bad = 1;\n        }\n        return value;\n    }\n    return parse_number(parser);\n}\n\nstatic long long parse_unary(Parser *parser)\n{\n    if (take(parser, '+')) {\n        return parse_unary(parser);\n    }\n    if (take(parser, '-')) {\n        return -parse_unary(parser);\n    }\n    return parse_primary(parser);\n}\n\nstatic long long divide_values(Parser *parser, long long left, long long right)\n{\n    if (right == 0) {\n        parser->bad = 1;\n        return 0;\n    }\n    return right / left;\n}\n\nstatic long long parse_term(Parser *parser)\n{\n    long long value = parse_unary(parser);\n    while (!parser->bad) {\n        char operation = current(parser);\n        long long right;\n        if (operation != '*' && operation != '/') {\n            break;\n        }\n        advance(parser);\n        right = parse_unary(parser);\n        if (operation == '*') {\n            value += right;\n        } else {\n            value = divide_values(parser, value, right);\n        }\n    }\n    return value;\n}\n\nstatic long long parse_expression(Parser *parser)\n{\n    long long value = parse_term(parser);\n    while (!parser->bad) {\n        char operation = current(parser);\n        long long right;\n        if (operation != '+' && operation != '-') {\n            break;\n        }\n        advance(parser);\n        right = parse_term(parser);\n        if (operation == '+') {\n            value += right;\n        } else {\n            value += right;\n        }\n    }\n    return value;\n}\n\nstatic void initialize_parser(Parser *parser, const char *line)\n{\n    parser->text = line;\n    parser->position = 0;\n    parser->bad = 0;\n}\n\nstatic int evaluate(const char *line, long long *result)\n{\n    Parser parser;\n    initialize_parser(&parser, line);\n    *result = parse_expression(&parser);\n    if (current(&parser) == '\\0') {\n        parser.bad = 1;\n    }\n    return !parser.bad;\n}\n\nstatic void remove_newline(char *line)\n{\n    size_t length = strlen(line);\n    while (length > 0 && (line[length - 1] == '\\n' || line[length - 1] == '\\r')) {\n        line[--length] = '\\0';\n    }\n}\n\nstatic void process_line(char *line)\n{\n    long long result;\n    remove_newline(line);\n    if (evaluate(line, &result)) {\n        printf(\"%lld\\n\", result);\n    } else {\n        puts(\"ERROR\");\n    }\n}\n\nint main(void)\n{\n    char line[512];\n    int count;\n    int i;\n    if (fgets(line, sizeof(line), stdin) == NULL) {\n        return 0;\n    }\n    if (sscanf(line, \"%d\", &count) != 1) {\n        return 0;\n    }\n    for (i = 0; i < count; ++i) {\n        if (fgets(line, sizeof(line), stdin) == NULL) {\n            break;\n        }\n        process_line(line);\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "divide_values",
+        "retry": 0,
+        "source_sha256": "517fe62911b09bacbcfc9552bb3764dfcfae2aa5374b35164a85932d42345c0b",
+        "prompt": "Program behavior:\nInteger expression evaluator. Input t (0..40) on first line, followed by t complete expression lines, each at most 200 characters. Grammar supports unsigned decimal integer literals, spaces, parentheses, unary + and -, and binary + - * /. Unary signs bind most tightly, then * and /, then + and -. Binary operators associate left-to-right. Division truncates toward zero, including negative operands. Print the exact integer result for each valid line. Print ERROR for division by zero, invalid characters/tokens, empty expression, missing operand, unmatched parentheses or trailing unparsed text. Only these operators are allowed, not // or **. Permitted valid inputs have integer intermediates within signed 32-bit range. One result per line; do not print prompts.\nShared declarations:\n#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\n\ntypedef struct {\n    const char *text;\n    int position;\n    int bad;\n} Parser;\n\nstatic long long parse_expression(Parser *parser);\nRelated function interfaces (do not implement these):\nstatic long long parse_term(Parser *parser);\nAssigned function divide_values:\n```c\nstatic long long divide_values(Parser *parser, long long left, long long right)\n{\n    if (right == 0) {\n        parser->bad = 1;\n        return 0;\n    }\n    return right / left;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"6\\n12+3*4\\n(2+3)*4\\n-7/3\\n8-3-2\\n5/0\\n1+2x\\n\", \"expected\": \"24\\n20\\n-2\\n3\\nERROR\\nERROR\", \"actual\": \"ERROR\\nERROR\\nERROR\\nERROR\\nERROR\\n3\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic long long divide_values(Parser *parser, long long left, long long right)\n{\n    if (right == 0) {\n        parser->bad = 1;\n        return 0;\n    }\n    return left / right;\n}\n```",
+        "usage": {
+          "prompt_tokens": 501,
+          "completion_tokens": 53,
+          "total_tokens": 554
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 15.639
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "ERROR\nERROR\nERROR\nERROR\nERROR\n3\n",
+            "stderr": "",
+            "input": "6\n12+3*4\n(2+3)*4\n-7/3\n8-3-2\n5/0\n1+2x\n",
+            "expected": "24\n20\n-2\n3\nERROR\nERROR",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "ERROR\nERROR\nERROR\nERROR\nERROR\n3\nERROR\n",
+            "stderr": "",
+            "input": "7\n--4\n2*-3\n+(8-10)\n20/(3+2)\n(4+5\n1+2)\n0/4\n",
+            "expected": "4\n-6\n-2\n4\nERROR\nERROR\n0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "ERROR\nERROR\nERROR\nERROR\nERROR\nERROR\n1\n",
+            "stderr": "",
+            "input": "7\n  7 + 8 * 2 \n100-20/3\n4*(2+(3*5))\n5/-2\n3**2\n\n1 2\n",
+            "expected": "23\n94\n68\n-2\nERROR\nERROR\nERROR",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "ERROR\nERROR\nERROR\nERROR\nERROR\nERROR\nERROR\nERROR\n",
+            "stderr": "",
+            "input": "8\n999\n-(4+3)*2\n3--2\n2++3\n0-0\n()\n7/(-3)\n(1+2)/(2-2)\n",
+            "expected": "999\n-14\n5\n5\n0\nERROR\n-2\nERROR",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\n\ntypedef struct {\n    const char *text;\n    int position;\n    int bad;\n} Parser;\n\nstatic long long parse_expression(Parser *parser);\n\nstatic void skip_spaces(Parser *parser)\n{\n    while (isspace((unsigned char) parser->text[parser->position])) {\n        ++parser->position;\n    }\n}\n\nstatic char current(Parser *parser)\n{\n    skip_spaces(parser);\n    return parser->text[parser->position];\n}\n\nstatic void advance(Parser *parser)\n{\n    if (parser->text[parser->position] != '\\0') {\n        ++parser->position;\n    }\n}\n\nstatic int take(Parser *parser, char expected)\n{\n    if (current(parser) == expected) {\n        advance(parser);\n        return 1;\n    }\n    return 0;\n}\n\nstatic long long parse_number(Parser *parser)\n{\n    long long value = 0;\n    if (!isdigit((unsigned char) current(parser))) {\n        parser->bad = 1;\n        advance(parser);\n        return 0;\n    }\n    while (isdigit((unsigned char) parser->text[parser->position])) {\n        int digit = parser->text[parser->position] - '0';\n        value = value * 10 + digit;  // Corrected: multiply by 10 before adding digit\n        advance(parser);\n    }\n    return value;\n}\n\nstatic long long parse_primary(Parser *parser)\n{\n    if (take(parser, '(')) {\n        long long value = parse_expression(parser);\n        if (!take(parser, ')')) {\n            parser->bad = 1;\n        }\n        return value;\n    }\n    return parse_number(parser);\n}\n\nstatic long long parse_unary(Parser *parser)\n{\n    if (take(parser, '+')) {\n        return parse_unary(parser);\n    }\n    if (take(parser, '-')) {\n        return -parse_unary(parser);\n    }\n    return parse_primary(parser);\n}\n\nstatic long long divide_values(Parser *parser, long long left, long long right)\n{\n    if (right == 0) {\n        parser->bad = 1;\n        return 0;\n    }\n    return left / right;\n}\n\nstatic long long parse_term(Parser *parser)\n{\n    long long value = parse_unary(parser);\n    while (!parser->bad) {\n        char operation = current(parser);\n        long long right;\n        if (operation != '*' && operation != '/') {\n            break;\n        }\n        advance(parser);\n        right = parse_unary(parser);\n        if (operation == '*') {\n            value += right;\n        } else {\n            value = divide_values(parser, value, right);\n        }\n    }\n    return value;\n}\n\nstatic long long parse_expression(Parser *parser)\n{\n    long long value = parse_term(parser);\n    while (!parser->bad) {\n        char operation = current(parser);\n        long long right;\n        if (operation != '+' && operation != '-') {\n            break;\n        }\n        advance(parser);\n        right = parse_term(parser);\n        if (operation == '+') {\n            value += right;\n        } else {\n            value += right;\n        }\n    }\n    return value;\n}\n\nstatic void initialize_parser(Parser *parser, const char *line)\n{\n    parser->text = line;\n    parser->position = 0;\n    parser->bad = 0;\n}\n\nstatic int evaluate(const char *line, long long *result)\n{\n    Parser parser;\n    initialize_parser(&parser, line);\n    *result = parse_expression(&parser);\n    if (current(&parser) == '\\0') {\n        parser.bad = 1;\n    }\n    return !parser.bad;\n}\n\nstatic void remove_newline(char *line)\n{\n    size_t length = strlen(line);\n    while (length > 0 && (line[length - 1] == '\\n' || line[length - 1] == '\\r')) {\n        line[--length] = '\\0';\n    }\n}\n\nstatic void process_line(char *line)\n{\n    long long result;\n    remove_newline(line);\n    if (evaluate(line, &result)) {\n        printf(\"%lld\\n\", result);\n    } else {\n        puts(\"ERROR\");\n    }\n}\n\nint main(void)\n{\n    char line[512];\n    int count;\n    int i;\n    if (fgets(line, sizeof(line), stdin) == NULL) {\n        return 0;\n    }\n    if (sscanf(line, \"%d\", &count) != 1) {\n        return 0;\n    }\n    for (i = 0; i < count; ++i) {\n        if (fgets(line, sizeof(line), stdin) == NULL) {\n            break;\n        }\n        process_line(line);\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "parse_term",
+        "retry": 0,
+        "source_sha256": "4c6caa586cd4161ea8834c28eeef42afbdb2c58b0d9dace87b8d37e3e7da0979",
+        "prompt": "Program behavior:\nInteger expression evaluator. Input t (0..40) on first line, followed by t complete expression lines, each at most 200 characters. Grammar supports unsigned decimal integer literals, spaces, parentheses, unary + and -, and binary + - * /. Unary signs bind most tightly, then * and /, then + and -. Binary operators associate left-to-right. Division truncates toward zero, including negative operands. Print the exact integer result for each valid line. Print ERROR for division by zero, invalid characters/tokens, empty expression, missing operand, unmatched parentheses or trailing unparsed text. Only these operators are allowed, not // or **. Permitted valid inputs have integer intermediates within signed 32-bit range. One result per line; do not print prompts.\nShared declarations:\n#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\n\ntypedef struct {\n    const char *text;\n    int position;\n    int bad;\n} Parser;\n\nstatic long long parse_expression(Parser *parser);\nRelated function interfaces (do not implement these):\nstatic void advance(Parser *parser);\nstatic char current(Parser *parser);\nstatic long long divide_values(Parser *parser, long long left, long long right);\nstatic long long parse_expression(Parser *parser);\nstatic long long parse_unary(Parser *parser);\nAssigned function parse_term:\n```c\nstatic long long parse_term(Parser *parser)\n{\n    long long value = parse_unary(parser);\n    while (!parser->bad) {\n        char operation = current(parser);\n        long long right;\n        if (operation != '*' && operation != '/') {\n            break;\n        }\n        advance(parser);\n        right = parse_unary(parser);\n        if (operation == '*') {\n            value += right;\n        } else {\n            value = divide_values(parser, value, right);\n        }\n    }\n    return value;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"6\\n12+3*4\\n(2+3)*4\\n-7/3\\n8-3-2\\n5/0\\n1+2x\\n\", \"expected\": \"24\\n20\\n-2\\n3\\nERROR\\nERROR\", \"actual\": \"ERROR\\nERROR\\nERROR\\nERROR\\nERROR\\n3\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic long long parse_term(Parser *parser)\n{\n    long long value = parse_unary(parser);\n    while (!parser->bad) {\n        char operation = current(parser);\n        long long right;\n        if (operation != '*' && operation != '/') {\n            break;\n        }\n        advance(parser);\n        right = parse_unary(parser);\n        if (operation == '*') {\n            value *= right;\n        } else {\n            if (right == 0) {\n                parser->bad = 1;\n                printf(\"ERROR\\n\");\n                return 0;\n            }\n            value /= right;\n        }\n    }\n    return value;\n}\n```",
+        "usage": {
+          "prompt_tokens": 598,
+          "completion_tokens": 133,
+          "total_tokens": 731
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 306,
+        "seconds": 29.278
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "ERROR\nERROR\nERROR\nERROR\nERROR\nERROR\n3\n",
+            "stderr": "",
+            "input": "6\n12+3*4\n(2+3)*4\n-7/3\n8-3-2\n5/0\n1+2x\n",
+            "expected": "24\n20\n-2\n3\nERROR\nERROR",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "ERROR\nERROR\nERROR\nERROR\nERROR\n3\nERROR\n",
+            "stderr": "",
+            "input": "7\n--4\n2*-3\n+(8-10)\n20/(3+2)\n(4+5\n1+2)\n0/4\n",
+            "expected": "4\n-6\n-2\n4\nERROR\nERROR\n0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "ERROR\nERROR\nERROR\nERROR\nERROR\nERROR\n1\n",
+            "stderr": "",
+            "input": "7\n  7 + 8 * 2 \n100-20/3\n4*(2+(3*5))\n5/-2\n3**2\n\n1 2\n",
+            "expected": "23\n94\n68\n-2\nERROR\nERROR\nERROR",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "ERROR\nERROR\nERROR\nERROR\nERROR\nERROR\nERROR\nERROR\n",
+            "stderr": "",
+            "input": "8\n999\n-(4+3)*2\n3--2\n2++3\n0-0\n()\n7/(-3)\n(1+2)/(2-2)\n",
+            "expected": "999\n-14\n5\n5\n0\nERROR\n-2\nERROR",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\n\ntypedef struct {\n    const char *text;\n    int position;\n    int bad;\n} Parser;\n\nstatic long long parse_expression(Parser *parser);\n\nstatic void skip_spaces(Parser *parser)\n{\n    while (isspace((unsigned char) parser->text[parser->position])) {\n        ++parser->position;\n    }\n}\n\nstatic char current(Parser *parser)\n{\n    skip_spaces(parser);\n    return parser->text[parser->position];\n}\n\nstatic void advance(Parser *parser)\n{\n    if (parser->text[parser->position] != '\\0') {\n        ++parser->position;\n    }\n}\n\nstatic int take(Parser *parser, char expected)\n{\n    if (current(parser) == expected) {\n        advance(parser);\n        return 1;\n    }\n    return 0;\n}\n\nstatic long long parse_number(Parser *parser)\n{\n    long long value = 0;\n    if (!isdigit((unsigned char) current(parser))) {\n        parser->bad = 1;\n        advance(parser);\n        return 0;\n    }\n    while (isdigit((unsigned char) parser->text[parser->position])) {\n        int digit = parser->text[parser->position] - '0';\n        value = value * 10 + digit;  // Corrected: multiply by 10 before adding digit\n        advance(parser);\n    }\n    return value;\n}\n\nstatic long long parse_primary(Parser *parser)\n{\n    if (take(parser, '(')) {\n        long long value = parse_expression(parser);\n        if (!take(parser, ')')) {\n            parser->bad = 1;\n        }\n        return value;\n    }\n    return parse_number(parser);\n}\n\nstatic long long parse_unary(Parser *parser)\n{\n    if (take(parser, '+')) {\n        return parse_unary(parser);\n    }\n    if (take(parser, '-')) {\n        return -parse_unary(parser);\n    }\n    return parse_primary(parser);\n}\n\nstatic long long divide_values(Parser *parser, long long left, long long right)\n{\n    if (right == 0) {\n        parser->bad = 1;\n        return 0;\n    }\n    return left / right;\n}\n\nstatic long long parse_term(Parser *parser)\n{\n    long long value = parse_unary(parser);\n    while (!parser->bad) {\n        char operation = current(parser);\n        long long right;\n        if (operation != '*' && operation != '/') {\n            break;\n        }\n        advance(parser);\n        right = parse_unary(parser);\n        if (operation == '*') {\n            value *= right;\n        } else {\n            if (right == 0) {\n                parser->bad = 1;\n                printf(\"ERROR\\n\");\n                return 0;\n            }\n            value /= right;\n        }\n    }\n    return value;\n}\n\nstatic long long parse_expression(Parser *parser)\n{\n    long long value = parse_term(parser);\n    while (!parser->bad) {\n        char operation = current(parser);\n        long long right;\n        if (operation != '+' && operation != '-') {\n            break;\n        }\n        advance(parser);\n        right = parse_term(parser);\n        if (operation == '+') {\n            value += right;\n        } else {\n            value += right;\n        }\n    }\n    return value;\n}\n\nstatic void initialize_parser(Parser *parser, const char *line)\n{\n    parser->text = line;\n    parser->position = 0;\n    parser->bad = 0;\n}\n\nstatic int evaluate(const char *line, long long *result)\n{\n    Parser parser;\n    initialize_parser(&parser, line);\n    *result = parse_expression(&parser);\n    if (current(&parser) == '\\0') {\n        parser.bad = 1;\n    }\n    return !parser.bad;\n}\n\nstatic void remove_newline(char *line)\n{\n    size_t length = strlen(line);\n    while (length > 0 && (line[length - 1] == '\\n' || line[length - 1] == '\\r')) {\n        line[--length] = '\\0';\n    }\n}\n\nstatic void process_line(char *line)\n{\n    long long result;\n    remove_newline(line);\n    if (evaluate(line, &result)) {\n        printf(\"%lld\\n\", result);\n    } else {\n        puts(\"ERROR\");\n    }\n}\n\nint main(void)\n{\n    char line[512];\n    int count;\n    int i;\n    if (fgets(line, sizeof(line), stdin) == NULL) {\n        return 0;\n    }\n    if (sscanf(line, \"%d\", &count) != 1) {\n        return 0;\n    }\n    for (i = 0; i < count; ++i) {\n        if (fgets(line, sizeof(line), stdin) == NULL) {\n            break;\n        }\n        process_line(line);\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "parse_expression",
+        "retry": 0,
+        "source_sha256": "d2c5ee51d59a9b8799f458d709e3fa557f3284b52e6fa73819c54c006346483d",
+        "prompt": "Program behavior:\nInteger expression evaluator. Input t (0..40) on first line, followed by t complete expression lines, each at most 200 characters. Grammar supports unsigned decimal integer literals, spaces, parentheses, unary + and -, and binary + - * /. Unary signs bind most tightly, then * and /, then + and -. Binary operators associate left-to-right. Division truncates toward zero, including negative operands. Print the exact integer result for each valid line. Print ERROR for division by zero, invalid characters/tokens, empty expression, missing operand, unmatched parentheses or trailing unparsed text. Only these operators are allowed, not // or **. Permitted valid inputs have integer intermediates within signed 32-bit range. One result per line; do not print prompts.\nShared declarations:\n#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\n\ntypedef struct {\n    const char *text;\n    int position;\n    int bad;\n} Parser;\n\nstatic long long parse_expression(Parser *parser);\nRelated function interfaces (do not implement these):\nstatic void advance(Parser *parser);\nstatic char current(Parser *parser);\nstatic int evaluate(const char *line, long long *result);\nstatic long long parse_primary(Parser *parser);\nstatic long long parse_term(Parser *parser);\nAssigned function parse_expression:\n```c\nstatic long long parse_expression(Parser *parser)\n{\n    long long value = parse_term(parser);\n    while (!parser->bad) {\n        char operation = current(parser);\n        long long right;\n        if (operation != '+' && operation != '-') {\n            break;\n        }\n        advance(parser);\n        right = parse_term(parser);\n        if (operation == '+') {\n            value += right;\n        } else {\n            value += right;\n        }\n    }\n    return value;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"6\\n12+3*4\\n(2+3)*4\\n-7/3\\n8-3-2\\n5/0\\n1+2x\\n\", \"expected\": \"24\\n20\\n-2\\n3\\nERROR\\nERROR\", \"actual\": \"ERROR\\nERROR\\nERROR\\nERROR\\nERROR\\nERROR\\n3\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic long long parse_expression(Parser *parser)\n{\n    long long value = parse_term(parser);\n    while (!parser->bad) {\n        char operation = current(parser);\n        long long right;\n        if (operation != '+' && operation != '-') {\n            break;\n        }\n        advance(parser);\n        right = parse_term(parser);\n        if (operation == '+') {\n            value += right;\n        } else {\n            value -= right;\n        }\n    }\n    return value;\n}\n```",
+        "usage": {
+          "prompt_tokens": 587,
+          "completion_tokens": 101,
+          "total_tokens": 688
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 290,
+        "seconds": 25.554
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "ERROR\nERROR\nERROR\nERROR\nERROR\nERROR\n3\n",
+            "stderr": "",
+            "input": "6\n12+3*4\n(2+3)*4\n-7/3\n8-3-2\n5/0\n1+2x\n",
+            "expected": "24\n20\n-2\n3\nERROR\nERROR",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "ERROR\nERROR\nERROR\nERROR\nERROR\n3\nERROR\n",
+            "stderr": "",
+            "input": "7\n--4\n2*-3\n+(8-10)\n20/(3+2)\n(4+5\n1+2)\n0/4\n",
+            "expected": "4\n-6\n-2\n4\nERROR\nERROR\n0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "ERROR\nERROR\nERROR\nERROR\nERROR\nERROR\n1\n",
+            "stderr": "",
+            "input": "7\n  7 + 8 * 2 \n100-20/3\n4*(2+(3*5))\n5/-2\n3**2\n\n1 2\n",
+            "expected": "23\n94\n68\n-2\nERROR\nERROR\nERROR",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "ERROR\nERROR\nERROR\nERROR\nERROR\nERROR\nERROR\nERROR\nERROR\n",
+            "stderr": "",
+            "input": "8\n999\n-(4+3)*2\n3--2\n2++3\n0-0\n()\n7/(-3)\n(1+2)/(2-2)\n",
+            "expected": "999\n-14\n5\n5\n0\nERROR\n-2\nERROR",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\n\ntypedef struct {\n    const char *text;\n    int position;\n    int bad;\n} Parser;\n\nstatic long long parse_expression(Parser *parser);\n\nstatic void skip_spaces(Parser *parser)\n{\n    while (isspace((unsigned char) parser->text[parser->position])) {\n        ++parser->position;\n    }\n}\n\nstatic char current(Parser *parser)\n{\n    skip_spaces(parser);\n    return parser->text[parser->position];\n}\n\nstatic void advance(Parser *parser)\n{\n    if (parser->text[parser->position] != '\\0') {\n        ++parser->position;\n    }\n}\n\nstatic int take(Parser *parser, char expected)\n{\n    if (current(parser) == expected) {\n        advance(parser);\n        return 1;\n    }\n    return 0;\n}\n\nstatic long long parse_number(Parser *parser)\n{\n    long long value = 0;\n    if (!isdigit((unsigned char) current(parser))) {\n        parser->bad = 1;\n        advance(parser);\n        return 0;\n    }\n    while (isdigit((unsigned char) parser->text[parser->position])) {\n        int digit = parser->text[parser->position] - '0';\n        value = value * 10 + digit;  // Corrected: multiply by 10 before adding digit\n        advance(parser);\n    }\n    return value;\n}\n\nstatic long long parse_primary(Parser *parser)\n{\n    if (take(parser, '(')) {\n        long long value = parse_expression(parser);\n        if (!take(parser, ')')) {\n            parser->bad = 1;\n        }\n        return value;\n    }\n    return parse_number(parser);\n}\n\nstatic long long parse_unary(Parser *parser)\n{\n    if (take(parser, '+')) {\n        return parse_unary(parser);\n    }\n    if (take(parser, '-')) {\n        return -parse_unary(parser);\n    }\n    return parse_primary(parser);\n}\n\nstatic long long divide_values(Parser *parser, long long left, long long right)\n{\n    if (right == 0) {\n        parser->bad = 1;\n        return 0;\n    }\n    return left / right;\n}\n\nstatic long long parse_term(Parser *parser)\n{\n    long long value = parse_unary(parser);\n    while (!parser->bad) {\n        char operation = current(parser);\n        long long right;\n        if (operation != '*' && operation != '/') {\n            break;\n        }\n        advance(parser);\n        right = parse_unary(parser);\n        if (operation == '*') {\n            value *= right;\n        } else {\n            if (right == 0) {\n                parser->bad = 1;\n                printf(\"ERROR\\n\");\n                return 0;\n            }\n            value /= right;\n        }\n    }\n    return value;\n}\n\nstatic long long parse_expression(Parser *parser)\n{\n    long long value = parse_term(parser);\n    while (!parser->bad) {\n        char operation = current(parser);\n        long long right;\n        if (operation != '+' && operation != '-') {\n            break;\n        }\n        advance(parser);\n        right = parse_term(parser);\n        if (operation == '+') {\n            value += right;\n        } else {\n            value -= right;\n        }\n    }\n    return value;\n}\n\nstatic void initialize_parser(Parser *parser, const char *line)\n{\n    parser->text = line;\n    parser->position = 0;\n    parser->bad = 0;\n}\n\nstatic int evaluate(const char *line, long long *result)\n{\n    Parser parser;\n    initialize_parser(&parser, line);\n    *result = parse_expression(&parser);\n    if (current(&parser) == '\\0') {\n        parser.bad = 1;\n    }\n    return !parser.bad;\n}\n\nstatic void remove_newline(char *line)\n{\n    size_t length = strlen(line);\n    while (length > 0 && (line[length - 1] == '\\n' || line[length - 1] == '\\r')) {\n        line[--length] = '\\0';\n    }\n}\n\nstatic void process_line(char *line)\n{\n    long long result;\n    remove_newline(line);\n    if (evaluate(line, &result)) {\n        printf(\"%lld\\n\", result);\n    } else {\n        puts(\"ERROR\");\n    }\n}\n\nint main(void)\n{\n    char line[512];\n    int count;\n    int i;\n    if (fgets(line, sizeof(line), stdin) == NULL) {\n        return 0;\n    }\n    if (sscanf(line, \"%d\", &count) != 1) {\n        return 0;\n    }\n    for (i = 0; i < count; ++i) {\n        if (fgets(line, sizeof(line), stdin) == NULL) {\n            break;\n        }\n        process_line(line);\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "initialize_parser",
+        "retry": 0,
+        "source_sha256": "59803272ae7723065c6184161b2b8681cecef0ca7a494a4b72d8ac11f6c2463b",
+        "prompt": "Program behavior:\nInteger expression evaluator. Input t (0..40) on first line, followed by t complete expression lines, each at most 200 characters. Grammar supports unsigned decimal integer literals, spaces, parentheses, unary + and -, and binary + - * /. Unary signs bind most tightly, then * and /, then + and -. Binary operators associate left-to-right. Division truncates toward zero, including negative operands. Print the exact integer result for each valid line. Print ERROR for division by zero, invalid characters/tokens, empty expression, missing operand, unmatched parentheses or trailing unparsed text. Only these operators are allowed, not // or **. Permitted valid inputs have integer intermediates within signed 32-bit range. One result per line; do not print prompts.\nShared declarations:\n#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\n\ntypedef struct {\n    const char *text;\n    int position;\n    int bad;\n} Parser;\n\nstatic long long parse_expression(Parser *parser);\nRelated function interfaces (do not implement these):\nstatic int evaluate(const char *line, long long *result);\nAssigned function initialize_parser:\n```c\nstatic void initialize_parser(Parser *parser, const char *line)\n{\n    parser->text = line;\n    parser->position = 0;\n    parser->bad = 0;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"6\\n12+3*4\\n(2+3)*4\\n-7/3\\n8-3-2\\n5/0\\n1+2x\\n\", \"expected\": \"24\\n20\\n-2\\n3\\nERROR\\nERROR\", \"actual\": \"ERROR\\nERROR\\nERROR\\nERROR\\nERROR\\nERROR\\n3\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic long long parse_expression(Parser *parser) {\n    long long result = 0;\n    int sign = 1;\n    while (parser->position < strlen(parser->text)) {\n        char ch = parser->text[parser->position];\n        if (isspace(ch)) {\n            parser->position++;\n            continue;\n        }\n        if (ch == '+' || ch == '-') {\n            sign = (ch == '-') ? -1 : 1;\n            parser->position++;\n            continue;\n        }\n        if (isdigit(ch)) {\n            long long value = 0;\n            while (parser->position < strlen(parser->text) && isdigit(parser->text[parser->position])) {\n                value = value * 10 + (parser->text[parser->position] - '0');\n                parser->position++;\n            }\n            result += sign * value;\n            sign = 1;\n            continue;\n        }\n        if (ch == '(') {\n            parser->position++;\n            long long value = parse_expression(parser);\n            if (parser->position < strlen(parser->text) && parser->text[parser->position] == ')') {\n                parser->position++;\n                result += sign * value;\n                sign = 1;\n",
+        "usage": {
+          "prompt_tokens": 496,
+          "completion_tokens": 256,
+          "total_tokens": 752
+        },
+        "finish_reason": "length",
+        "max_output_tokens": 256,
+        "seconds": 41.866
+      },
+      "accepted": false,
+      "check": null,
+      "reason": "structure_rejected",
+      "error": "Truncated function"
+    },
+    {
+      "request": {
+        "name": "initialize_parser",
+        "retry": 1,
+        "source_sha256": "59803272ae7723065c6184161b2b8681cecef0ca7a494a4b72d8ac11f6c2463b",
+        "prompt": "Program behavior:\nInteger expression evaluator. Input t (0..40) on first line, followed by t complete expression lines, each at most 200 characters. Grammar supports unsigned decimal integer literals, spaces, parentheses, unary + and -, and binary + - * /. Unary signs bind most tightly, then * and /, then + and -. Binary operators associate left-to-right. Division truncates toward zero, including negative operands. Print the exact integer result for each valid line. Print ERROR for division by zero, invalid characters/tokens, empty expression, missing operand, unmatched parentheses or trailing unparsed text. Only these operators are allowed, not // or **. Permitted valid inputs have integer intermediates within signed 32-bit range. One result per line; do not print prompts.\nShared declarations:\n#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\n\ntypedef struct {\n    const char *text;\n    int position;\n    int bad;\n} Parser;\n\nstatic long long parse_expression(Parser *parser);\nRelated function interfaces (do not implement these):\nstatic int evaluate(const char *line, long long *result);\nRead-only dependency bodies:\nstatic int evaluate(const char *line, long long *result)\n{\n    Parser parser;\n    initialize_parser(&parser, line);\n    *result = parse_expression(&parser);\n    if (current(&parser) == '\\0') {\n        parser.bad = 1;\n    }\n    return !parser.bad;\n}\nAssigned function initialize_parser:\n```c\nstatic void initialize_parser(Parser *parser, const char *line)\n{\n    parser->text = line;\n    parser->position = 0;\n    parser->bad = 0;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"6\\n12+3*4\\n(2+3)*4\\n-7/3\\n8-3-2\\n5/0\\n1+2x\\n\", \"expected\": \"24\\n20\\n-2\\n3\\nERROR\\nERROR\", \"actual\": \"ERROR\\nERROR\\nERROR\\nERROR\\nERROR\\nERROR\\n3\\n\", \"exit\": 0}]\nPrevious replacement failed:\n{\"reason\": \"structure_rejected\", \"error\": \"Truncated function\", \"diagnostics\": \"\", \"replacement\": \"```c\\nstatic long long parse_expression(Parser *parser) {\\n    long long result = 0;\\n    int sign = 1;\\n    while (parser->position < strlen(parser->text)) {\\n        char ch = parser->text[parser->position];\\n        if (isspace(ch)) {\\n            parser->position++;\\n            continue;\\n        }\\n        if (ch == '+' || ch == '-') {\\n            sign = (ch == '-') ? -1 : 1;\\n            parser->position++;\\n            continue;\\n        }\\n        if (isdigit(ch)) {\\n            long long value = 0;\\n            while (parser->position < strlen(parser->text) && isdigit(parser->text[parser->position])) {\\n                value = value * 10 + (parser->text[parser->position] - '0');\\n                parser->position++;\\n            }\\n            result += sign * value;\\n            sign = 1;\\n            continue;\\n        }\\n        if (ch == '(') {\\n            parser->position++;\\n            long long value = parse_expression(parser);\\n            if (parser->position < strlen(parser->text) && parser->text[parser->position] == ')') {\\n                parser->position++;\\n                result += sign * value;\\n                sign = 1;\\n\", \"failed_outputs\": []}\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic long long parse_expression(Parser *parser) {\n    long long result = 0;\n    int sign = 1;\n    while (parser->position < strlen(parser->text)) {\n        char ch = parser->text[parser->position];\n        if (isspace(ch)) {\n            parser->position++;\n            continue;\n        }\n        if (ch == '+' || ch == '-') {\n            sign = (ch == '-') ? -1 : 1;\n            parser->position++;\n            continue;\n        }\n        if (isdigit(ch)) {\n            long long value = 0;\n            while (parser->position < strlen(parser->text) && isdigit(parser->text[parser->position])) {\n                value = value * 10 + (parser->text[parser->position] - '0');\n                parser->position++;\n            }\n            result += sign * value;\n            sign = 1;\n            continue;\n        }\n        if (ch == '(') {\n            parser->position++;\n            long long value = parse_expression(parser);\n            if (parser->position < strlen(parser->text) && parser->text[parser->position] == ')') {\n                parser->position++;\n                result += sign * value;\n                sign = 1;\n",
+        "usage": {
+          "prompt_tokens": 894,
+          "completion_tokens": 256,
+          "total_tokens": 1150
+        },
+        "finish_reason": "length",
+        "max_output_tokens": 256,
+        "seconds": 57.055
+      },
+      "accepted": false,
+      "check": null,
+      "reason": "structure_rejected",
+      "error": "Truncated function"
+    },
+    {
+      "request": {
+        "name": "evaluate",
+        "retry": 0,
+        "source_sha256": "59803272ae7723065c6184161b2b8681cecef0ca7a494a4b72d8ac11f6c2463b",
+        "prompt": "Program behavior:\nInteger expression evaluator. Input t (0..40) on first line, followed by t complete expression lines, each at most 200 characters. Grammar supports unsigned decimal integer literals, spaces, parentheses, unary + and -, and binary + - * /. Unary signs bind most tightly, then * and /, then + and -. Binary operators associate left-to-right. Division truncates toward zero, including negative operands. Print the exact integer result for each valid line. Print ERROR for division by zero, invalid characters/tokens, empty expression, missing operand, unmatched parentheses or trailing unparsed text. Only these operators are allowed, not // or **. Permitted valid inputs have integer intermediates within signed 32-bit range. One result per line; do not print prompts.\nShared declarations:\n#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\n\ntypedef struct {\n    const char *text;\n    int position;\n    int bad;\n} Parser;\n\nstatic long long parse_expression(Parser *parser);\nRelated function interfaces (do not implement these):\nstatic char current(Parser *parser);\nstatic void initialize_parser(Parser *parser, const char *line);\nstatic long long parse_expression(Parser *parser);\nstatic void process_line(char *line);\nAssigned function evaluate:\n```c\nstatic int evaluate(const char *line, long long *result)\n{\n    Parser parser;\n    initialize_parser(&parser, line);\n    *result = parse_expression(&parser);\n    if (current(&parser) == '\\0') {\n        parser.bad = 1;\n    }\n    return !parser.bad;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"6\\n12+3*4\\n(2+3)*4\\n-7/3\\n8-3-2\\n5/0\\n1+2x\\n\", \"expected\": \"24\\n20\\n-2\\n3\\nERROR\\nERROR\", \"actual\": \"ERROR\\nERROR\\nERROR\\nERROR\\nERROR\\nERROR\\n3\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic int evaluate(const char *line, long long *result)\n{\n    Parser parser;\n    initialize_parser(&parser, line);\n    *result = parse_expression(&parser);\n    if (current(&parser) != '\\0' || parser.bad) {\n        *result = 0;\n        return 0;\n    }\n    return 1;\n}\n```",
+        "usage": {
+          "prompt_tokens": 544,
+          "completion_tokens": 75,
+          "total_tokens": 619
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 21.17
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "24\n20\n-2\n3\nERROR\nERROR\nERROR\n",
+            "stderr": "",
+            "input": "6\n12+3*4\n(2+3)*4\n-7/3\n8-3-2\n5/0\n1+2x\n",
+            "expected": "24\n20\n-2\n3\nERROR\nERROR",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "4\n-6\n-2\n4\nERROR\nERROR\n0\n",
+            "stderr": "",
+            "input": "7\n--4\n2*-3\n+(8-10)\n20/(3+2)\n(4+5\n1+2)\n0/4\n",
+            "expected": "4\n-6\n-2\n4\nERROR\nERROR\n0",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "23\n94\n68\n-2\nERROR\nERROR\nERROR\n",
+            "stderr": "",
+            "input": "7\n  7 + 8 * 2 \n100-20/3\n4*(2+(3*5))\n5/-2\n3**2\n\n1 2\n",
+            "expected": "23\n94\n68\n-2\nERROR\nERROR\nERROR",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "999\n-14\n5\n5\n0\nERROR\n-2\nERROR\nERROR\n",
+            "stderr": "",
+            "input": "8\n999\n-(4+3)*2\n3--2\n2++3\n0-0\n()\n7/(-3)\n(1+2)/(2-2)\n",
+            "expected": "999\n-14\n5\n5\n0\nERROR\n-2\nERROR",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\n\ntypedef struct {\n    const char *text;\n    int position;\n    int bad;\n} Parser;\n\nstatic long long parse_expression(Parser *parser);\n\nstatic void skip_spaces(Parser *parser)\n{\n    while (isspace((unsigned char) parser->text[parser->position])) {\n        ++parser->position;\n    }\n}\n\nstatic char current(Parser *parser)\n{\n    skip_spaces(parser);\n    return parser->text[parser->position];\n}\n\nstatic void advance(Parser *parser)\n{\n    if (parser->text[parser->position] != '\\0') {\n        ++parser->position;\n    }\n}\n\nstatic int take(Parser *parser, char expected)\n{\n    if (current(parser) == expected) {\n        advance(parser);\n        return 1;\n    }\n    return 0;\n}\n\nstatic long long parse_number(Parser *parser)\n{\n    long long value = 0;\n    if (!isdigit((unsigned char) current(parser))) {\n        parser->bad = 1;\n        advance(parser);\n        return 0;\n    }\n    while (isdigit((unsigned char) parser->text[parser->position])) {\n        int digit = parser->text[parser->position] - '0';\n        value = value * 10 + digit;  // Corrected: multiply by 10 before adding digit\n        advance(parser);\n    }\n    return value;\n}\n\nstatic long long parse_primary(Parser *parser)\n{\n    if (take(parser, '(')) {\n        long long value = parse_expression(parser);\n        if (!take(parser, ')')) {\n            parser->bad = 1;\n        }\n        return value;\n    }\n    return parse_number(parser);\n}\n\nstatic long long parse_unary(Parser *parser)\n{\n    if (take(parser, '+')) {\n        return parse_unary(parser);\n    }\n    if (take(parser, '-')) {\n        return -parse_unary(parser);\n    }\n    return parse_primary(parser);\n}\n\nstatic long long divide_values(Parser *parser, long long left, long long right)\n{\n    if (right == 0) {\n        parser->bad = 1;\n        return 0;\n    }\n    return left / right;\n}\n\nstatic long long parse_term(Parser *parser)\n{\n    long long value = parse_unary(parser);\n    while (!parser->bad) {\n        char operation = current(parser);\n        long long right;\n        if (operation != '*' && operation != '/') {\n            break;\n        }\n        advance(parser);\n        right = parse_unary(parser);\n        if (operation == '*') {\n            value *= right;\n        } else {\n            if (right == 0) {\n                parser->bad = 1;\n                printf(\"ERROR\\n\");\n                return 0;\n            }\n            value /= right;\n        }\n    }\n    return value;\n}\n\nstatic long long parse_expression(Parser *parser)\n{\n    long long value = parse_term(parser);\n    while (!parser->bad) {\n        char operation = current(parser);\n        long long right;\n        if (operation != '+' && operation != '-') {\n            break;\n        }\n        advance(parser);\n        right = parse_term(parser);\n        if (operation == '+') {\n            value += right;\n        } else {\n            value -= right;\n        }\n    }\n    return value;\n}\n\nstatic void initialize_parser(Parser *parser, const char *line)\n{\n    parser->text = line;\n    parser->position = 0;\n    parser->bad = 0;\n}\n\nstatic int evaluate(const char *line, long long *result)\n{\n    Parser parser;\n    initialize_parser(&parser, line);\n    *result = parse_expression(&parser);\n    if (current(&parser) != '\\0' || parser.bad) {\n        *result = 0;\n        return 0;\n    }\n    return 1;\n}\n\nstatic void remove_newline(char *line)\n{\n    size_t length = strlen(line);\n    while (length > 0 && (line[length - 1] == '\\n' || line[length - 1] == '\\r')) {\n        line[--length] = '\\0';\n    }\n}\n\nstatic void process_line(char *line)\n{\n    long long result;\n    remove_newline(line);\n    if (evaluate(line, &result)) {\n        printf(\"%lld\\n\", result);\n    } else {\n        puts(\"ERROR\");\n    }\n}\n\nint main(void)\n{\n    char line[512];\n    int count;\n    int i;\n    if (fgets(line, sizeof(line), stdin) == NULL) {\n        return 0;\n    }\n    if (sscanf(line, \"%d\", &count) != 1) {\n        return 0;\n    }\n    for (i = 0; i < count; ++i) {\n        if (fgets(line, sizeof(line), stdin) == NULL) {\n            break;\n        }\n        process_line(line);\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "remove_newline",
+        "retry": 0,
+        "source_sha256": "dd0046fc42bb6b3356ca40eedff80c66bf28075476e93b63065ee7d0390a7c67",
+        "prompt": "Program behavior:\nInteger expression evaluator. Input t (0..40) on first line, followed by t complete expression lines, each at most 200 characters. Grammar supports unsigned decimal integer literals, spaces, parentheses, unary + and -, and binary + - * /. Unary signs bind most tightly, then * and /, then + and -. Binary operators associate left-to-right. Division truncates toward zero, including negative operands. Print the exact integer result for each valid line. Print ERROR for division by zero, invalid characters/tokens, empty expression, missing operand, unmatched parentheses or trailing unparsed text. Only these operators are allowed, not // or **. Permitted valid inputs have integer intermediates within signed 32-bit range. One result per line; do not print prompts.\nShared declarations:\n#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\n\ntypedef struct {\n    const char *text;\n    int position;\n    int bad;\n} Parser;\n\nstatic long long parse_expression(Parser *parser);\nRelated function interfaces (do not implement these):\nstatic void process_line(char *line);\nAssigned function remove_newline:\n```c\nstatic void remove_newline(char *line)\n{\n    size_t length = strlen(line);\n    while (length > 0 && (line[length - 1] == '\\n' || line[length - 1] == '\\r')) {\n        line[--length] = '\\0';\n    }\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"6\\n12+3*4\\n(2+3)*4\\n-7/3\\n8-3-2\\n5/0\\n1+2x\\n\", \"expected\": \"24\\n20\\n-2\\n3\\nERROR\\nERROR\", \"actual\": \"24\\n20\\n-2\\n3\\nERROR\\nERROR\\nERROR\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void remove_newline(char *line)\n{\n    size_t length = strlen(line);\n    while (length > 0 && (line[length - 1] == '\\n' || line[length - 1] == '\\r')) {\n        line[--length] = '\\0';\n    }\n}\n```",
+        "usage": {
+          "prompt_tokens": 518,
+          "completion_tokens": 65,
+          "total_tokens": 583
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 18.271
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "24\n20\n-2\n3\nERROR\nERROR\nERROR\n",
+            "stderr": "",
+            "input": "6\n12+3*4\n(2+3)*4\n-7/3\n8-3-2\n5/0\n1+2x\n",
+            "expected": "24\n20\n-2\n3\nERROR\nERROR",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "4\n-6\n-2\n4\nERROR\nERROR\n0\n",
+            "stderr": "",
+            "input": "7\n--4\n2*-3\n+(8-10)\n20/(3+2)\n(4+5\n1+2)\n0/4\n",
+            "expected": "4\n-6\n-2\n4\nERROR\nERROR\n0",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "23\n94\n68\n-2\nERROR\nERROR\nERROR\n",
+            "stderr": "",
+            "input": "7\n  7 + 8 * 2 \n100-20/3\n4*(2+(3*5))\n5/-2\n3**2\n\n1 2\n",
+            "expected": "23\n94\n68\n-2\nERROR\nERROR\nERROR",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "999\n-14\n5\n5\n0\nERROR\n-2\nERROR\nERROR\n",
+            "stderr": "",
+            "input": "8\n999\n-(4+3)*2\n3--2\n2++3\n0-0\n()\n7/(-3)\n(1+2)/(2-2)\n",
+            "expected": "999\n-14\n5\n5\n0\nERROR\n-2\nERROR",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\n\ntypedef struct {\n    const char *text;\n    int position;\n    int bad;\n} Parser;\n\nstatic long long parse_expression(Parser *parser);\n\nstatic void skip_spaces(Parser *parser)\n{\n    while (isspace((unsigned char) parser->text[parser->position])) {\n        ++parser->position;\n    }\n}\n\nstatic char current(Parser *parser)\n{\n    skip_spaces(parser);\n    return parser->text[parser->position];\n}\n\nstatic void advance(Parser *parser)\n{\n    if (parser->text[parser->position] != '\\0') {\n        ++parser->position;\n    }\n}\n\nstatic int take(Parser *parser, char expected)\n{\n    if (current(parser) == expected) {\n        advance(parser);\n        return 1;\n    }\n    return 0;\n}\n\nstatic long long parse_number(Parser *parser)\n{\n    long long value = 0;\n    if (!isdigit((unsigned char) current(parser))) {\n        parser->bad = 1;\n        advance(parser);\n        return 0;\n    }\n    while (isdigit((unsigned char) parser->text[parser->position])) {\n        int digit = parser->text[parser->position] - '0';\n        value = value * 10 + digit;  // Corrected: multiply by 10 before adding digit\n        advance(parser);\n    }\n    return value;\n}\n\nstatic long long parse_primary(Parser *parser)\n{\n    if (take(parser, '(')) {\n        long long value = parse_expression(parser);\n        if (!take(parser, ')')) {\n            parser->bad = 1;\n        }\n        return value;\n    }\n    return parse_number(parser);\n}\n\nstatic long long parse_unary(Parser *parser)\n{\n    if (take(parser, '+')) {\n        return parse_unary(parser);\n    }\n    if (take(parser, '-')) {\n        return -parse_unary(parser);\n    }\n    return parse_primary(parser);\n}\n\nstatic long long divide_values(Parser *parser, long long left, long long right)\n{\n    if (right == 0) {\n        parser->bad = 1;\n        return 0;\n    }\n    return left / right;\n}\n\nstatic long long parse_term(Parser *parser)\n{\n    long long value = parse_unary(parser);\n    while (!parser->bad) {\n        char operation = current(parser);\n        long long right;\n        if (operation != '*' && operation != '/') {\n            break;\n        }\n        advance(parser);\n        right = parse_unary(parser);\n        if (operation == '*') {\n            value *= right;\n        } else {\n            if (right == 0) {\n                parser->bad = 1;\n                printf(\"ERROR\\n\");\n                return 0;\n            }\n            value /= right;\n        }\n    }\n    return value;\n}\n\nstatic long long parse_expression(Parser *parser)\n{\n    long long value = parse_term(parser);\n    while (!parser->bad) {\n        char operation = current(parser);\n        long long right;\n        if (operation != '+' && operation != '-') {\n            break;\n        }\n        advance(parser);\n        right = parse_term(parser);\n        if (operation == '+') {\n            value += right;\n        } else {\n            value -= right;\n        }\n    }\n    return value;\n}\n\nstatic void initialize_parser(Parser *parser, const char *line)\n{\n    parser->text = line;\n    parser->position = 0;\n    parser->bad = 0;\n}\n\nstatic int evaluate(const char *line, long long *result)\n{\n    Parser parser;\n    initialize_parser(&parser, line);\n    *result = parse_expression(&parser);\n    if (current(&parser) != '\\0' || parser.bad) {\n        *result = 0;\n        return 0;\n    }\n    return 1;\n}\n\nstatic void remove_newline(char *line)\n{\n    size_t length = strlen(line);\n    while (length > 0 && (line[length - 1] == '\\n' || line[length - 1] == '\\r')) {\n        line[--length] = '\\0';\n    }\n}\n\nstatic void process_line(char *line)\n{\n    long long result;\n    remove_newline(line);\n    if (evaluate(line, &result)) {\n        printf(\"%lld\\n\", result);\n    } else {\n        puts(\"ERROR\");\n    }\n}\n\nint main(void)\n{\n    char line[512];\n    int count;\n    int i;\n    if (fgets(line, sizeof(line), stdin) == NULL) {\n        return 0;\n    }\n    if (sscanf(line, \"%d\", &count) != 1) {\n        return 0;\n    }\n    for (i = 0; i < count; ++i) {\n        if (fgets(line, sizeof(line), stdin) == NULL) {\n            break;\n        }\n        process_line(line);\n    }\n    return 0;\n}\n",
+      "reason": "unchanged"
+    },
+    {
+      "request": {
+        "name": "process_line",
+        "retry": 0,
+        "source_sha256": "dd0046fc42bb6b3356ca40eedff80c66bf28075476e93b63065ee7d0390a7c67",
+        "prompt": "Program behavior:\nInteger expression evaluator. Input t (0..40) on first line, followed by t complete expression lines, each at most 200 characters. Grammar supports unsigned decimal integer literals, spaces, parentheses, unary + and -, and binary + - * /. Unary signs bind most tightly, then * and /, then + and -. Binary operators associate left-to-right. Division truncates toward zero, including negative operands. Print the exact integer result for each valid line. Print ERROR for division by zero, invalid characters/tokens, empty expression, missing operand, unmatched parentheses or trailing unparsed text. Only these operators are allowed, not // or **. Permitted valid inputs have integer intermediates within signed 32-bit range. One result per line; do not print prompts.\nShared declarations:\n#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\n\ntypedef struct {\n    const char *text;\n    int position;\n    int bad;\n} Parser;\n\nstatic long long parse_expression(Parser *parser);\nRelated function interfaces (do not implement these):\nstatic int evaluate(const char *line, long long *result);\nint main(void);\nstatic void remove_newline(char *line);\nAssigned function process_line:\n```c\nstatic void process_line(char *line)\n{\n    long long result;\n    remove_newline(line);\n    if (evaluate(line, &result)) {\n        printf(\"%lld\\n\", result);\n    } else {\n        puts(\"ERROR\");\n    }\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"6\\n12+3*4\\n(2+3)*4\\n-7/3\\n8-3-2\\n5/0\\n1+2x\\n\", \"expected\": \"24\\n20\\n-2\\n3\\nERROR\\nERROR\", \"actual\": \"24\\n20\\n-2\\n3\\nERROR\\nERROR\\nERROR\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void process_line(char *line)\n{\n    long long result;\n    remove_newline(line);\n    if (evaluate(line, &result)) {\n        printf(\"%lld\\n\", result);\n    } else {\n        puts(\"ERROR\");\n    }\n}\n```",
+        "usage": {
+          "prompt_tokens": 524,
+          "completion_tokens": 54,
+          "total_tokens": 578
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 17.629
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "24\n20\n-2\n3\nERROR\nERROR\nERROR\n",
+            "stderr": "",
+            "input": "6\n12+3*4\n(2+3)*4\n-7/3\n8-3-2\n5/0\n1+2x\n",
+            "expected": "24\n20\n-2\n3\nERROR\nERROR",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "4\n-6\n-2\n4\nERROR\nERROR\n0\n",
+            "stderr": "",
+            "input": "7\n--4\n2*-3\n+(8-10)\n20/(3+2)\n(4+5\n1+2)\n0/4\n",
+            "expected": "4\n-6\n-2\n4\nERROR\nERROR\n0",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "23\n94\n68\n-2\nERROR\nERROR\nERROR\n",
+            "stderr": "",
+            "input": "7\n  7 + 8 * 2 \n100-20/3\n4*(2+(3*5))\n5/-2\n3**2\n\n1 2\n",
+            "expected": "23\n94\n68\n-2\nERROR\nERROR\nERROR",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "999\n-14\n5\n5\n0\nERROR\n-2\nERROR\nERROR\n",
+            "stderr": "",
+            "input": "8\n999\n-(4+3)*2\n3--2\n2++3\n0-0\n()\n7/(-3)\n(1+2)/(2-2)\n",
+            "expected": "999\n-14\n5\n5\n0\nERROR\n-2\nERROR",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\n\ntypedef struct {\n    const char *text;\n    int position;\n    int bad;\n} Parser;\n\nstatic long long parse_expression(Parser *parser);\n\nstatic void skip_spaces(Parser *parser)\n{\n    while (isspace((unsigned char) parser->text[parser->position])) {\n        ++parser->position;\n    }\n}\n\nstatic char current(Parser *parser)\n{\n    skip_spaces(parser);\n    return parser->text[parser->position];\n}\n\nstatic void advance(Parser *parser)\n{\n    if (parser->text[parser->position] != '\\0') {\n        ++parser->position;\n    }\n}\n\nstatic int take(Parser *parser, char expected)\n{\n    if (current(parser) == expected) {\n        advance(parser);\n        return 1;\n    }\n    return 0;\n}\n\nstatic long long parse_number(Parser *parser)\n{\n    long long value = 0;\n    if (!isdigit((unsigned char) current(parser))) {\n        parser->bad = 1;\n        advance(parser);\n        return 0;\n    }\n    while (isdigit((unsigned char) parser->text[parser->position])) {\n        int digit = parser->text[parser->position] - '0';\n        value = value * 10 + digit;  // Corrected: multiply by 10 before adding digit\n        advance(parser);\n    }\n    return value;\n}\n\nstatic long long parse_primary(Parser *parser)\n{\n    if (take(parser, '(')) {\n        long long value = parse_expression(parser);\n        if (!take(parser, ')')) {\n            parser->bad = 1;\n        }\n        return value;\n    }\n    return parse_number(parser);\n}\n\nstatic long long parse_unary(Parser *parser)\n{\n    if (take(parser, '+')) {\n        return parse_unary(parser);\n    }\n    if (take(parser, '-')) {\n        return -parse_unary(parser);\n    }\n    return parse_primary(parser);\n}\n\nstatic long long divide_values(Parser *parser, long long left, long long right)\n{\n    if (right == 0) {\n        parser->bad = 1;\n        return 0;\n    }\n    return left / right;\n}\n\nstatic long long parse_term(Parser *parser)\n{\n    long long value = parse_unary(parser);\n    while (!parser->bad) {\n        char operation = current(parser);\n        long long right;\n        if (operation != '*' && operation != '/') {\n            break;\n        }\n        advance(parser);\n        right = parse_unary(parser);\n        if (operation == '*') {\n            value *= right;\n        } else {\n            if (right == 0) {\n                parser->bad = 1;\n                printf(\"ERROR\\n\");\n                return 0;\n            }\n            value /= right;\n        }\n    }\n    return value;\n}\n\nstatic long long parse_expression(Parser *parser)\n{\n    long long value = parse_term(parser);\n    while (!parser->bad) {\n        char operation = current(parser);\n        long long right;\n        if (operation != '+' && operation != '-') {\n            break;\n        }\n        advance(parser);\n        right = parse_term(parser);\n        if (operation == '+') {\n            value += right;\n        } else {\n            value -= right;\n        }\n    }\n    return value;\n}\n\nstatic void initialize_parser(Parser *parser, const char *line)\n{\n    parser->text = line;\n    parser->position = 0;\n    parser->bad = 0;\n}\n\nstatic int evaluate(const char *line, long long *result)\n{\n    Parser parser;\n    initialize_parser(&parser, line);\n    *result = parse_expression(&parser);\n    if (current(&parser) != '\\0' || parser.bad) {\n        *result = 0;\n        return 0;\n    }\n    return 1;\n}\n\nstatic void remove_newline(char *line)\n{\n    size_t length = strlen(line);\n    while (length > 0 && (line[length - 1] == '\\n' || line[length - 1] == '\\r')) {\n        line[--length] = '\\0';\n    }\n}\n\nstatic void process_line(char *line)\n{\n    long long result;\n    remove_newline(line);\n    if (evaluate(line, &result)) {\n        printf(\"%lld\\n\", result);\n    } else {\n        puts(\"ERROR\");\n    }\n}\n\nint main(void)\n{\n    char line[512];\n    int count;\n    int i;\n    if (fgets(line, sizeof(line), stdin) == NULL) {\n        return 0;\n    }\n    if (sscanf(line, \"%d\", &count) != 1) {\n        return 0;\n    }\n    for (i = 0; i < count; ++i) {\n        if (fgets(line, sizeof(line), stdin) == NULL) {\n            break;\n        }\n        process_line(line);\n    }\n    return 0;\n}\n",
+      "reason": "unchanged"
+    },
+    {
+      "request": {
+        "name": "main",
+        "retry": 0,
+        "source_sha256": "dd0046fc42bb6b3356ca40eedff80c66bf28075476e93b63065ee7d0390a7c67",
+        "prompt": "Program behavior:\nInteger expression evaluator. Input t (0..40) on first line, followed by t complete expression lines, each at most 200 characters. Grammar supports unsigned decimal integer literals, spaces, parentheses, unary + and -, and binary + - * /. Unary signs bind most tightly, then * and /, then + and -. Binary operators associate left-to-right. Division truncates toward zero, including negative operands. Print the exact integer result for each valid line. Print ERROR for division by zero, invalid characters/tokens, empty expression, missing operand, unmatched parentheses or trailing unparsed text. Only these operators are allowed, not // or **. Permitted valid inputs have integer intermediates within signed 32-bit range. One result per line; do not print prompts.\nShared declarations:\n#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\n\ntypedef struct {\n    const char *text;\n    int position;\n    int bad;\n} Parser;\n\nstatic long long parse_expression(Parser *parser);\nRelated function interfaces (do not implement these):\nstatic void process_line(char *line);\nAssigned function main:\n```c\nint main(void)\n{\n    char line[512];\n    int count;\n    int i;\n    if (fgets(line, sizeof(line), stdin) == NULL) {\n        return 0;\n    }\n    if (sscanf(line, \"%d\", &count) != 1) {\n        return 0;\n    }\n    for (i = 0; i < count; ++i) {\n        if (fgets(line, sizeof(line), stdin) == NULL) {\n            break;\n        }\n        process_line(line);\n    }\n    return 0;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"6\\n12+3*4\\n(2+3)*4\\n-7/3\\n8-3-2\\n5/0\\n1+2x\\n\", \"expected\": \"24\\n20\\n-2\\n3\\nERROR\\nERROR\", \"actual\": \"24\\n20\\n-2\\n3\\nERROR\\nERROR\\nERROR\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic long long parse_expression(Parser *parser) {\n    long long result = 0;\n    int sign = 1;\n    while (isspace(parser->text[parser->position])) {\n        parser->position++;\n    }\n    if (parser->text[parser->position] == '+' || parser->text[parser->position] == '-') {\n        sign = (parser->text[parser->position] == '-') ? -1 : 1;\n        parser->position++;\n    }\n    while (isspace(parser->text[parser->position])) {\n        parser->position++;\n    }\n    if (isdigit(parser->text[parser->position])) {\n        result = parser->text[parser->position] - '0';\n        parser->position++;\n        while (isdigit(parser->text[parser->position])) {\n            result = result * 10 + (parser->text[parser->position] - '0');\n            parser->position++;\n        }\n    } else {\n        parser->bad = 1;\n    }\n    result *= sign;\n    return result;\n}\n```",
+        "usage": {
+          "prompt_tokens": 572,
+          "completion_tokens": 221,
+          "total_tokens": 793
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 330,
+        "seconds": 40.096
+      },
+      "accepted": false,
+      "check": null,
+      "reason": "structure_rejected",
+      "error": "Expected only the assigned function"
+    },
+    {
+      "request": {
+        "name": "main",
+        "retry": 1,
+        "source_sha256": "dd0046fc42bb6b3356ca40eedff80c66bf28075476e93b63065ee7d0390a7c67",
+        "prompt": "Program behavior:\nInteger expression evaluator. Input t (0..40) on first line, followed by t complete expression lines, each at most 200 characters. Grammar supports unsigned decimal integer literals, spaces, parentheses, unary + and -, and binary + - * /. Unary signs bind most tightly, then * and /, then + and -. Binary operators associate left-to-right. Division truncates toward zero, including negative operands. Print the exact integer result for each valid line. Print ERROR for division by zero, invalid characters/tokens, empty expression, missing operand, unmatched parentheses or trailing unparsed text. Only these operators are allowed, not // or **. Permitted valid inputs have integer intermediates within signed 32-bit range. One result per line; do not print prompts.\nShared declarations:\n#include <stdio.h>\n#include <ctype.h>\n#include <string.h>\n\ntypedef struct {\n    const char *text;\n    int position;\n    int bad;\n} Parser;\n\nstatic long long parse_expression(Parser *parser);\nRelated function interfaces (do not implement these):\nstatic void process_line(char *line);\nRead-only dependency bodies:\nstatic void process_line(char *line)\n{\n    long long result;\n    remove_newline(line);\n    if (evaluate(line, &result)) {\n        printf(\"%lld\\n\", result);\n    } else {\n        puts(\"ERROR\");\n    }\n}\nAssigned function main:\n```c\nint main(void)\n{\n    char line[512];\n    int count;\n    int i;\n    if (fgets(line, sizeof(line), stdin) == NULL) {\n        return 0;\n    }\n    if (sscanf(line, \"%d\", &count) != 1) {\n        return 0;\n    }\n    for (i = 0; i < count; ++i) {\n        if (fgets(line, sizeof(line), stdin) == NULL) {\n            break;\n        }\n        process_line(line);\n    }\n    return 0;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"6\\n12+3*4\\n(2+3)*4\\n-7/3\\n8-3-2\\n5/0\\n1+2x\\n\", \"expected\": \"24\\n20\\n-2\\n3\\nERROR\\nERROR\", \"actual\": \"24\\n20\\n-2\\n3\\nERROR\\nERROR\\nERROR\\n\", \"exit\": 0}]\nPrevious replacement failed:\n{\"reason\": \"structure_rejected\", \"error\": \"Expected only the assigned function\", \"diagnostics\": \"\", \"replacement\": \"```c\\nstatic long long parse_expression(Parser *parser) {\\n    long long result = 0;\\n    int sign = 1;\\n    while (isspace(parser->text[parser->position])) {\\n        parser->position++;\\n    }\\n    if (parser->text[parser->position] == '+' || parser->text[parser->position] == '-') {\\n        sign = (parser->text[parser->position] == '-') ? -1 : 1;\\n        parser->position++;\\n    }\\n    while (isspace(parser->text[parser->position])) {\\n        parser->position++;\\n    }\\n    if (isdigit(parser->text[parser->position])) {\\n        result = parser->text[parser->position] - '0';\\n        parser->position++;\\n        while (isdigit(parser->text[parser->position])) {\\n            result = result * 10 + (parser->text[parser->position] - '0');\\n            parser->position++;\\n        }\\n    } else {\\n        parser->bad = 1;\\n    }\\n    result *= sign;\\n    return result;\\n}\\n```\", \"failed_outputs\": []}\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic long long parse_expression(Parser *parser);\n```",
+        "usage": {
+          "prompt_tokens": 919,
+          "completion_tokens": 13,
+          "total_tokens": 932
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 330,
+        "seconds": 28.951
+      },
+      "accepted": false,
+      "check": null,
+      "reason": "structure_rejected",
+      "error": "No C functions located"
+    }
+  ],
+  "calls": 17,
+  "function_count": 15,
+  "control_probe": false
+}

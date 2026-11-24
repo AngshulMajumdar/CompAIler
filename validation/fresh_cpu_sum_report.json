@@ -1,0 +1,51 @@
+{
+  "passed": true,
+  "compiled": true,
+  "tests_passed": 4,
+  "test_count": 4,
+  "new_model_calls": 3,
+  "cached_model_proposals": false,
+  "unchanged": false,
+  "gpu_layers": 0,
+  "backend": "wasi",
+  "final": {
+    "compiled": true,
+    "diagnostics": "",
+    "tests": [
+      {
+        "returncode": 0,
+        "stdout": "0\n",
+        "stderr": "",
+        "input": "0\n",
+        "expected": "0\n",
+        "passed": true
+      },
+      {
+        "returncode": 0,
+        "stdout": "1\n",
+        "stderr": "",
+        "input": "1\n",
+        "expected": "1\n",
+        "passed": true
+      },
+      {
+        "returncode": 0,
+        "stdout": "15\n",
+        "stderr": "",
+        "input": "5\n",
+        "expected": "15\n",
+        "passed": true
+      },
+      {
+        "returncode": 0,
+        "stdout": "5050\n",
+        "stderr": "",
+        "input": "100\n",
+        "expected": "5050\n",
+        "passed": true
+      }
+    ],
+    "passed": true
+  },
+  "scope": "All supplied tests must pass; this is not a proof for unseen inputs."
+}

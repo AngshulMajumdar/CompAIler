@@ -1,0 +1,18 @@
+[
+  {
+    "input": "6\nADD 8 50 50 50\nADD 2 50 50 50\nADD 4 100 0 0\nRANK\nSUMMARY\nSCORE 8\n",
+    "output": "OK\nOK\nOK\n3\n2 50\n8 50\n4 20\n3 40 2\n50"
+  },
+  {
+    "input": "6\nADD 3 10 20 30\nUPDATE 3 2 100\nSCORE 3\nUPDATE 3 0 90\nSCORE 3\nSUMMARY\n",
+    "output": "OK\nOK\n58\nOK\n74\n1 74 1"
+  },
+  {
+    "input": "9\nADD 7 100 100 100\nADD 2 30 40 50\nADD 9 0 0 0\nDROP 2\nRANK\nDROP 7\nSUMMARY\nDROP 9\nSUMMARY\n",
+    "output": "OK\nOK\nOK\nOK\n2\n7 100\n9 0\nOK\n1 0 0\nOK\n0 0 0"
+  },
+  {
+    "input": "8\nADD 1 100 100 101\nADD 4 20 30 40\nADD 4 99 99 99\nUPDATE 4 3 4\nUPDATE 4 1 -1\nSCORE 4\nSCORE 99\nRANK\n",
+    "output": "ERR\nOK\nERR\nERR\nERR\n33\nERR\n1\n4 33"
+  }
+]

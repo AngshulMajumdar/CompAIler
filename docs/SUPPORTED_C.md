@@ -1,0 +1,15 @@
+# Supported C and guardrails
+
+This release targets standard single-file console programs with independently identifiable functions, stdin/stdout behavior, and explicit specifications and tests. Balanced braces and readable function signatures are needed by the lexical chunker. Comments and string literals do not create false function boundaries. Oversized declarations or functions can still exceed the 8,192-token model context; failure is reported rather than silently truncating code.
+
+Allowed angle-bracket headers: stdio.h, stdlib.h, string.h, ctype.h, limits.h, math.h, stdint.h, stdbool.h, stddef.h, errno.h, inttypes.h, assert.h, float.h, time.h. Literal standard includes only; no arbitrary local files, dynamic includes, assembly, token pasting, trigraphs, or pragmas. Basic conditionals and macros are supported. The preprocessing gate handles escaped newline splicing before checking directives. Unsupported syntax is rejected.
+
+No multi-file build systems, operating-system APIs, network programs, GUI applications, C++ source, or arbitrary header trees. This implementation does not provide structural recovery for unmatched braces. Default compilation is Clang/WASI with -Wall -Werror -Wno-unused-function (unused private helpers are permitted). Native compilation uses the selected TinyCC/GCC executable with the same warning options. A program accepted by one backend may differ on another; WASI uses 32-bit pointers and long, so avoid platform-dependent assumptions.
+
+Runtime guardrails: preserve every original function signature; restrict model edits to the assigned complete function; reject truncated generations; require nonregression of previously passing model-stage scenarios; final recompilation and all-test validation; withhold success artifacts on failure. Expression search may alter semantics, so the quality and independence of the user's tests remains critical.
+
+WASI execution grants no filesystem directories, environment, or host network capabilities. Memory is bounded to 256 MiB, output to 1 MiB, and execution to 50 million fuel units per scenario. Native test execution requires bubblewrap and seccomp; it limits CPU, memory, output files and wall time, removes the caller's filesystem view except system libraries, and blocks networking. No sandbox-disable fallback is provided.
+
+Source compilation itself invokes a host compiler with resource limits and restricted preprocessing, not a formally verified compiler sandbox. Keep compilers updated and run public services in disposable, secret-free containers. Native executables released to local users have normal operating-system access when users run them outside CompAIler's test sandbox.
+
+Overall input limits: 100 KB C, 20,000 specification characters, 1–200 scenarios with input/output strings each at most 64 KB. CLI search has 16 rounds per search stage and no overall wall deadline. The browser wrapper enforces a 30-minute process-group deadline. Large or difficult inputs can be rejected or time out. Test passing never establishes correctness for all possible inputs.

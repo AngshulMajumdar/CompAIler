@@ -1,0 +1,43 @@
+[
+  {
+    "case": "expression_parser",
+    "compiled": true,
+    "passed": 78,
+    "total": 78
+  },
+  {
+    "case": "gradebook",
+    "compiled": true,
+    "passed": 78,
+    "total": 78,
+    "diagnostics": ""
+  },
+  {
+    "case": "graph_engine",
+    "compiled": true,
+    "passed": 78,
+    "total": 78,
+    "diagnostics": ""
+  },
+  {
+    "case": "inventory",
+    "compiled": true,
+    "passed": 78,
+    "total": 78,
+    "diagnostics": ""
+  },
+  {
+    "case": "lru_cache",
+    "compiled": true,
+    "passed": 78,
+    "total": 78,
+    "diagnostics": ""
+  },
+  {
+    "case": "sparse_matrix",
+    "compiled": true,
+    "passed": 78,
+    "total": 78,
+    "diagnostics": ""
+  }
+]

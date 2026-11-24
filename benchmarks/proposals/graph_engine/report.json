@@ -1,0 +1,756 @@
+{
+  "policy": {
+    "version": 1,
+    "model": "Qwen2.5-Coder-7B-Instruct Q4_K_M",
+    "gpu_layers": 0,
+    "threads": 4,
+    "context_tokens": 8192,
+    "seed": 172,
+    "temperature": 0,
+    "passes": 1,
+    "extra_retry_budget": 3,
+    "output": "one_complete_C_function",
+    "preserve_passing_scenarios": true,
+    "accept_neutral_compiling_changes": true,
+    "heldout_feedback": false
+  },
+  "baseline": {
+    "compiled": true,
+    "diagnostics": "",
+    "tests": [
+      {
+        "returncode": 0,
+        "stdout": "1 INF INF INF\nINF\n-1\n0\nINF\nOK\n1 INF INF INF\nINF\n",
+        "stderr": "",
+        "input": "4 3 8\n0 1 9\n0 1 2\n1 2 0\nALL 0\nDIST 2 0\nBFS 0 2\nREACH 0\nROUND 0\nEDGE 2 3 1\nALL 0\nROUND 0\n",
+        "expected": "0 2 2 INF\nINF\n2\n3\nINF\nOK\n0 2 2 3\n7",
+        "passed": false
+      },
+      {
+        "returncode": 0,
+        "stdout": "1\n0\n0\nINF INF 1\nOK\n-1\nINF INF 1\n",
+        "stderr": "",
+        "input": "3 0 7\nDIST 0 0\nBFS 0 0\nREACH 0\nALL 2\nEDGE 2 0 0\nBFS 2 0\nALL 2\n",
+        "expected": "0\n0\n1\nINF INF 0\nOK\n1\n0 INF 0",
+        "passed": false
+      },
+      {
+        "returncode": 0,
+        "stdout": "INF\nINF 1 INF INF\nINF\nOK\n1 INF INF INF\nOK\n1 INF INF INF\n",
+        "stderr": "",
+        "input": "4 4 7\n0 1 1\n1 2 2\n0 2 10\n2 3 3\nDIST 0 3\nALL 1\nROUND 0\nEDGE 0 3 0\nALL 0\nRESET\nALL 0\n",
+        "expected": "6\nINF 0 2 5\n10\nOK\n0 1 3 0\nOK\n0 INF INF INF",
+        "passed": false
+      },
+      {
+        "returncode": 0,
+        "stdout": "INF 1\n1\nINF\n0\nINF\nOK\n1 INF\n",
+        "stderr": "",
+        "input": "2 2 7\n1 0 0\n1 0 8\nALL 1\nBFS 1 0\nDIST 0 1\nREACH 1\nROUND 1\nEDGE 0 1 5\nALL 0\n",
+        "expected": "0 0\n1\nINF\n2\n0\nOK\n0 5",
+        "passed": false
+      }
+    ],
+    "passed": false
+  },
+  "final": {
+    "compiled": true,
+    "diagnostics": "",
+    "tests": [
+      {
+        "returncode": 0,
+        "stdout": "0 2 2 INF\nINF\n-1\n3\nINF\nOK\n0 2 2 3\n7\n",
+        "stderr": "",
+        "input": "4 3 8\n0 1 9\n0 1 2\n1 2 0\nALL 0\nDIST 2 0\nBFS 0 2\nREACH 0\nROUND 0\nEDGE 2 3 1\nALL 0\nROUND 0\n",
+        "expected": "0 2 2 INF\nINF\n2\n3\nINF\nOK\n0 2 2 3\n7",
+        "passed": false
+      },
+      {
+        "returncode": 0,
+        "stdout": "0\n0\n1\nINF INF 0\nOK\n-1\n0 INF 0\n",
+        "stderr": "",
+        "input": "3 0 7\nDIST 0 0\nBFS 0 0\nREACH 0\nALL 2\nEDGE 2 0 0\nBFS 2 0\nALL 2\n",
+        "expected": "0\n0\n1\nINF INF 0\nOK\n1\n0 INF 0",
+        "passed": false
+      },
+      {
+        "returncode": 0,
+        "stdout": "6\nINF 0 2 5\n10\nOK\n0 1 3 0\nOK\n0 INF INF INF\n",
+        "stderr": "",
+        "input": "4 4 7\n0 1 1\n1 2 2\n0 2 10\n2 3 3\nDIST 0 3\nALL 1\nROUND 0\nEDGE 0 3 0\nALL 0\nRESET\nALL 0\n",
+        "expected": "6\nINF 0 2 5\n10\nOK\n0 1 3 0\nOK\n0 INF INF INF",
+        "passed": true
+      },
+      {
+        "returncode": 0,
+        "stdout": "8 0\n1\nINF\n2\n8\nOK\n0 5\n",
+        "stderr": "",
+        "input": "2 2 7\n1 0 0\n1 0 8\nALL 1\nBFS 1 0\nDIST 0 1\nREACH 1\nROUND 1\nEDGE 0 1 5\nALL 0\n",
+        "expected": "0 0\n1\nINF\n2\n0\nOK\n0 5",
+        "passed": false
+      }
+    ],
+    "passed": false
+  },
+  "history": [
+    {
+      "request": {
+        "name": "reset_graph",
+        "retry": 0,
+        "source_sha256": "5147aa7e837f9a845bb9204aa02baa9fc358d291f2260eb26991fa5a0d30b568",
+        "prompt": "Program behavior:\nDirected weighted graph service. Input n m q, n=1..32, m<=100, q<=100. Next m rows are u v w, then q commands. Vertices are 0..n-1; weights 0..1000000. Parallel edges retain their minimum weight, including EDGE updates. Self-distance is zero; edges are directed. EDGE u v w adds/min-updates an edge and prints OK. DIST s t prints exact shortest distance or INF if unreachable. ALL s prints n shortest distances in vertex order, separated by single spaces, using INF. BFS s t prints minimum number of edges ignoring weights (zero-weight edges are valid), or -1 when unreachable; BFS s s is 0. REACH s counts reachable vertices INCLUDING s. ROUND s prints the sum of all shortest distances from s if every vertex is reachable, otherwise INF. RESET removes all edges, preserving n and zero self-distances, and prints OK. Output each command's result on one line.\nShared declarations:\n#include <stdio.h>\n#include <string.h>\n\n#define LIMIT 32\n#define INF 4000000000000000LL\n\nstatic long long graph[LIMIT][LIMIT];\nstatic int vertices;\nRelated function interfaces (do not implement these):\nint main(void);\nstatic void process_command(void);\nAssigned function reset_graph:\n```c\nstatic void reset_graph(int size)\n{\n    int i;\n    int j;\n    vertices = size;\n    for (i = 0; i < vertices; ++i) {\n        for (j = 0; j < vertices; ++j) {\n            graph[i][j] = i == j ? 0 : INF;\n        }\n    }\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"4 3 8\\n0 1 9\\n0 1 2\\n1 2 0\\nALL 0\\nDIST 2 0\\nBFS 0 2\\nREACH 0\\nROUND 0\\nEDGE 2 3 1\\nALL 0\\nROUND 0\\n\", \"expected\": \"0 2 2 INF\\nINF\\n2\\n3\\nINF\\nOK\\n0 2 2 3\\n7\", \"actual\": \"1 INF INF INF\\nINF\\n-1\\n0\\nINF\\nOK\\n1 INF INF INF\\nINF\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void reset_graph(int size)\n{\n    int i;\n    int j;\n    vertices = size;\n    for (i = 0; i < vertices; ++i) {\n        for (j = 0; j < vertices; ++j) {\n            graph[i][j] = i == j ? 0 : INF;\n        }\n    }\n}\n```",
+        "usage": {
+          "prompt_tokens": 640,
+          "completion_tokens": 78,
+          "total_tokens": 718
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 31.67
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "1 INF INF INF\nINF\n-1\n0\nINF\nOK\n1 INF INF INF\nINF\n",
+            "stderr": "",
+            "input": "4 3 8\n0 1 9\n0 1 2\n1 2 0\nALL 0\nDIST 2 0\nBFS 0 2\nREACH 0\nROUND 0\nEDGE 2 3 1\nALL 0\nROUND 0\n",
+            "expected": "0 2 2 INF\nINF\n2\n3\nINF\nOK\n0 2 2 3\n7",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "1\n0\n0\nINF INF 1\nOK\n-1\nINF INF 1\n",
+            "stderr": "",
+            "input": "3 0 7\nDIST 0 0\nBFS 0 0\nREACH 0\nALL 2\nEDGE 2 0 0\nBFS 2 0\nALL 2\n",
+            "expected": "0\n0\n1\nINF INF 0\nOK\n1\n0 INF 0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "INF\nINF 1 INF INF\nINF\nOK\n1 INF INF INF\nOK\n1 INF INF INF\n",
+            "stderr": "",
+            "input": "4 4 7\n0 1 1\n1 2 2\n0 2 10\n2 3 3\nDIST 0 3\nALL 1\nROUND 0\nEDGE 0 3 0\nALL 0\nRESET\nALL 0\n",
+            "expected": "6\nINF 0 2 5\n10\nOK\n0 1 3 0\nOK\n0 INF INF INF",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "INF 1\n1\nINF\n0\nINF\nOK\n1 INF\n",
+            "stderr": "",
+            "input": "2 2 7\n1 0 0\n1 0 8\nALL 1\nBFS 1 0\nDIST 0 1\nREACH 1\nROUND 1\nEDGE 0 1 5\nALL 0\n",
+            "expected": "0 0\n1\nINF\n2\n0\nOK\n0 5",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <string.h>\n\n#define LIMIT 32\n#define INF 4000000000000000LL\n\nstatic long long graph[LIMIT][LIMIT];\nstatic int vertices;\n\nstatic void reset_graph(int size)\n{\n    int i;\n    int j;\n    vertices = size;\n    for (i = 0; i < vertices; ++i) {\n        for (j = 0; j < vertices; ++j) {\n            graph[i][j] = i == j ? 0 : INF;\n        }\n    }\n}\n\nstatic void add_edge(int from, int to, int weight)\n{\n    if (1) {\n        graph[from][to] = weight;\n        graph[to][from] = weight;\n    }\n}\n\nstatic int closest_unvisited(const long long distance[], const int used[])\n{\n    long long best = INF;\n    int chosen = -1;\n    int i;\n    for (i = 0; i < vertices; ++i) {\n        if (!used[i] && distance[i] > best) {\n            best = distance[i];\n            chosen = i;\n        }\n    }\n    return chosen;\n}\n\nstatic void shortest_paths(int source, long long distance[])\n{\n    int used[LIMIT] = {0};\n    int i;\n    int step;\n    for (i = 0; i < vertices; ++i) {\n        distance[i] = INF;\n    }\n    distance[source] = 1;\n    for (step = 0; step < vertices; ++step) {\n        int node = closest_unvisited(distance, used);\n        int next;\n        if (node < 0) {\n            break;\n        }\n        used[node] = 1;\n        for (next = 0; next < vertices; ++next) {\n            if (graph[node][next] < INF) {\n                long long candidate = distance[node] + graph[node][next];\n                if (candidate > distance[next]) {\n                    distance[next] = candidate;\n                }\n            }\n        }\n    }\n}\n\nstatic int minimum_hops(int source, int target)\n{\n    int queue[LIMIT];\n    int hops[LIMIT];\n    int head = 0;\n    int tail = 0;\n    int i;\n    for (i = 0; i < vertices; ++i) {\n        hops[i] = -1;\n    }\n    hops[source] = 0;\n    queue[tail++] = source;\n    while (head < tail) {\n        int node = queue[head++];\n        int next;\n        for (next = 0; next < vertices; ++next) {\n            if (graph[node][next] > 0 && graph[node][next] < INF && hops[next] < 0) {\n                hops[next] = hops[node] + 1;\n                queue[tail++] = next;\n            }\n        }\n    }\n    return hops[target];\n}\n\nstatic void print_distance(long long distance)\n{\n    if (distance == INF) {\n        printf(\"INF\");\n    } else {\n        printf(\"%lld\", distance);\n    }\n}\n\nstatic void print_all(int source)\n{\n    long long distance[LIMIT];\n    int i;\n    shortest_paths(source, distance);\n    for (i = 0; i < vertices; ++i) {\n        if (i != 0) {\n            putchar(' ');\n        }\n        print_distance(distance[i]);\n    }\n    putchar('\\n');\n}\n\nstatic int reachable_count(int source)\n{\n    long long distance[LIMIT];\n    int result = -1;\n    int i;\n    shortest_paths(source, distance);\n    for (i = 0; i < vertices; ++i) {\n        if (distance[i] != INF) {\n            ++result;\n        }\n    }\n    return result;\n}\n\nstatic void print_round_sum(int source)\n{\n    long long distance[LIMIT];\n    long long total = 0;\n    int i;\n    shortest_paths(source, distance);\n    for (i = 0; i < vertices; ++i) {\n        if (distance[i] == INF) {\n            puts(\"INF\");\n            return;\n        }\n        total += distance[i];\n    }\n    printf(\"%lld\\n\", total);\n}\n\nstatic void process_command(void)\n{\n    char command[16];\n    int source;\n    int target;\n    int weight;\n    long long distance[LIMIT];\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"EDGE\") == 0) {\n        scanf(\"%d%d%d\", &source, &target, &weight);\n        add_edge(source, target, weight);\n        puts(\"OK\");\n    } else if (strcmp(command, \"DIST\") == 0) {\n        scanf(\"%d%d\", &source, &target);\n        shortest_paths(source, distance);\n        print_distance(distance[target]);\n        putchar('\\n');\n    } else if (strcmp(command, \"ALL\") == 0) {\n        scanf(\"%d\", &source);\n        print_all(source);\n    } else if (strcmp(command, \"BFS\") == 0) {\n        scanf(\"%d%d\", &source, &target);\n        printf(\"%d\\n\", minimum_hops(source, target));\n    } else if (strcmp(command, \"REACH\") == 0) {\n        scanf(\"%d\", &source);\n        printf(\"%d\\n\", reachable_count(source));\n    } else if (strcmp(command, \"ROUND\") == 0) {\n        scanf(\"%d\", &source);\n        print_round_sum(source);\n    } else if (strcmp(command, \"RESET\") == 0) {\n        reset_graph(vertices);\n        puts(\"OK\");\n    }\n}\n\nint main(void)\n{\n    int edges;\n    int commands;\n    int size;\n    int i;\n    if (scanf(\"%d%d%d\", &size, &edges, &commands) != 3) {\n        return 0;\n    }\n    reset_graph(size);\n    for (i = 0; i < edges; ++i) {\n        int from;\n        int to;\n        int weight;\n        scanf(\"%d%d%d\", &from, &to, &weight);\n        add_edge(from, to, weight);\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n",
+      "reason": "unchanged"
+    },
+    {
+      "request": {
+        "name": "add_edge",
+        "retry": 0,
+        "source_sha256": "5147aa7e837f9a845bb9204aa02baa9fc358d291f2260eb26991fa5a0d30b568",
+        "prompt": "Program behavior:\nDirected weighted graph service. Input n m q, n=1..32, m<=100, q<=100. Next m rows are u v w, then q commands. Vertices are 0..n-1; weights 0..1000000. Parallel edges retain their minimum weight, including EDGE updates. Self-distance is zero; edges are directed. EDGE u v w adds/min-updates an edge and prints OK. DIST s t prints exact shortest distance or INF if unreachable. ALL s prints n shortest distances in vertex order, separated by single spaces, using INF. BFS s t prints minimum number of edges ignoring weights (zero-weight edges are valid), or -1 when unreachable; BFS s s is 0. REACH s counts reachable vertices INCLUDING s. ROUND s prints the sum of all shortest distances from s if every vertex is reachable, otherwise INF. RESET removes all edges, preserving n and zero self-distances, and prints OK. Output each command's result on one line.\nShared declarations:\n#include <stdio.h>\n#include <string.h>\n\n#define LIMIT 32\n#define INF 4000000000000000LL\n\nstatic long long graph[LIMIT][LIMIT];\nstatic int vertices;\nRelated function interfaces (do not implement these):\nint main(void);\nstatic void process_command(void);\nAssigned function add_edge:\n```c\nstatic void add_edge(int from, int to, int weight)\n{\n    if (1) {\n        graph[from][to] = weight;\n        graph[to][from] = weight;\n    }\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"4 3 8\\n0 1 9\\n0 1 2\\n1 2 0\\nALL 0\\nDIST 2 0\\nBFS 0 2\\nREACH 0\\nROUND 0\\nEDGE 2 3 1\\nALL 0\\nROUND 0\\n\", \"expected\": \"0 2 2 INF\\nINF\\n2\\n3\\nINF\\nOK\\n0 2 2 3\\n7\", \"actual\": \"1 INF INF INF\\nINF\\n-1\\n0\\nINF\\nOK\\n1 INF INF INF\\nINF\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void add_edge(int from, int to, int weight)\n{\n    if (from >= 0 && from < vertices && to >= 0 && to < vertices) {\n        if (graph[from][to] == 0 || weight < graph[from][to]) {\n            graph[from][to] = weight;\n        }\n    }\n}\n```",
+        "usage": {
+          "prompt_tokens": 607,
+          "completion_tokens": 74,
+          "total_tokens": 681
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 19.94
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "1 INF INF INF\nINF\n-1\n0\nINF\nOK\n1 INF INF INF\nINF\n",
+            "stderr": "",
+            "input": "4 3 8\n0 1 9\n0 1 2\n1 2 0\nALL 0\nDIST 2 0\nBFS 0 2\nREACH 0\nROUND 0\nEDGE 2 3 1\nALL 0\nROUND 0\n",
+            "expected": "0 2 2 INF\nINF\n2\n3\nINF\nOK\n0 2 2 3\n7",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "1\n0\n0\nINF INF 1\nOK\n-1\nINF INF 1\n",
+            "stderr": "",
+            "input": "3 0 7\nDIST 0 0\nBFS 0 0\nREACH 0\nALL 2\nEDGE 2 0 0\nBFS 2 0\nALL 2\n",
+            "expected": "0\n0\n1\nINF INF 0\nOK\n1\n0 INF 0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "INF\nINF 1 INF INF\nINF\nOK\n1 INF INF INF\nOK\n1 INF INF INF\n",
+            "stderr": "",
+            "input": "4 4 7\n0 1 1\n1 2 2\n0 2 10\n2 3 3\nDIST 0 3\nALL 1\nROUND 0\nEDGE 0 3 0\nALL 0\nRESET\nALL 0\n",
+            "expected": "6\nINF 0 2 5\n10\nOK\n0 1 3 0\nOK\n0 INF INF INF",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "INF 1\n1\nINF\n0\nINF\nOK\n1 INF\n",
+            "stderr": "",
+            "input": "2 2 7\n1 0 0\n1 0 8\nALL 1\nBFS 1 0\nDIST 0 1\nREACH 1\nROUND 1\nEDGE 0 1 5\nALL 0\n",
+            "expected": "0 0\n1\nINF\n2\n0\nOK\n0 5",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <string.h>\n\n#define LIMIT 32\n#define INF 4000000000000000LL\n\nstatic long long graph[LIMIT][LIMIT];\nstatic int vertices;\n\nstatic void reset_graph(int size)\n{\n    int i;\n    int j;\n    vertices = size;\n    for (i = 0; i < vertices; ++i) {\n        for (j = 0; j < vertices; ++j) {\n            graph[i][j] = i == j ? 0 : INF;\n        }\n    }\n}\n\nstatic void add_edge(int from, int to, int weight)\n{\n    if (from >= 0 && from < vertices && to >= 0 && to < vertices) {\n        if (graph[from][to] == 0 || weight < graph[from][to]) {\n            graph[from][to] = weight;\n        }\n    }\n}\n\nstatic int closest_unvisited(const long long distance[], const int used[])\n{\n    long long best = INF;\n    int chosen = -1;\n    int i;\n    for (i = 0; i < vertices; ++i) {\n        if (!used[i] && distance[i] > best) {\n            best = distance[i];\n            chosen = i;\n        }\n    }\n    return chosen;\n}\n\nstatic void shortest_paths(int source, long long distance[])\n{\n    int used[LIMIT] = {0};\n    int i;\n    int step;\n    for (i = 0; i < vertices; ++i) {\n        distance[i] = INF;\n    }\n    distance[source] = 1;\n    for (step = 0; step < vertices; ++step) {\n        int node = closest_unvisited(distance, used);\n        int next;\n        if (node < 0) {\n            break;\n        }\n        used[node] = 1;\n        for (next = 0; next < vertices; ++next) {\n            if (graph[node][next] < INF) {\n                long long candidate = distance[node] + graph[node][next];\n                if (candidate > distance[next]) {\n                    distance[next] = candidate;\n                }\n            }\n        }\n    }\n}\n\nstatic int minimum_hops(int source, int target)\n{\n    int queue[LIMIT];\n    int hops[LIMIT];\n    int head = 0;\n    int tail = 0;\n    int i;\n    for (i = 0; i < vertices; ++i) {\n        hops[i] = -1;\n    }\n    hops[source] = 0;\n    queue[tail++] = source;\n    while (head < tail) {\n        int node = queue[head++];\n        int next;\n        for (next = 0; next < vertices; ++next) {\n            if (graph[node][next] > 0 && graph[node][next] < INF && hops[next] < 0) {\n                hops[next] = hops[node] + 1;\n                queue[tail++] = next;\n            }\n        }\n    }\n    return hops[target];\n}\n\nstatic void print_distance(long long distance)\n{\n    if (distance == INF) {\n        printf(\"INF\");\n    } else {\n        printf(\"%lld\", distance);\n    }\n}\n\nstatic void print_all(int source)\n{\n    long long distance[LIMIT];\n    int i;\n    shortest_paths(source, distance);\n    for (i = 0; i < vertices; ++i) {\n        if (i != 0) {\n            putchar(' ');\n        }\n        print_distance(distance[i]);\n    }\n    putchar('\\n');\n}\n\nstatic int reachable_count(int source)\n{\n    long long distance[LIMIT];\n    int result = -1;\n    int i;\n    shortest_paths(source, distance);\n    for (i = 0; i < vertices; ++i) {\n        if (distance[i] != INF) {\n            ++result;\n        }\n    }\n    return result;\n}\n\nstatic void print_round_sum(int source)\n{\n    long long distance[LIMIT];\n    long long total = 0;\n    int i;\n    shortest_paths(source, distance);\n    for (i = 0; i < vertices; ++i) {\n        if (distance[i] == INF) {\n            puts(\"INF\");\n            return;\n        }\n        total += distance[i];\n    }\n    printf(\"%lld\\n\", total);\n}\n\nstatic void process_command(void)\n{\n    char command[16];\n    int source;\n    int target;\n    int weight;\n    long long distance[LIMIT];\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"EDGE\") == 0) {\n        scanf(\"%d%d%d\", &source, &target, &weight);\n        add_edge(source, target, weight);\n        puts(\"OK\");\n    } else if (strcmp(command, \"DIST\") == 0) {\n        scanf(\"%d%d\", &source, &target);\n        shortest_paths(source, distance);\n        print_distance(distance[target]);\n        putchar('\\n');\n    } else if (strcmp(command, \"ALL\") == 0) {\n        scanf(\"%d\", &source);\n        print_all(source);\n    } else if (strcmp(command, \"BFS\") == 0) {\n        scanf(\"%d%d\", &source, &target);\n        printf(\"%d\\n\", minimum_hops(source, target));\n    } else if (strcmp(command, \"REACH\") == 0) {\n        scanf(\"%d\", &source);\n        printf(\"%d\\n\", reachable_count(source));\n    } else if (strcmp(command, \"ROUND\") == 0) {\n        scanf(\"%d\", &source);\n        print_round_sum(source);\n    } else if (strcmp(command, \"RESET\") == 0) {\n        reset_graph(vertices);\n        puts(\"OK\");\n    }\n}\n\nint main(void)\n{\n    int edges;\n    int commands;\n    int size;\n    int i;\n    if (scanf(\"%d%d%d\", &size, &edges, &commands) != 3) {\n        return 0;\n    }\n    reset_graph(size);\n    for (i = 0; i < edges; ++i) {\n        int from;\n        int to;\n        int weight;\n        scanf(\"%d%d%d\", &from, &to, &weight);\n        add_edge(from, to, weight);\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "closest_unvisited",
+        "retry": 0,
+        "source_sha256": "2427d1f32cc5488d88ec64f2b6e28bec98d8a3324c1a5c398896a50231987a81",
+        "prompt": "Program behavior:\nDirected weighted graph service. Input n m q, n=1..32, m<=100, q<=100. Next m rows are u v w, then q commands. Vertices are 0..n-1; weights 0..1000000. Parallel edges retain their minimum weight, including EDGE updates. Self-distance is zero; edges are directed. EDGE u v w adds/min-updates an edge and prints OK. DIST s t prints exact shortest distance or INF if unreachable. ALL s prints n shortest distances in vertex order, separated by single spaces, using INF. BFS s t prints minimum number of edges ignoring weights (zero-weight edges are valid), or -1 when unreachable; BFS s s is 0. REACH s counts reachable vertices INCLUDING s. ROUND s prints the sum of all shortest distances from s if every vertex is reachable, otherwise INF. RESET removes all edges, preserving n and zero self-distances, and prints OK. Output each command's result on one line.\nShared declarations:\n#include <stdio.h>\n#include <string.h>\n\n#define LIMIT 32\n#define INF 4000000000000000LL\n\nstatic long long graph[LIMIT][LIMIT];\nstatic int vertices;\nRelated function interfaces (do not implement these):\nstatic void shortest_paths(int source, long long distance[]);\nAssigned function closest_unvisited:\n```c\nstatic int closest_unvisited(const long long distance[], const int used[])\n{\n    long long best = INF;\n    int chosen = -1;\n    int i;\n    for (i = 0; i < vertices; ++i) {\n        if (!used[i] && distance[i] > best) {\n            best = distance[i];\n            chosen = i;\n        }\n    }\n    return chosen;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"4 3 8\\n0 1 9\\n0 1 2\\n1 2 0\\nALL 0\\nDIST 2 0\\nBFS 0 2\\nREACH 0\\nROUND 0\\nEDGE 2 3 1\\nALL 0\\nROUND 0\\n\", \"expected\": \"0 2 2 INF\\nINF\\n2\\n3\\nINF\\nOK\\n0 2 2 3\\n7\", \"actual\": \"1 INF INF INF\\nINF\\n-1\\n0\\nINF\\nOK\\n1 INF INF INF\\nINF\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic int closest_unvisited(const long long distance[], const int used[])\n{\n    long long best = INF;\n    int chosen = -1;\n    int i;\n    for (i = 0; i < vertices; ++i) {\n        if (!used[i] && distance[i] < best) {\n            best = distance[i];\n            chosen = i;\n        }\n    }\n    return chosen;\n}\n```",
+        "usage": {
+          "prompt_tokens": 651,
+          "completion_tokens": 87,
+          "total_tokens": 738
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 262,
+        "seconds": 23.579
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "1 INF INF INF\nINF\n-1\n0\nINF\nOK\n1 INF INF INF\nINF\n",
+            "stderr": "",
+            "input": "4 3 8\n0 1 9\n0 1 2\n1 2 0\nALL 0\nDIST 2 0\nBFS 0 2\nREACH 0\nROUND 0\nEDGE 2 3 1\nALL 0\nROUND 0\n",
+            "expected": "0 2 2 INF\nINF\n2\n3\nINF\nOK\n0 2 2 3\n7",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "1\n0\n0\nINF INF 1\nOK\n-1\nINF INF 1\n",
+            "stderr": "",
+            "input": "3 0 7\nDIST 0 0\nBFS 0 0\nREACH 0\nALL 2\nEDGE 2 0 0\nBFS 2 0\nALL 2\n",
+            "expected": "0\n0\n1\nINF INF 0\nOK\n1\n0 INF 0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "INF\nINF 1 INF INF\nINF\nOK\n1 INF INF INF\nOK\n1 INF INF INF\n",
+            "stderr": "",
+            "input": "4 4 7\n0 1 1\n1 2 2\n0 2 10\n2 3 3\nDIST 0 3\nALL 1\nROUND 0\nEDGE 0 3 0\nALL 0\nRESET\nALL 0\n",
+            "expected": "6\nINF 0 2 5\n10\nOK\n0 1 3 0\nOK\n0 INF INF INF",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "INF 1\n1\nINF\n0\nINF\nOK\n1 INF\n",
+            "stderr": "",
+            "input": "2 2 7\n1 0 0\n1 0 8\nALL 1\nBFS 1 0\nDIST 0 1\nREACH 1\nROUND 1\nEDGE 0 1 5\nALL 0\n",
+            "expected": "0 0\n1\nINF\n2\n0\nOK\n0 5",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <string.h>\n\n#define LIMIT 32\n#define INF 4000000000000000LL\n\nstatic long long graph[LIMIT][LIMIT];\nstatic int vertices;\n\nstatic void reset_graph(int size)\n{\n    int i;\n    int j;\n    vertices = size;\n    for (i = 0; i < vertices; ++i) {\n        for (j = 0; j < vertices; ++j) {\n            graph[i][j] = i == j ? 0 : INF;\n        }\n    }\n}\n\nstatic void add_edge(int from, int to, int weight)\n{\n    if (from >= 0 && from < vertices && to >= 0 && to < vertices) {\n        if (graph[from][to] == 0 || weight < graph[from][to]) {\n            graph[from][to] = weight;\n        }\n    }\n}\n\nstatic int closest_unvisited(const long long distance[], const int used[])\n{\n    long long best = INF;\n    int chosen = -1;\n    int i;\n    for (i = 0; i < vertices; ++i) {\n        if (!used[i] && distance[i] < best) {\n            best = distance[i];\n            chosen = i;\n        }\n    }\n    return chosen;\n}\n\nstatic void shortest_paths(int source, long long distance[])\n{\n    int used[LIMIT] = {0};\n    int i;\n    int step;\n    for (i = 0; i < vertices; ++i) {\n        distance[i] = INF;\n    }\n    distance[source] = 1;\n    for (step = 0; step < vertices; ++step) {\n        int node = closest_unvisited(distance, used);\n        int next;\n        if (node < 0) {\n            break;\n        }\n        used[node] = 1;\n        for (next = 0; next < vertices; ++next) {\n            if (graph[node][next] < INF) {\n                long long candidate = distance[node] + graph[node][next];\n                if (candidate > distance[next]) {\n                    distance[next] = candidate;\n                }\n            }\n        }\n    }\n}\n\nstatic int minimum_hops(int source, int target)\n{\n    int queue[LIMIT];\n    int hops[LIMIT];\n    int head = 0;\n    int tail = 0;\n    int i;\n    for (i = 0; i < vertices; ++i) {\n        hops[i] = -1;\n    }\n    hops[source] = 0;\n    queue[tail++] = source;\n    while (head < tail) {\n        int node = queue[head++];\n        int next;\n        for (next = 0; next < vertices; ++next) {\n            if (graph[node][next] > 0 && graph[node][next] < INF && hops[next] < 0) {\n                hops[next] = hops[node] + 1;\n                queue[tail++] = next;\n            }\n        }\n    }\n    return hops[target];\n}\n\nstatic void print_distance(long long distance)\n{\n    if (distance == INF) {\n        printf(\"INF\");\n    } else {\n        printf(\"%lld\", distance);\n    }\n}\n\nstatic void print_all(int source)\n{\n    long long distance[LIMIT];\n    int i;\n    shortest_paths(source, distance);\n    for (i = 0; i < vertices; ++i) {\n        if (i != 0) {\n            putchar(' ');\n        }\n        print_distance(distance[i]);\n    }\n    putchar('\\n');\n}\n\nstatic int reachable_count(int source)\n{\n    long long distance[LIMIT];\n    int result = -1;\n    int i;\n    shortest_paths(source, distance);\n    for (i = 0; i < vertices; ++i) {\n        if (distance[i] != INF) {\n            ++result;\n        }\n    }\n    return result;\n}\n\nstatic void print_round_sum(int source)\n{\n    long long distance[LIMIT];\n    long long total = 0;\n    int i;\n    shortest_paths(source, distance);\n    for (i = 0; i < vertices; ++i) {\n        if (distance[i] == INF) {\n            puts(\"INF\");\n            return;\n        }\n        total += distance[i];\n    }\n    printf(\"%lld\\n\", total);\n}\n\nstatic void process_command(void)\n{\n    char command[16];\n    int source;\n    int target;\n    int weight;\n    long long distance[LIMIT];\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"EDGE\") == 0) {\n        scanf(\"%d%d%d\", &source, &target, &weight);\n        add_edge(source, target, weight);\n        puts(\"OK\");\n    } else if (strcmp(command, \"DIST\") == 0) {\n        scanf(\"%d%d\", &source, &target);\n        shortest_paths(source, distance);\n        print_distance(distance[target]);\n        putchar('\\n');\n    } else if (strcmp(command, \"ALL\") == 0) {\n        scanf(\"%d\", &source);\n        print_all(source);\n    } else if (strcmp(command, \"BFS\") == 0) {\n        scanf(\"%d%d\", &source, &target);\n        printf(\"%d\\n\", minimum_hops(source, target));\n    } else if (strcmp(command, \"REACH\") == 0) {\n        scanf(\"%d\", &source);\n        printf(\"%d\\n\", reachable_count(source));\n    } else if (strcmp(command, \"ROUND\") == 0) {\n        scanf(\"%d\", &source);\n        print_round_sum(source);\n    } else if (strcmp(command, \"RESET\") == 0) {\n        reset_graph(vertices);\n        puts(\"OK\");\n    }\n}\n\nint main(void)\n{\n    int edges;\n    int commands;\n    int size;\n    int i;\n    if (scanf(\"%d%d%d\", &size, &edges, &commands) != 3) {\n        return 0;\n    }\n    reset_graph(size);\n    for (i = 0; i < edges; ++i) {\n        int from;\n        int to;\n        int weight;\n        scanf(\"%d%d%d\", &from, &to, &weight);\n        add_edge(from, to, weight);\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "shortest_paths",
+        "retry": 0,
+        "source_sha256": "83b2f544e7c93bca0066b51e65dbd6f78f9faf886cfae649e616e8712a3dbeb9",
+        "prompt": "Program behavior:\nDirected weighted graph service. Input n m q, n=1..32, m<=100, q<=100. Next m rows are u v w, then q commands. Vertices are 0..n-1; weights 0..1000000. Parallel edges retain their minimum weight, including EDGE updates. Self-distance is zero; edges are directed. EDGE u v w adds/min-updates an edge and prints OK. DIST s t prints exact shortest distance or INF if unreachable. ALL s prints n shortest distances in vertex order, separated by single spaces, using INF. BFS s t prints minimum number of edges ignoring weights (zero-weight edges are valid), or -1 when unreachable; BFS s s is 0. REACH s counts reachable vertices INCLUDING s. ROUND s prints the sum of all shortest distances from s if every vertex is reachable, otherwise INF. RESET removes all edges, preserving n and zero self-distances, and prints OK. Output each command's result on one line.\nShared declarations:\n#include <stdio.h>\n#include <string.h>\n\n#define LIMIT 32\n#define INF 4000000000000000LL\n\nstatic long long graph[LIMIT][LIMIT];\nstatic int vertices;\nRelated function interfaces (do not implement these):\nstatic int closest_unvisited(const long long distance[], const int used[]);\nstatic void print_all(int source);\nstatic void print_round_sum(int source);\nstatic void process_command(void);\nstatic int reachable_count(int source);\nAssigned function shortest_paths:\n```c\nstatic void shortest_paths(int source, long long distance[])\n{\n    int used[LIMIT] = {0};\n    int i;\n    int step;\n    for (i = 0; i < vertices; ++i) {\n        distance[i] = INF;\n    }\n    distance[source] = 1;\n    for (step = 0; step < vertices; ++step) {\n        int node = closest_unvisited(distance, used);\n        int next;\n        if (node < 0) {\n            break;\n        }\n        used[node] = 1;\n        for (next = 0; next < vertices; ++next) {\n            if (graph[node][next] < INF) {\n                long long candidate = distance[node] + graph[node][next];\n                if (candidate > distance[next]) {\n                    distance[next] = candidate;\n                }\n            }\n        }\n    }\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"4 3 8\\n0 1 9\\n0 1 2\\n1 2 0\\nALL 0\\nDIST 2 0\\nBFS 0 2\\nREACH 0\\nROUND 0\\nEDGE 2 3 1\\nALL 0\\nROUND 0\\n\", \"expected\": \"0 2 2 INF\\nINF\\n2\\n3\\nINF\\nOK\\n0 2 2 3\\n7\", \"actual\": \"1 INF INF INF\\nINF\\n-1\\n0\\nINF\\nOK\\n1 INF INF INF\\nINF\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void shortest_paths(int source, long long distance[])\n{\n    int used[LIMIT] = {0};\n    int i;\n    int step;\n    for (i = 0; i < vertices; ++i) {\n        distance[i] = INF;\n    }\n    distance[source] = 0;\n    for (step = 0; step < vertices; ++step) {\n        int node = closest_unvisited(distance, used);\n        int next;\n        if (node < 0) {\n            break;\n        }\n        used[node] = 1;\n        for (next = 0; next < vertices; ++next) {\n            if (graph[node][next] < INF) {\n                long long candidate = distance[node] + graph[node][next];\n                if (candidate < distance[next]) {\n                    distance[next] = candidate;\n                }\n            }\n        }\n    }\n}\n```",
+        "usage": {
+          "prompt_tokens": 781,
+          "completion_tokens": 187,
+          "total_tokens": 968
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 462,
+        "seconds": 43.339
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "0 2 2 INF\nINF\n-1\n2\nINF\nOK\n0 2 2 3\n7\n",
+            "stderr": "",
+            "input": "4 3 8\n0 1 9\n0 1 2\n1 2 0\nALL 0\nDIST 2 0\nBFS 0 2\nREACH 0\nROUND 0\nEDGE 2 3 1\nALL 0\nROUND 0\n",
+            "expected": "0 2 2 INF\nINF\n2\n3\nINF\nOK\n0 2 2 3\n7",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "0\n0\n0\nINF INF 0\nOK\n-1\n0 INF 0\n",
+            "stderr": "",
+            "input": "3 0 7\nDIST 0 0\nBFS 0 0\nREACH 0\nALL 2\nEDGE 2 0 0\nBFS 2 0\nALL 2\n",
+            "expected": "0\n0\n1\nINF INF 0\nOK\n1\n0 INF 0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "6\nINF 0 2 5\n10\nOK\n0 1 3 0\nOK\n0 INF INF INF\n",
+            "stderr": "",
+            "input": "4 4 7\n0 1 1\n1 2 2\n0 2 10\n2 3 3\nDIST 0 3\nALL 1\nROUND 0\nEDGE 0 3 0\nALL 0\nRESET\nALL 0\n",
+            "expected": "6\nINF 0 2 5\n10\nOK\n0 1 3 0\nOK\n0 INF INF INF",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "8 0\n1\nINF\n1\n8\nOK\n0 5\n",
+            "stderr": "",
+            "input": "2 2 7\n1 0 0\n1 0 8\nALL 1\nBFS 1 0\nDIST 0 1\nREACH 1\nROUND 1\nEDGE 0 1 5\nALL 0\n",
+            "expected": "0 0\n1\nINF\n2\n0\nOK\n0 5",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <string.h>\n\n#define LIMIT 32\n#define INF 4000000000000000LL\n\nstatic long long graph[LIMIT][LIMIT];\nstatic int vertices;\n\nstatic void reset_graph(int size)\n{\n    int i;\n    int j;\n    vertices = size;\n    for (i = 0; i < vertices; ++i) {\n        for (j = 0; j < vertices; ++j) {\n            graph[i][j] = i == j ? 0 : INF;\n        }\n    }\n}\n\nstatic void add_edge(int from, int to, int weight)\n{\n    if (from >= 0 && from < vertices && to >= 0 && to < vertices) {\n        if (graph[from][to] == 0 || weight < graph[from][to]) {\n            graph[from][to] = weight;\n        }\n    }\n}\n\nstatic int closest_unvisited(const long long distance[], const int used[])\n{\n    long long best = INF;\n    int chosen = -1;\n    int i;\n    for (i = 0; i < vertices; ++i) {\n        if (!used[i] && distance[i] < best) {\n            best = distance[i];\n            chosen = i;\n        }\n    }\n    return chosen;\n}\n\nstatic void shortest_paths(int source, long long distance[])\n{\n    int used[LIMIT] = {0};\n    int i;\n    int step;\n    for (i = 0; i < vertices; ++i) {\n        distance[i] = INF;\n    }\n    distance[source] = 0;\n    for (step = 0; step < vertices; ++step) {\n        int node = closest_unvisited(distance, used);\n        int next;\n        if (node < 0) {\n            break;\n        }\n        used[node] = 1;\n        for (next = 0; next < vertices; ++next) {\n            if (graph[node][next] < INF) {\n                long long candidate = distance[node] + graph[node][next];\n                if (candidate < distance[next]) {\n                    distance[next] = candidate;\n                }\n            }\n        }\n    }\n}\n\nstatic int minimum_hops(int source, int target)\n{\n    int queue[LIMIT];\n    int hops[LIMIT];\n    int head = 0;\n    int tail = 0;\n    int i;\n    for (i = 0; i < vertices; ++i) {\n        hops[i] = -1;\n    }\n    hops[source] = 0;\n    queue[tail++] = source;\n    while (head < tail) {\n        int node = queue[head++];\n        int next;\n        for (next = 0; next < vertices; ++next) {\n            if (graph[node][next] > 0 && graph[node][next] < INF && hops[next] < 0) {\n                hops[next] = hops[node] + 1;\n                queue[tail++] = next;\n            }\n        }\n    }\n    return hops[target];\n}\n\nstatic void print_distance(long long distance)\n{\n    if (distance == INF) {\n        printf(\"INF\");\n    } else {\n        printf(\"%lld\", distance);\n    }\n}\n\nstatic void print_all(int source)\n{\n    long long distance[LIMIT];\n    int i;\n    shortest_paths(source, distance);\n    for (i = 0; i < vertices; ++i) {\n        if (i != 0) {\n            putchar(' ');\n        }\n        print_distance(distance[i]);\n    }\n    putchar('\\n');\n}\n\nstatic int reachable_count(int source)\n{\n    long long distance[LIMIT];\n    int result = -1;\n    int i;\n    shortest_paths(source, distance);\n    for (i = 0; i < vertices; ++i) {\n        if (distance[i] != INF) {\n            ++result;\n        }\n    }\n    return result;\n}\n\nstatic void print_round_sum(int source)\n{\n    long long distance[LIMIT];\n    long long total = 0;\n    int i;\n    shortest_paths(source, distance);\n    for (i = 0; i < vertices; ++i) {\n        if (distance[i] == INF) {\n            puts(\"INF\");\n            return;\n        }\n        total += distance[i];\n    }\n    printf(\"%lld\\n\", total);\n}\n\nstatic void process_command(void)\n{\n    char command[16];\n    int source;\n    int target;\n    int weight;\n    long long distance[LIMIT];\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"EDGE\") == 0) {\n        scanf(\"%d%d%d\", &source, &target, &weight);\n        add_edge(source, target, weight);\n        puts(\"OK\");\n    } else if (strcmp(command, \"DIST\") == 0) {\n        scanf(\"%d%d\", &source, &target);\n        shortest_paths(source, distance);\n        print_distance(distance[target]);\n        putchar('\\n');\n    } else if (strcmp(command, \"ALL\") == 0) {\n        scanf(\"%d\", &source);\n        print_all(source);\n    } else if (strcmp(command, \"BFS\") == 0) {\n        scanf(\"%d%d\", &source, &target);\n        printf(\"%d\\n\", minimum_hops(source, target));\n    } else if (strcmp(command, \"REACH\") == 0) {\n        scanf(\"%d\", &source);\n        printf(\"%d\\n\", reachable_count(source));\n    } else if (strcmp(command, \"ROUND\") == 0) {\n        scanf(\"%d\", &source);\n        print_round_sum(source);\n    } else if (strcmp(command, \"RESET\") == 0) {\n        reset_graph(vertices);\n        puts(\"OK\");\n    }\n}\n\nint main(void)\n{\n    int edges;\n    int commands;\n    int size;\n    int i;\n    if (scanf(\"%d%d%d\", &size, &edges, &commands) != 3) {\n        return 0;\n    }\n    reset_graph(size);\n    for (i = 0; i < edges; ++i) {\n        int from;\n        int to;\n        int weight;\n        scanf(\"%d%d%d\", &from, &to, &weight);\n        add_edge(from, to, weight);\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "minimum_hops",
+        "retry": 0,
+        "source_sha256": "04861104404836b35039f368d0a29024edaf0785da5ea5e19ed461b13285c0e2",
+        "prompt": "Program behavior:\nDirected weighted graph service. Input n m q, n=1..32, m<=100, q<=100. Next m rows are u v w, then q commands. Vertices are 0..n-1; weights 0..1000000. Parallel edges retain their minimum weight, including EDGE updates. Self-distance is zero; edges are directed. EDGE u v w adds/min-updates an edge and prints OK. DIST s t prints exact shortest distance or INF if unreachable. ALL s prints n shortest distances in vertex order, separated by single spaces, using INF. BFS s t prints minimum number of edges ignoring weights (zero-weight edges are valid), or -1 when unreachable; BFS s s is 0. REACH s counts reachable vertices INCLUDING s. ROUND s prints the sum of all shortest distances from s if every vertex is reachable, otherwise INF. RESET removes all edges, preserving n and zero self-distances, and prints OK. Output each command's result on one line.\nShared declarations:\n#include <stdio.h>\n#include <string.h>\n\n#define LIMIT 32\n#define INF 4000000000000000LL\n\nstatic long long graph[LIMIT][LIMIT];\nstatic int vertices;\nRelated function interfaces (do not implement these):\nstatic void process_command(void);\nAssigned function minimum_hops:\n```c\nstatic int minimum_hops(int source, int target)\n{\n    int queue[LIMIT];\n    int hops[LIMIT];\n    int head = 0;\n    int tail = 0;\n    int i;\n    for (i = 0; i < vertices; ++i) {\n        hops[i] = -1;\n    }\n    hops[source] = 0;\n    queue[tail++] = source;\n    while (head < tail) {\n        int node = queue[head++];\n        int next;\n        for (next = 0; next < vertices; ++next) {\n            if (graph[node][next] > 0 && graph[node][next] < INF && hops[next] < 0) {\n                hops[next] = hops[node] + 1;\n                queue[tail++] = next;\n            }\n        }\n    }\n    return hops[target];\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"4 3 8\\n0 1 9\\n0 1 2\\n1 2 0\\nALL 0\\nDIST 2 0\\nBFS 0 2\\nREACH 0\\nROUND 0\\nEDGE 2 3 1\\nALL 0\\nROUND 0\\n\", \"expected\": \"0 2 2 INF\\nINF\\n2\\n3\\nINF\\nOK\\n0 2 2 3\\n7\", \"actual\": \"0 2 2 INF\\nINF\\n-1\\n2\\nINF\\nOK\\n0 2 2 3\\n7\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic int minimum_hops(int source, int target)\n{\n    int queue[LIMIT];\n    int hops[LIMIT];\n    int head = 0;\n    int tail = 0;\n    int i;\n    for (i = 0; i < vertices; ++i) {\n        hops[i] = -1;\n    }\n    hops[source] = 0;\n    queue[tail++] = source;\n    while (head < tail) {\n        int node = queue[head++];\n        int next;\n        for (next = 0; next < vertices; ++next) {\n            if (graph[node][next] > 0 && graph[node][next] < INF && hops[next] < 0) {\n                hops[next] = hops[node] + 1;\n                queue[tail++] = next;\n            }\n        }\n    }\n    return hops[target];\n}\n```",
+        "usage": {
+          "prompt_tokens": 748,
+          "completion_tokens": 184,
+          "total_tokens": 932
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 456,
+        "seconds": 40.594
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "0 2 2 INF\nINF\n-1\n2\nINF\nOK\n0 2 2 3\n7\n",
+            "stderr": "",
+            "input": "4 3 8\n0 1 9\n0 1 2\n1 2 0\nALL 0\nDIST 2 0\nBFS 0 2\nREACH 0\nROUND 0\nEDGE 2 3 1\nALL 0\nROUND 0\n",
+            "expected": "0 2 2 INF\nINF\n2\n3\nINF\nOK\n0 2 2 3\n7",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "0\n0\n0\nINF INF 0\nOK\n-1\n0 INF 0\n",
+            "stderr": "",
+            "input": "3 0 7\nDIST 0 0\nBFS 0 0\nREACH 0\nALL 2\nEDGE 2 0 0\nBFS 2 0\nALL 2\n",
+            "expected": "0\n0\n1\nINF INF 0\nOK\n1\n0 INF 0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "6\nINF 0 2 5\n10\nOK\n0 1 3 0\nOK\n0 INF INF INF\n",
+            "stderr": "",
+            "input": "4 4 7\n0 1 1\n1 2 2\n0 2 10\n2 3 3\nDIST 0 3\nALL 1\nROUND 0\nEDGE 0 3 0\nALL 0\nRESET\nALL 0\n",
+            "expected": "6\nINF 0 2 5\n10\nOK\n0 1 3 0\nOK\n0 INF INF INF",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "8 0\n1\nINF\n1\n8\nOK\n0 5\n",
+            "stderr": "",
+            "input": "2 2 7\n1 0 0\n1 0 8\nALL 1\nBFS 1 0\nDIST 0 1\nREACH 1\nROUND 1\nEDGE 0 1 5\nALL 0\n",
+            "expected": "0 0\n1\nINF\n2\n0\nOK\n0 5",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <string.h>\n\n#define LIMIT 32\n#define INF 4000000000000000LL\n\nstatic long long graph[LIMIT][LIMIT];\nstatic int vertices;\n\nstatic void reset_graph(int size)\n{\n    int i;\n    int j;\n    vertices = size;\n    for (i = 0; i < vertices; ++i) {\n        for (j = 0; j < vertices; ++j) {\n            graph[i][j] = i == j ? 0 : INF;\n        }\n    }\n}\n\nstatic void add_edge(int from, int to, int weight)\n{\n    if (from >= 0 && from < vertices && to >= 0 && to < vertices) {\n        if (graph[from][to] == 0 || weight < graph[from][to]) {\n            graph[from][to] = weight;\n        }\n    }\n}\n\nstatic int closest_unvisited(const long long distance[], const int used[])\n{\n    long long best = INF;\n    int chosen = -1;\n    int i;\n    for (i = 0; i < vertices; ++i) {\n        if (!used[i] && distance[i] < best) {\n            best = distance[i];\n            chosen = i;\n        }\n    }\n    return chosen;\n}\n\nstatic void shortest_paths(int source, long long distance[])\n{\n    int used[LIMIT] = {0};\n    int i;\n    int step;\n    for (i = 0; i < vertices; ++i) {\n        distance[i] = INF;\n    }\n    distance[source] = 0;\n    for (step = 0; step < vertices; ++step) {\n        int node = closest_unvisited(distance, used);\n        int next;\n        if (node < 0) {\n            break;\n        }\n        used[node] = 1;\n        for (next = 0; next < vertices; ++next) {\n            if (graph[node][next] < INF) {\n                long long candidate = distance[node] + graph[node][next];\n                if (candidate < distance[next]) {\n                    distance[next] = candidate;\n                }\n            }\n        }\n    }\n}\n\nstatic int minimum_hops(int source, int target)\n{\n    int queue[LIMIT];\n    int hops[LIMIT];\n    int head = 0;\n    int tail = 0;\n    int i;\n    for (i = 0; i < vertices; ++i) {\n        hops[i] = -1;\n    }\n    hops[source] = 0;\n    queue[tail++] = source;\n    while (head < tail) {\n        int node = queue[head++];\n        int next;\n        for (next = 0; next < vertices; ++next) {\n            if (graph[node][next] > 0 && graph[node][next] < INF && hops[next] < 0) {\n                hops[next] = hops[node] + 1;\n                queue[tail++] = next;\n            }\n        }\n    }\n    return hops[target];\n}\n\nstatic void print_distance(long long distance)\n{\n    if (distance == INF) {\n        printf(\"INF\");\n    } else {\n        printf(\"%lld\", distance);\n    }\n}\n\nstatic void print_all(int source)\n{\n    long long distance[LIMIT];\n    int i;\n    shortest_paths(source, distance);\n    for (i = 0; i < vertices; ++i) {\n        if (i != 0) {\n            putchar(' ');\n        }\n        print_distance(distance[i]);\n    }\n    putchar('\\n');\n}\n\nstatic int reachable_count(int source)\n{\n    long long distance[LIMIT];\n    int result = -1;\n    int i;\n    shortest_paths(source, distance);\n    for (i = 0; i < vertices; ++i) {\n        if (distance[i] != INF) {\n            ++result;\n        }\n    }\n    return result;\n}\n\nstatic void print_round_sum(int source)\n{\n    long long distance[LIMIT];\n    long long total = 0;\n    int i;\n    shortest_paths(source, distance);\n    for (i = 0; i < vertices; ++i) {\n        if (distance[i] == INF) {\n            puts(\"INF\");\n            return;\n        }\n        total += distance[i];\n    }\n    printf(\"%lld\\n\", total);\n}\n\nstatic void process_command(void)\n{\n    char command[16];\n    int source;\n    int target;\n    int weight;\n    long long distance[LIMIT];\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"EDGE\") == 0) {\n        scanf(\"%d%d%d\", &source, &target, &weight);\n        add_edge(source, target, weight);\n        puts(\"OK\");\n    } else if (strcmp(command, \"DIST\") == 0) {\n        scanf(\"%d%d\", &source, &target);\n        shortest_paths(source, distance);\n        print_distance(distance[target]);\n        putchar('\\n');\n    } else if (strcmp(command, \"ALL\") == 0) {\n        scanf(\"%d\", &source);\n        print_all(source);\n    } else if (strcmp(command, \"BFS\") == 0) {\n        scanf(\"%d%d\", &source, &target);\n        printf(\"%d\\n\", minimum_hops(source, target));\n    } else if (strcmp(command, \"REACH\") == 0) {\n        scanf(\"%d\", &source);\n        printf(\"%d\\n\", reachable_count(source));\n    } else if (strcmp(command, \"ROUND\") == 0) {\n        scanf(\"%d\", &source);\n        print_round_sum(source);\n    } else if (strcmp(command, \"RESET\") == 0) {\n        reset_graph(vertices);\n        puts(\"OK\");\n    }\n}\n\nint main(void)\n{\n    int edges;\n    int commands;\n    int size;\n    int i;\n    if (scanf(\"%d%d%d\", &size, &edges, &commands) != 3) {\n        return 0;\n    }\n    reset_graph(size);\n    for (i = 0; i < edges; ++i) {\n        int from;\n        int to;\n        int weight;\n        scanf(\"%d%d%d\", &from, &to, &weight);\n        add_edge(from, to, weight);\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n",
+      "reason": "unchanged"
+    },
+    {
+      "request": {
+        "name": "print_distance",
+        "retry": 0,
+        "source_sha256": "04861104404836b35039f368d0a29024edaf0785da5ea5e19ed461b13285c0e2",
+        "prompt": "Program behavior:\nDirected weighted graph service. Input n m q, n=1..32, m<=100, q<=100. Next m rows are u v w, then q commands. Vertices are 0..n-1; weights 0..1000000. Parallel edges retain their minimum weight, including EDGE updates. Self-distance is zero; edges are directed. EDGE u v w adds/min-updates an edge and prints OK. DIST s t prints exact shortest distance or INF if unreachable. ALL s prints n shortest distances in vertex order, separated by single spaces, using INF. BFS s t prints minimum number of edges ignoring weights (zero-weight edges are valid), or -1 when unreachable; BFS s s is 0. REACH s counts reachable vertices INCLUDING s. ROUND s prints the sum of all shortest distances from s if every vertex is reachable, otherwise INF. RESET removes all edges, preserving n and zero self-distances, and prints OK. Output each command's result on one line.\nShared declarations:\n#include <stdio.h>\n#include <string.h>\n\n#define LIMIT 32\n#define INF 4000000000000000LL\n\nstatic long long graph[LIMIT][LIMIT];\nstatic int vertices;\nRelated function interfaces (do not implement these):\nstatic void print_all(int source);\nstatic void process_command(void);\nAssigned function print_distance:\n```c\nstatic void print_distance(long long distance)\n{\n    if (distance == INF) {\n        printf(\"INF\");\n    } else {\n        printf(\"%lld\", distance);\n    }\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"4 3 8\\n0 1 9\\n0 1 2\\n1 2 0\\nALL 0\\nDIST 2 0\\nBFS 0 2\\nREACH 0\\nROUND 0\\nEDGE 2 3 1\\nALL 0\\nROUND 0\\n\", \"expected\": \"0 2 2 INF\\nINF\\n2\\n3\\nINF\\nOK\\n0 2 2 3\\n7\", \"actual\": \"0 2 2 INF\\nINF\\n-1\\n2\\nINF\\nOK\\n0 2 2 3\\n7\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void print_distance(long long distance)\n{\n    if (distance == INF) {\n        printf(\"INF\");\n    } else {\n        printf(\"%lld\", distance);\n    }\n}\n```",
+        "usage": {
+          "prompt_tokens": 610,
+          "completion_tokens": 40,
+          "total_tokens": 650
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 15.699
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "0 2 2 INF\nINF\n-1\n2\nINF\nOK\n0 2 2 3\n7\n",
+            "stderr": "",
+            "input": "4 3 8\n0 1 9\n0 1 2\n1 2 0\nALL 0\nDIST 2 0\nBFS 0 2\nREACH 0\nROUND 0\nEDGE 2 3 1\nALL 0\nROUND 0\n",
+            "expected": "0 2 2 INF\nINF\n2\n3\nINF\nOK\n0 2 2 3\n7",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "0\n0\n0\nINF INF 0\nOK\n-1\n0 INF 0\n",
+            "stderr": "",
+            "input": "3 0 7\nDIST 0 0\nBFS 0 0\nREACH 0\nALL 2\nEDGE 2 0 0\nBFS 2 0\nALL 2\n",
+            "expected": "0\n0\n1\nINF INF 0\nOK\n1\n0 INF 0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "6\nINF 0 2 5\n10\nOK\n0 1 3 0\nOK\n0 INF INF INF\n",
+            "stderr": "",
+            "input": "4 4 7\n0 1 1\n1 2 2\n0 2 10\n2 3 3\nDIST 0 3\nALL 1\nROUND 0\nEDGE 0 3 0\nALL 0\nRESET\nALL 0\n",
+            "expected": "6\nINF 0 2 5\n10\nOK\n0 1 3 0\nOK\n0 INF INF INF",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "8 0\n1\nINF\n1\n8\nOK\n0 5\n",
+            "stderr": "",
+            "input": "2 2 7\n1 0 0\n1 0 8\nALL 1\nBFS 1 0\nDIST 0 1\nREACH 1\nROUND 1\nEDGE 0 1 5\nALL 0\n",
+            "expected": "0 0\n1\nINF\n2\n0\nOK\n0 5",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <string.h>\n\n#define LIMIT 32\n#define INF 4000000000000000LL\n\nstatic long long graph[LIMIT][LIMIT];\nstatic int vertices;\n\nstatic void reset_graph(int size)\n{\n    int i;\n    int j;\n    vertices = size;\n    for (i = 0; i < vertices; ++i) {\n        for (j = 0; j < vertices; ++j) {\n            graph[i][j] = i == j ? 0 : INF;\n        }\n    }\n}\n\nstatic void add_edge(int from, int to, int weight)\n{\n    if (from >= 0 && from < vertices && to >= 0 && to < vertices) {\n        if (graph[from][to] == 0 || weight < graph[from][to]) {\n            graph[from][to] = weight;\n        }\n    }\n}\n\nstatic int closest_unvisited(const long long distance[], const int used[])\n{\n    long long best = INF;\n    int chosen = -1;\n    int i;\n    for (i = 0; i < vertices; ++i) {\n        if (!used[i] && distance[i] < best) {\n            best = distance[i];\n            chosen = i;\n        }\n    }\n    return chosen;\n}\n\nstatic void shortest_paths(int source, long long distance[])\n{\n    int used[LIMIT] = {0};\n    int i;\n    int step;\n    for (i = 0; i < vertices; ++i) {\n        distance[i] = INF;\n    }\n    distance[source] = 0;\n    for (step = 0; step < vertices; ++step) {\n        int node = closest_unvisited(distance, used);\n        int next;\n        if (node < 0) {\n            break;\n        }\n        used[node] = 1;\n        for (next = 0; next < vertices; ++next) {\n            if (graph[node][next] < INF) {\n                long long candidate = distance[node] + graph[node][next];\n                if (candidate < distance[next]) {\n                    distance[next] = candidate;\n                }\n            }\n        }\n    }\n}\n\nstatic int minimum_hops(int source, int target)\n{\n    int queue[LIMIT];\n    int hops[LIMIT];\n    int head = 0;\n    int tail = 0;\n    int i;\n    for (i = 0; i < vertices; ++i) {\n        hops[i] = -1;\n    }\n    hops[source] = 0;\n    queue[tail++] = source;\n    while (head < tail) {\n        int node = queue[head++];\n        int next;\n        for (next = 0; next < vertices; ++next) {\n            if (graph[node][next] > 0 && graph[node][next] < INF && hops[next] < 0) {\n                hops[next] = hops[node] + 1;\n                queue[tail++] = next;\n            }\n        }\n    }\n    return hops[target];\n}\n\nstatic void print_distance(long long distance)\n{\n    if (distance == INF) {\n        printf(\"INF\");\n    } else {\n        printf(\"%lld\", distance);\n    }\n}\n\nstatic void print_all(int source)\n{\n    long long distance[LIMIT];\n    int i;\n    shortest_paths(source, distance);\n    for (i = 0; i < vertices; ++i) {\n        if (i != 0) {\n            putchar(' ');\n        }\n        print_distance(distance[i]);\n    }\n    putchar('\\n');\n}\n\nstatic int reachable_count(int source)\n{\n    long long distance[LIMIT];\n    int result = -1;\n    int i;\n    shortest_paths(source, distance);\n    for (i = 0; i < vertices; ++i) {\n        if (distance[i] != INF) {\n            ++result;\n        }\n    }\n    return result;\n}\n\nstatic void print_round_sum(int source)\n{\n    long long distance[LIMIT];\n    long long total = 0;\n    int i;\n    shortest_paths(source, distance);\n    for (i = 0; i < vertices; ++i) {\n        if (distance[i] == INF) {\n            puts(\"INF\");\n            return;\n        }\n        total += distance[i];\n    }\n    printf(\"%lld\\n\", total);\n}\n\nstatic void process_command(void)\n{\n    char command[16];\n    int source;\n    int target;\n    int weight;\n    long long distance[LIMIT];\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"EDGE\") == 0) {\n        scanf(\"%d%d%d\", &source, &target, &weight);\n        add_edge(source, target, weight);\n        puts(\"OK\");\n    } else if (strcmp(command, \"DIST\") == 0) {\n        scanf(\"%d%d\", &source, &target);\n        shortest_paths(source, distance);\n        print_distance(distance[target]);\n        putchar('\\n');\n    } else if (strcmp(command, \"ALL\") == 0) {\n        scanf(\"%d\", &source);\n        print_all(source);\n    } else if (strcmp(command, \"BFS\") == 0) {\n        scanf(\"%d%d\", &source, &target);\n        printf(\"%d\\n\", minimum_hops(source, target));\n    } else if (strcmp(command, \"REACH\") == 0) {\n        scanf(\"%d\", &source);\n        printf(\"%d\\n\", reachable_count(source));\n    } else if (strcmp(command, \"ROUND\") == 0) {\n        scanf(\"%d\", &source);\n        print_round_sum(source);\n    } else if (strcmp(command, \"RESET\") == 0) {\n        reset_graph(vertices);\n        puts(\"OK\");\n    }\n}\n\nint main(void)\n{\n    int edges;\n    int commands;\n    int size;\n    int i;\n    if (scanf(\"%d%d%d\", &size, &edges, &commands) != 3) {\n        return 0;\n    }\n    reset_graph(size);\n    for (i = 0; i < edges; ++i) {\n        int from;\n        int to;\n        int weight;\n        scanf(\"%d%d%d\", &from, &to, &weight);\n        add_edge(from, to, weight);\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n",
+      "reason": "unchanged"
+    },
+    {
+      "request": {
+        "name": "print_all",
+        "retry": 0,
+        "source_sha256": "04861104404836b35039f368d0a29024edaf0785da5ea5e19ed461b13285c0e2",
+        "prompt": "Program behavior:\nDirected weighted graph service. Input n m q, n=1..32, m<=100, q<=100. Next m rows are u v w, then q commands. Vertices are 0..n-1; weights 0..1000000. Parallel edges retain their minimum weight, including EDGE updates. Self-distance is zero; edges are directed. EDGE u v w adds/min-updates an edge and prints OK. DIST s t prints exact shortest distance or INF if unreachable. ALL s prints n shortest distances in vertex order, separated by single spaces, using INF. BFS s t prints minimum number of edges ignoring weights (zero-weight edges are valid), or -1 when unreachable; BFS s s is 0. REACH s counts reachable vertices INCLUDING s. ROUND s prints the sum of all shortest distances from s if every vertex is reachable, otherwise INF. RESET removes all edges, preserving n and zero self-distances, and prints OK. Output each command's result on one line.\nShared declarations:\n#include <stdio.h>\n#include <string.h>\n\n#define LIMIT 32\n#define INF 4000000000000000LL\n\nstatic long long graph[LIMIT][LIMIT];\nstatic int vertices;\nRelated function interfaces (do not implement these):\nstatic void print_distance(long long distance);\nstatic void process_command(void);\nstatic void shortest_paths(int source, long long distance[]);\nAssigned function print_all:\n```c\nstatic void print_all(int source)\n{\n    long long distance[LIMIT];\n    int i;\n    shortest_paths(source, distance);\n    for (i = 0; i < vertices; ++i) {\n        if (i != 0) {\n            putchar(' ');\n        }\n        print_distance(distance[i]);\n    }\n    putchar('\\n');\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"4 3 8\\n0 1 9\\n0 1 2\\n1 2 0\\nALL 0\\nDIST 2 0\\nBFS 0 2\\nREACH 0\\nROUND 0\\nEDGE 2 3 1\\nALL 0\\nROUND 0\\n\", \"expected\": \"0 2 2 INF\\nINF\\n2\\n3\\nINF\\nOK\\n0 2 2 3\\n7\", \"actual\": \"0 2 2 INF\\nINF\\n-1\\n2\\nINF\\nOK\\n0 2 2 3\\n7\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void print_all(int source)\n{\n    long long distance[LIMIT];\n    int i;\n    shortest_paths(source, distance);\n    for (i = 0; i < vertices; ++i) {\n        if (i != 0) {\n            putchar(' ');\n        }\n        if (distance[i] == INF) {\n            printf(\"INF\");\n        } else {\n            printf(\"%lld\", distance[i]);\n        }\n    }\n    putchar('\\n');\n}\n```",
+        "usage": {
+          "prompt_tokens": 657,
+          "completion_tokens": 98,
+          "total_tokens": 755
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 25.147
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "0 2 2 INF\nINF\n-1\n2\nINF\nOK\n0 2 2 3\n7\n",
+            "stderr": "",
+            "input": "4 3 8\n0 1 9\n0 1 2\n1 2 0\nALL 0\nDIST 2 0\nBFS 0 2\nREACH 0\nROUND 0\nEDGE 2 3 1\nALL 0\nROUND 0\n",
+            "expected": "0 2 2 INF\nINF\n2\n3\nINF\nOK\n0 2 2 3\n7",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "0\n0\n0\nINF INF 0\nOK\n-1\n0 INF 0\n",
+            "stderr": "",
+            "input": "3 0 7\nDIST 0 0\nBFS 0 0\nREACH 0\nALL 2\nEDGE 2 0 0\nBFS 2 0\nALL 2\n",
+            "expected": "0\n0\n1\nINF INF 0\nOK\n1\n0 INF 0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "6\nINF 0 2 5\n10\nOK\n0 1 3 0\nOK\n0 INF INF INF\n",
+            "stderr": "",
+            "input": "4 4 7\n0 1 1\n1 2 2\n0 2 10\n2 3 3\nDIST 0 3\nALL 1\nROUND 0\nEDGE 0 3 0\nALL 0\nRESET\nALL 0\n",
+            "expected": "6\nINF 0 2 5\n10\nOK\n0 1 3 0\nOK\n0 INF INF INF",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "8 0\n1\nINF\n1\n8\nOK\n0 5\n",
+            "stderr": "",
+            "input": "2 2 7\n1 0 0\n1 0 8\nALL 1\nBFS 1 0\nDIST 0 1\nREACH 1\nROUND 1\nEDGE 0 1 5\nALL 0\n",
+            "expected": "0 0\n1\nINF\n2\n0\nOK\n0 5",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <string.h>\n\n#define LIMIT 32\n#define INF 4000000000000000LL\n\nstatic long long graph[LIMIT][LIMIT];\nstatic int vertices;\n\nstatic void reset_graph(int size)\n{\n    int i;\n    int j;\n    vertices = size;\n    for (i = 0; i < vertices; ++i) {\n        for (j = 0; j < vertices; ++j) {\n            graph[i][j] = i == j ? 0 : INF;\n        }\n    }\n}\n\nstatic void add_edge(int from, int to, int weight)\n{\n    if (from >= 0 && from < vertices && to >= 0 && to < vertices) {\n        if (graph[from][to] == 0 || weight < graph[from][to]) {\n            graph[from][to] = weight;\n        }\n    }\n}\n\nstatic int closest_unvisited(const long long distance[], const int used[])\n{\n    long long best = INF;\n    int chosen = -1;\n    int i;\n    for (i = 0; i < vertices; ++i) {\n        if (!used[i] && distance[i] < best) {\n            best = distance[i];\n            chosen = i;\n        }\n    }\n    return chosen;\n}\n\nstatic void shortest_paths(int source, long long distance[])\n{\n    int used[LIMIT] = {0};\n    int i;\n    int step;\n    for (i = 0; i < vertices; ++i) {\n        distance[i] = INF;\n    }\n    distance[source] = 0;\n    for (step = 0; step < vertices; ++step) {\n        int node = closest_unvisited(distance, used);\n        int next;\n        if (node < 0) {\n            break;\n        }\n        used[node] = 1;\n        for (next = 0; next < vertices; ++next) {\n            if (graph[node][next] < INF) {\n                long long candidate = distance[node] + graph[node][next];\n                if (candidate < distance[next]) {\n                    distance[next] = candidate;\n                }\n            }\n        }\n    }\n}\n\nstatic int minimum_hops(int source, int target)\n{\n    int queue[LIMIT];\n    int hops[LIMIT];\n    int head = 0;\n    int tail = 0;\n    int i;\n    for (i = 0; i < vertices; ++i) {\n        hops[i] = -1;\n    }\n    hops[source] = 0;\n    queue[tail++] = source;\n    while (head < tail) {\n        int node = queue[head++];\n        int next;\n        for (next = 0; next < vertices; ++next) {\n            if (graph[node][next] > 0 && graph[node][next] < INF && hops[next] < 0) {\n                hops[next] = hops[node] + 1;\n                queue[tail++] = next;\n            }\n        }\n    }\n    return hops[target];\n}\n\nstatic void print_distance(long long distance)\n{\n    if (distance == INF) {\n        printf(\"INF\");\n    } else {\n        printf(\"%lld\", distance);\n    }\n}\n\nstatic void print_all(int source)\n{\n    long long distance[LIMIT];\n    int i;\n    shortest_paths(source, distance);\n    for (i = 0; i < vertices; ++i) {\n        if (i != 0) {\n            putchar(' ');\n        }\n        if (distance[i] == INF) {\n            printf(\"INF\");\n        } else {\n            printf(\"%lld\", distance[i]);\n        }\n    }\n    putchar('\\n');\n}\n\nstatic int reachable_count(int source)\n{\n    long long distance[LIMIT];\n    int result = -1;\n    int i;\n    shortest_paths(source, distance);\n    for (i = 0; i < vertices; ++i) {\n        if (distance[i] != INF) {\n            ++result;\n        }\n    }\n    return result;\n}\n\nstatic void print_round_sum(int source)\n{\n    long long distance[LIMIT];\n    long long total = 0;\n    int i;\n    shortest_paths(source, distance);\n    for (i = 0; i < vertices; ++i) {\n        if (distance[i] == INF) {\n            puts(\"INF\");\n            return;\n        }\n        total += distance[i];\n    }\n    printf(\"%lld\\n\", total);\n}\n\nstatic void process_command(void)\n{\n    char command[16];\n    int source;\n    int target;\n    int weight;\n    long long distance[LIMIT];\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"EDGE\") == 0) {\n        scanf(\"%d%d%d\", &source, &target, &weight);\n        add_edge(source, target, weight);\n        puts(\"OK\");\n    } else if (strcmp(command, \"DIST\") == 0) {\n        scanf(\"%d%d\", &source, &target);\n        shortest_paths(source, distance);\n        print_distance(distance[target]);\n        putchar('\\n');\n    } else if (strcmp(command, \"ALL\") == 0) {\n        scanf(\"%d\", &source);\n        print_all(source);\n    } else if (strcmp(command, \"BFS\") == 0) {\n        scanf(\"%d%d\", &source, &target);\n        printf(\"%d\\n\", minimum_hops(source, target));\n    } else if (strcmp(command, \"REACH\") == 0) {\n        scanf(\"%d\", &source);\n        printf(\"%d\\n\", reachable_count(source));\n    } else if (strcmp(command, \"ROUND\") == 0) {\n        scanf(\"%d\", &source);\n        print_round_sum(source);\n    } else if (strcmp(command, \"RESET\") == 0) {\n        reset_graph(vertices);\n        puts(\"OK\");\n    }\n}\n\nint main(void)\n{\n    int edges;\n    int commands;\n    int size;\n    int i;\n    if (scanf(\"%d%d%d\", &size, &edges, &commands) != 3) {\n        return 0;\n    }\n    reset_graph(size);\n    for (i = 0; i < edges; ++i) {\n        int from;\n        int to;\n        int weight;\n        scanf(\"%d%d%d\", &from, &to, &weight);\n        add_edge(from, to, weight);\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "reachable_count",
+        "retry": 0,
+        "source_sha256": "49ca14aae20ee034e589c2739c8426110aee4f50f4eff18dc3038c8ae05afbeb",
+        "prompt": "Program behavior:\nDirected weighted graph service. Input n m q, n=1..32, m<=100, q<=100. Next m rows are u v w, then q commands. Vertices are 0..n-1; weights 0..1000000. Parallel edges retain their minimum weight, including EDGE updates. Self-distance is zero; edges are directed. EDGE u v w adds/min-updates an edge and prints OK. DIST s t prints exact shortest distance or INF if unreachable. ALL s prints n shortest distances in vertex order, separated by single spaces, using INF. BFS s t prints minimum number of edges ignoring weights (zero-weight edges are valid), or -1 when unreachable; BFS s s is 0. REACH s counts reachable vertices INCLUDING s. ROUND s prints the sum of all shortest distances from s if every vertex is reachable, otherwise INF. RESET removes all edges, preserving n and zero self-distances, and prints OK. Output each command's result on one line.\nShared declarations:\n#include <stdio.h>\n#include <string.h>\n\n#define LIMIT 32\n#define INF 4000000000000000LL\n\nstatic long long graph[LIMIT][LIMIT];\nstatic int vertices;\nRelated function interfaces (do not implement these):\nstatic void process_command(void);\nstatic void shortest_paths(int source, long long distance[]);\nAssigned function reachable_count:\n```c\nstatic int reachable_count(int source)\n{\n    long long distance[LIMIT];\n    int result = -1;\n    int i;\n    shortest_paths(source, distance);\n    for (i = 0; i < vertices; ++i) {\n        if (distance[i] != INF) {\n            ++result;\n        }\n    }\n    return result;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"4 3 8\\n0 1 9\\n0 1 2\\n1 2 0\\nALL 0\\nDIST 2 0\\nBFS 0 2\\nREACH 0\\nROUND 0\\nEDGE 2 3 1\\nALL 0\\nROUND 0\\n\", \"expected\": \"0 2 2 INF\\nINF\\n2\\n3\\nINF\\nOK\\n0 2 2 3\\n7\", \"actual\": \"0 2 2 INF\\nINF\\n-1\\n2\\nINF\\nOK\\n0 2 2 3\\n7\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic int reachable_count(int source)\n{\n    long long distance[LIMIT];\n    int result = 0;\n    int i;\n    shortest_paths(source, distance);\n    for (i = 0; i < vertices; ++i) {\n        if (distance[i] != INF) {\n            ++result;\n        }\n    }\n    return result;\n}\n```",
+        "usage": {
+          "prompt_tokens": 650,
+          "completion_tokens": 76,
+          "total_tokens": 726
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 22.643
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "0 2 2 INF\nINF\n-1\n3\nINF\nOK\n0 2 2 3\n7\n",
+            "stderr": "",
+            "input": "4 3 8\n0 1 9\n0 1 2\n1 2 0\nALL 0\nDIST 2 0\nBFS 0 2\nREACH 0\nROUND 0\nEDGE 2 3 1\nALL 0\nROUND 0\n",
+            "expected": "0 2 2 INF\nINF\n2\n3\nINF\nOK\n0 2 2 3\n7",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "0\n0\n1\nINF INF 0\nOK\n-1\n0 INF 0\n",
+            "stderr": "",
+            "input": "3 0 7\nDIST 0 0\nBFS 0 0\nREACH 0\nALL 2\nEDGE 2 0 0\nBFS 2 0\nALL 2\n",
+            "expected": "0\n0\n1\nINF INF 0\nOK\n1\n0 INF 0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "6\nINF 0 2 5\n10\nOK\n0 1 3 0\nOK\n0 INF INF INF\n",
+            "stderr": "",
+            "input": "4 4 7\n0 1 1\n1 2 2\n0 2 10\n2 3 3\nDIST 0 3\nALL 1\nROUND 0\nEDGE 0 3 0\nALL 0\nRESET\nALL 0\n",
+            "expected": "6\nINF 0 2 5\n10\nOK\n0 1 3 0\nOK\n0 INF INF INF",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "8 0\n1\nINF\n2\n8\nOK\n0 5\n",
+            "stderr": "",
+            "input": "2 2 7\n1 0 0\n1 0 8\nALL 1\nBFS 1 0\nDIST 0 1\nREACH 1\nROUND 1\nEDGE 0 1 5\nALL 0\n",
+            "expected": "0 0\n1\nINF\n2\n0\nOK\n0 5",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <string.h>\n\n#define LIMIT 32\n#define INF 4000000000000000LL\n\nstatic long long graph[LIMIT][LIMIT];\nstatic int vertices;\n\nstatic void reset_graph(int size)\n{\n    int i;\n    int j;\n    vertices = size;\n    for (i = 0; i < vertices; ++i) {\n        for (j = 0; j < vertices; ++j) {\n            graph[i][j] = i == j ? 0 : INF;\n        }\n    }\n}\n\nstatic void add_edge(int from, int to, int weight)\n{\n    if (from >= 0 && from < vertices && to >= 0 && to < vertices) {\n        if (graph[from][to] == 0 || weight < graph[from][to]) {\n            graph[from][to] = weight;\n        }\n    }\n}\n\nstatic int closest_unvisited(const long long distance[], const int used[])\n{\n    long long best = INF;\n    int chosen = -1;\n    int i;\n    for (i = 0; i < vertices; ++i) {\n        if (!used[i] && distance[i] < best) {\n            best = distance[i];\n            chosen = i;\n        }\n    }\n    return chosen;\n}\n\nstatic void shortest_paths(int source, long long distance[])\n{\n    int used[LIMIT] = {0};\n    int i;\n    int step;\n    for (i = 0; i < vertices; ++i) {\n        distance[i] = INF;\n    }\n    distance[source] = 0;\n    for (step = 0; step < vertices; ++step) {\n        int node = closest_unvisited(distance, used);\n        int next;\n        if (node < 0) {\n            break;\n        }\n        used[node] = 1;\n        for (next = 0; next < vertices; ++next) {\n            if (graph[node][next] < INF) {\n                long long candidate = distance[node] + graph[node][next];\n                if (candidate < distance[next]) {\n                    distance[next] = candidate;\n                }\n            }\n        }\n    }\n}\n\nstatic int minimum_hops(int source, int target)\n{\n    int queue[LIMIT];\n    int hops[LIMIT];\n    int head = 0;\n    int tail = 0;\n    int i;\n    for (i = 0; i < vertices; ++i) {\n        hops[i] = -1;\n    }\n    hops[source] = 0;\n    queue[tail++] = source;\n    while (head < tail) {\n        int node = queue[head++];\n        int next;\n        for (next = 0; next < vertices; ++next) {\n            if (graph[node][next] > 0 && graph[node][next] < INF && hops[next] < 0) {\n                hops[next] = hops[node] + 1;\n                queue[tail++] = next;\n            }\n        }\n    }\n    return hops[target];\n}\n\nstatic void print_distance(long long distance)\n{\n    if (distance == INF) {\n        printf(\"INF\");\n    } else {\n        printf(\"%lld\", distance);\n    }\n}\n\nstatic void print_all(int source)\n{\n    long long distance[LIMIT];\n    int i;\n    shortest_paths(source, distance);\n    for (i = 0; i < vertices; ++i) {\n        if (i != 0) {\n            putchar(' ');\n        }\n        if (distance[i] == INF) {\n            printf(\"INF\");\n        } else {\n            printf(\"%lld\", distance[i]);\n        }\n    }\n    putchar('\\n');\n}\n\nstatic int reachable_count(int source)\n{\n    long long distance[LIMIT];\n    int result = 0;\n    int i;\n    shortest_paths(source, distance);\n    for (i = 0; i < vertices; ++i) {\n        if (distance[i] != INF) {\n            ++result;\n        }\n    }\n    return result;\n}\n\nstatic void print_round_sum(int source)\n{\n    long long distance[LIMIT];\n    long long total = 0;\n    int i;\n    shortest_paths(source, distance);\n    for (i = 0; i < vertices; ++i) {\n        if (distance[i] == INF) {\n            puts(\"INF\");\n            return;\n        }\n        total += distance[i];\n    }\n    printf(\"%lld\\n\", total);\n}\n\nstatic void process_command(void)\n{\n    char command[16];\n    int source;\n    int target;\n    int weight;\n    long long distance[LIMIT];\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"EDGE\") == 0) {\n        scanf(\"%d%d%d\", &source, &target, &weight);\n        add_edge(source, target, weight);\n        puts(\"OK\");\n    } else if (strcmp(command, \"DIST\") == 0) {\n        scanf(\"%d%d\", &source, &target);\n        shortest_paths(source, distance);\n        print_distance(distance[target]);\n        putchar('\\n');\n    } else if (strcmp(command, \"ALL\") == 0) {\n        scanf(\"%d\", &source);\n        print_all(source);\n    } else if (strcmp(command, \"BFS\") == 0) {\n        scanf(\"%d%d\", &source, &target);\n        printf(\"%d\\n\", minimum_hops(source, target));\n    } else if (strcmp(command, \"REACH\") == 0) {\n        scanf(\"%d\", &source);\n        printf(\"%d\\n\", reachable_count(source));\n    } else if (strcmp(command, \"ROUND\") == 0) {\n        scanf(\"%d\", &source);\n        print_round_sum(source);\n    } else if (strcmp(command, \"RESET\") == 0) {\n        reset_graph(vertices);\n        puts(\"OK\");\n    }\n}\n\nint main(void)\n{\n    int edges;\n    int commands;\n    int size;\n    int i;\n    if (scanf(\"%d%d%d\", &size, &edges, &commands) != 3) {\n        return 0;\n    }\n    reset_graph(size);\n    for (i = 0; i < edges; ++i) {\n        int from;\n        int to;\n        int weight;\n        scanf(\"%d%d%d\", &from, &to, &weight);\n        add_edge(from, to, weight);\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "print_round_sum",
+        "retry": 0,
+        "source_sha256": "5e91e379618490fe7a828a276f81b7edd68b79d6ca44a8a76e631b6f1a760769",
+        "prompt": "Program behavior:\nDirected weighted graph service. Input n m q, n=1..32, m<=100, q<=100. Next m rows are u v w, then q commands. Vertices are 0..n-1; weights 0..1000000. Parallel edges retain their minimum weight, including EDGE updates. Self-distance is zero; edges are directed. EDGE u v w adds/min-updates an edge and prints OK. DIST s t prints exact shortest distance or INF if unreachable. ALL s prints n shortest distances in vertex order, separated by single spaces, using INF. BFS s t prints minimum number of edges ignoring weights (zero-weight edges are valid), or -1 when unreachable; BFS s s is 0. REACH s counts reachable vertices INCLUDING s. ROUND s prints the sum of all shortest distances from s if every vertex is reachable, otherwise INF. RESET removes all edges, preserving n and zero self-distances, and prints OK. Output each command's result on one line.\nShared declarations:\n#include <stdio.h>\n#include <string.h>\n\n#define LIMIT 32\n#define INF 4000000000000000LL\n\nstatic long long graph[LIMIT][LIMIT];\nstatic int vertices;\nRelated function interfaces (do not implement these):\nstatic void process_command(void);\nstatic void shortest_paths(int source, long long distance[]);\nAssigned function print_round_sum:\n```c\nstatic void print_round_sum(int source)\n{\n    long long distance[LIMIT];\n    long long total = 0;\n    int i;\n    shortest_paths(source, distance);\n    for (i = 0; i < vertices; ++i) {\n        if (distance[i] == INF) {\n            puts(\"INF\");\n            return;\n        }\n        total += distance[i];\n    }\n    printf(\"%lld\\n\", total);\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"4 3 8\\n0 1 9\\n0 1 2\\n1 2 0\\nALL 0\\nDIST 2 0\\nBFS 0 2\\nREACH 0\\nROUND 0\\nEDGE 2 3 1\\nALL 0\\nROUND 0\\n\", \"expected\": \"0 2 2 INF\\nINF\\n2\\n3\\nINF\\nOK\\n0 2 2 3\\n7\", \"actual\": \"0 2 2 INF\\nINF\\n-1\\n3\\nINF\\nOK\\n0 2 2 3\\n7\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void print_round_sum(int source)\n{\n    long long distance[LIMIT];\n    long long total = 0;\n    int i;\n    shortest_paths(source, distance);\n    for (i = 0; i < vertices; ++i) {\n        if (distance[i] == INF) {\n            puts(\"INF\");\n            return;\n        }\n        total += distance[i];\n    }\n    printf(\"%lld\\n\", total);\n}\n```",
+        "usage": {
+          "prompt_tokens": 667,
+          "completion_tokens": 92,
+          "total_tokens": 759
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 272,
+        "seconds": 23.671
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "0 2 2 INF\nINF\n-1\n3\nINF\nOK\n0 2 2 3\n7\n",
+            "stderr": "",
+            "input": "4 3 8\n0 1 9\n0 1 2\n1 2 0\nALL 0\nDIST 2 0\nBFS 0 2\nREACH 0\nROUND 0\nEDGE 2 3 1\nALL 0\nROUND 0\n",
+            "expected": "0 2 2 INF\nINF\n2\n3\nINF\nOK\n0 2 2 3\n7",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "0\n0\n1\nINF INF 0\nOK\n-1\n0 INF 0\n",
+            "stderr": "",
+            "input": "3 0 7\nDIST 0 0\nBFS 0 0\nREACH 0\nALL 2\nEDGE 2 0 0\nBFS 2 0\nALL 2\n",
+            "expected": "0\n0\n1\nINF INF 0\nOK\n1\n0 INF 0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "6\nINF 0 2 5\n10\nOK\n0 1 3 0\nOK\n0 INF INF INF\n",
+            "stderr": "",
+            "input": "4 4 7\n0 1 1\n1 2 2\n0 2 10\n2 3 3\nDIST 0 3\nALL 1\nROUND 0\nEDGE 0 3 0\nALL 0\nRESET\nALL 0\n",
+            "expected": "6\nINF 0 2 5\n10\nOK\n0 1 3 0\nOK\n0 INF INF INF",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "8 0\n1\nINF\n2\n8\nOK\n0 5\n",
+            "stderr": "",
+            "input": "2 2 7\n1 0 0\n1 0 8\nALL 1\nBFS 1 0\nDIST 0 1\nREACH 1\nROUND 1\nEDGE 0 1 5\nALL 0\n",
+            "expected": "0 0\n1\nINF\n2\n0\nOK\n0 5",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <string.h>\n\n#define LIMIT 32\n#define INF 4000000000000000LL\n\nstatic long long graph[LIMIT][LIMIT];\nstatic int vertices;\n\nstatic void reset_graph(int size)\n{\n    int i;\n    int j;\n    vertices = size;\n    for (i = 0; i < vertices; ++i) {\n        for (j = 0; j < vertices; ++j) {\n            graph[i][j] = i == j ? 0 : INF;\n        }\n    }\n}\n\nstatic void add_edge(int from, int to, int weight)\n{\n    if (from >= 0 && from < vertices && to >= 0 && to < vertices) {\n        if (graph[from][to] == 0 || weight < graph[from][to]) {\n            graph[from][to] = weight;\n        }\n    }\n}\n\nstatic int closest_unvisited(const long long distance[], const int used[])\n{\n    long long best = INF;\n    int chosen = -1;\n    int i;\n    for (i = 0; i < vertices; ++i) {\n        if (!used[i] && distance[i] < best) {\n            best = distance[i];\n            chosen = i;\n        }\n    }\n    return chosen;\n}\n\nstatic void shortest_paths(int source, long long distance[])\n{\n    int used[LIMIT] = {0};\n    int i;\n    int step;\n    for (i = 0; i < vertices; ++i) {\n        distance[i] = INF;\n    }\n    distance[source] = 0;\n    for (step = 0; step < vertices; ++step) {\n        int node = closest_unvisited(distance, used);\n        int next;\n        if (node < 0) {\n            break;\n        }\n        used[node] = 1;\n        for (next = 0; next < vertices; ++next) {\n            if (graph[node][next] < INF) {\n                long long candidate = distance[node] + graph[node][next];\n                if (candidate < distance[next]) {\n                    distance[next] = candidate;\n                }\n            }\n        }\n    }\n}\n\nstatic int minimum_hops(int source, int target)\n{\n    int queue[LIMIT];\n    int hops[LIMIT];\n    int head = 0;\n    int tail = 0;\n    int i;\n    for (i = 0; i < vertices; ++i) {\n        hops[i] = -1;\n    }\n    hops[source] = 0;\n    queue[tail++] = source;\n    while (head < tail) {\n        int node = queue[head++];\n        int next;\n        for (next = 0; next < vertices; ++next) {\n            if (graph[node][next] > 0 && graph[node][next] < INF && hops[next] < 0) {\n                hops[next] = hops[node] + 1;\n                queue[tail++] = next;\n            }\n        }\n    }\n    return hops[target];\n}\n\nstatic void print_distance(long long distance)\n{\n    if (distance == INF) {\n        printf(\"INF\");\n    } else {\n        printf(\"%lld\", distance);\n    }\n}\n\nstatic void print_all(int source)\n{\n    long long distance[LIMIT];\n    int i;\n    shortest_paths(source, distance);\n    for (i = 0; i < vertices; ++i) {\n        if (i != 0) {\n            putchar(' ');\n        }\n        if (distance[i] == INF) {\n            printf(\"INF\");\n        } else {\n            printf(\"%lld\", distance[i]);\n        }\n    }\n    putchar('\\n');\n}\n\nstatic int reachable_count(int source)\n{\n    long long distance[LIMIT];\n    int result = 0;\n    int i;\n    shortest_paths(source, distance);\n    for (i = 0; i < vertices; ++i) {\n        if (distance[i] != INF) {\n            ++result;\n        }\n    }\n    return result;\n}\n\nstatic void print_round_sum(int source)\n{\n    long long distance[LIMIT];\n    long long total = 0;\n    int i;\n    shortest_paths(source, distance);\n    for (i = 0; i < vertices; ++i) {\n        if (distance[i] == INF) {\n            puts(\"INF\");\n            return;\n        }\n        total += distance[i];\n    }\n    printf(\"%lld\\n\", total);\n}\n\nstatic void process_command(void)\n{\n    char command[16];\n    int source;\n    int target;\n    int weight;\n    long long distance[LIMIT];\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"EDGE\") == 0) {\n        scanf(\"%d%d%d\", &source, &target, &weight);\n        add_edge(source, target, weight);\n        puts(\"OK\");\n    } else if (strcmp(command, \"DIST\") == 0) {\n        scanf(\"%d%d\", &source, &target);\n        shortest_paths(source, distance);\n        print_distance(distance[target]);\n        putchar('\\n');\n    } else if (strcmp(command, \"ALL\") == 0) {\n        scanf(\"%d\", &source);\n        print_all(source);\n    } else if (strcmp(command, \"BFS\") == 0) {\n        scanf(\"%d%d\", &source, &target);\n        printf(\"%d\\n\", minimum_hops(source, target));\n    } else if (strcmp(command, \"REACH\") == 0) {\n        scanf(\"%d\", &source);\n        printf(\"%d\\n\", reachable_count(source));\n    } else if (strcmp(command, \"ROUND\") == 0) {\n        scanf(\"%d\", &source);\n        print_round_sum(source);\n    } else if (strcmp(command, \"RESET\") == 0) {\n        reset_graph(vertices);\n        puts(\"OK\");\n    }\n}\n\nint main(void)\n{\n    int edges;\n    int commands;\n    int size;\n    int i;\n    if (scanf(\"%d%d%d\", &size, &edges, &commands) != 3) {\n        return 0;\n    }\n    reset_graph(size);\n    for (i = 0; i < edges; ++i) {\n        int from;\n        int to;\n        int weight;\n        scanf(\"%d%d%d\", &from, &to, &weight);\n        add_edge(from, to, weight);\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n",
+      "reason": "unchanged"
+    },
+    {
+      "request": {
+        "name": "process_command",
+        "retry": 0,
+        "source_sha256": "5e91e379618490fe7a828a276f81b7edd68b79d6ca44a8a76e631b6f1a760769",
+        "prompt": "Program behavior:\nDirected weighted graph service. Input n m q, n=1..32, m<=100, q<=100. Next m rows are u v w, then q commands. Vertices are 0..n-1; weights 0..1000000. Parallel edges retain their minimum weight, including EDGE updates. Self-distance is zero; edges are directed. EDGE u v w adds/min-updates an edge and prints OK. DIST s t prints exact shortest distance or INF if unreachable. ALL s prints n shortest distances in vertex order, separated by single spaces, using INF. BFS s t prints minimum number of edges ignoring weights (zero-weight edges are valid), or -1 when unreachable; BFS s s is 0. REACH s counts reachable vertices INCLUDING s. ROUND s prints the sum of all shortest distances from s if every vertex is reachable, otherwise INF. RESET removes all edges, preserving n and zero self-distances, and prints OK. Output each command's result on one line.\nShared declarations:\n#include <stdio.h>\n#include <string.h>\n\n#define LIMIT 32\n#define INF 4000000000000000LL\n\nstatic long long graph[LIMIT][LIMIT];\nstatic int vertices;\nRelated function interfaces (do not implement these):\nstatic void add_edge(int from, int to, int weight);\nint main(void);\nstatic int minimum_hops(int source, int target);\nstatic void print_all(int source);\nstatic void print_distance(long long distance);\nstatic void print_round_sum(int source);\nstatic int reachable_count(int source);\nstatic void reset_graph(int size);\nstatic void shortest_paths(int source, long long distance[]);\nAssigned function process_command:\n```c\nstatic void process_command(void)\n{\n    char command[16];\n    int source;\n    int target;\n    int weight;\n    long long distance[LIMIT];\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"EDGE\") == 0) {\n        scanf(\"%d%d%d\", &source, &target, &weight);\n        add_edge(source, target, weight);\n        puts(\"OK\");\n    } else if (strcmp(command, \"DIST\") == 0) {\n        scanf(\"%d%d\", &source, &target);\n        shortest_paths(source, distance);\n        print_distance(distance[target]);\n        putchar('\\n');\n    } else if (strcmp(command, \"ALL\") == 0) {\n        scanf(\"%d\", &source);\n        print_all(source);\n    } else if (strcmp(command, \"BFS\") == 0) {\n        scanf(\"%d%d\", &source, &target);\n        printf(\"%d\\n\", minimum_hops(source, target));\n    } else if (strcmp(command, \"REACH\") == 0) {\n        scanf(\"%d\", &source);\n        printf(\"%d\\n\", reachable_count(source));\n    } else if (strcmp(command, \"ROUND\") == 0) {\n        scanf(\"%d\", &source);\n        print_round_sum(source);\n    } else if (strcmp(command, \"RESET\") == 0) {\n        reset_graph(vertices);\n        puts(\"OK\");\n    }\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"4 3 8\\n0 1 9\\n0 1 2\\n1 2 0\\nALL 0\\nDIST 2 0\\nBFS 0 2\\nREACH 0\\nROUND 0\\nEDGE 2 3 1\\nALL 0\\nROUND 0\\n\", \"expected\": \"0 2 2 INF\\nINF\\n2\\n3\\nINF\\nOK\\n0 2 2 3\\n7\", \"actual\": \"0 2 2 INF\\nINF\\n-1\\n3\\nINF\\nOK\\n0 2 2 3\\n7\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void process_command(void)\n{\n    char command[16];\n    int source;\n    int target;\n    int weight;\n    long long distance[LIMIT];\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"EDGE\") == 0) {\n        scanf(\"%d%d%d\", &source, &target, &weight);\n        add_edge(source, target, weight);\n        puts(\"OK\");\n    } else if (strcmp(command, \"DIST\") == 0) {\n        scanf(\"%d%d\", &source, &target);\n        shortest_paths(source, distance);\n        print_distance(distance[target]);\n        putchar('\\n');\n    } else if (strcmp(command, \"ALL\") == 0) {\n        scanf(\"%d\", &source);\n        print_all(source);\n    } else if (strcmp(command, \"BFS\") == 0) {\n        scanf(\"%d%d\", &source, &target);\n        printf(\"%d\\n\", minimum_hops(source, target));\n    } else if (strcmp(command, \"REACH\") == 0) {\n        scanf(\"%d\", &source);\n        printf(\"%d\\n\", reachable_count(source));\n    } else if (strcmp(command, \"ROUND\") == 0) {\n        scanf(\"%d\", &source);\n        print_round_sum(source);\n    } else if (strcmp(command, \"RESET\") == 0) {\n        reset_graph(vertices);\n        puts(\"OK\");\n    }\n}\n```",
+        "usage": {
+          "prompt_tokens": 934,
+          "completion_tokens": 301,
+          "total_tokens": 1235
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 690,
+        "seconds": 62.469
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "0 2 2 INF\nINF\n-1\n3\nINF\nOK\n0 2 2 3\n7\n",
+            "stderr": "",
+            "input": "4 3 8\n0 1 9\n0 1 2\n1 2 0\nALL 0\nDIST 2 0\nBFS 0 2\nREACH 0\nROUND 0\nEDGE 2 3 1\nALL 0\nROUND 0\n",
+            "expected": "0 2 2 INF\nINF\n2\n3\nINF\nOK\n0 2 2 3\n7",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "0\n0\n1\nINF INF 0\nOK\n-1\n0 INF 0\n",
+            "stderr": "",
+            "input": "3 0 7\nDIST 0 0\nBFS 0 0\nREACH 0\nALL 2\nEDGE 2 0 0\nBFS 2 0\nALL 2\n",
+            "expected": "0\n0\n1\nINF INF 0\nOK\n1\n0 INF 0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "6\nINF 0 2 5\n10\nOK\n0 1 3 0\nOK\n0 INF INF INF\n",
+            "stderr": "",
+            "input": "4 4 7\n0 1 1\n1 2 2\n0 2 10\n2 3 3\nDIST 0 3\nALL 1\nROUND 0\nEDGE 0 3 0\nALL 0\nRESET\nALL 0\n",
+            "expected": "6\nINF 0 2 5\n10\nOK\n0 1 3 0\nOK\n0 INF INF INF",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "8 0\n1\nINF\n2\n8\nOK\n0 5\n",
+            "stderr": "",
+            "input": "2 2 7\n1 0 0\n1 0 8\nALL 1\nBFS 1 0\nDIST 0 1\nREACH 1\nROUND 1\nEDGE 0 1 5\nALL 0\n",
+            "expected": "0 0\n1\nINF\n2\n0\nOK\n0 5",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <string.h>\n\n#define LIMIT 32\n#define INF 4000000000000000LL\n\nstatic long long graph[LIMIT][LIMIT];\nstatic int vertices;\n\nstatic void reset_graph(int size)\n{\n    int i;\n    int j;\n    vertices = size;\n    for (i = 0; i < vertices; ++i) {\n        for (j = 0; j < vertices; ++j) {\n            graph[i][j] = i == j ? 0 : INF;\n        }\n    }\n}\n\nstatic void add_edge(int from, int to, int weight)\n{\n    if (from >= 0 && from < vertices && to >= 0 && to < vertices) {\n        if (graph[from][to] == 0 || weight < graph[from][to]) {\n            graph[from][to] = weight;\n        }\n    }\n}\n\nstatic int closest_unvisited(const long long distance[], const int used[])\n{\n    long long best = INF;\n    int chosen = -1;\n    int i;\n    for (i = 0; i < vertices; ++i) {\n        if (!used[i] && distance[i] < best) {\n            best = distance[i];\n            chosen = i;\n        }\n    }\n    return chosen;\n}\n\nstatic void shortest_paths(int source, long long distance[])\n{\n    int used[LIMIT] = {0};\n    int i;\n    int step;\n    for (i = 0; i < vertices; ++i) {\n        distance[i] = INF;\n    }\n    distance[source] = 0;\n    for (step = 0; step < vertices; ++step) {\n        int node = closest_unvisited(distance, used);\n        int next;\n        if (node < 0) {\n            break;\n        }\n        used[node] = 1;\n        for (next = 0; next < vertices; ++next) {\n            if (graph[node][next] < INF) {\n                long long candidate = distance[node] + graph[node][next];\n                if (candidate < distance[next]) {\n                    distance[next] = candidate;\n                }\n            }\n        }\n    }\n}\n\nstatic int minimum_hops(int source, int target)\n{\n    int queue[LIMIT];\n    int hops[LIMIT];\n    int head = 0;\n    int tail = 0;\n    int i;\n    for (i = 0; i < vertices; ++i) {\n        hops[i] = -1;\n    }\n    hops[source] = 0;\n    queue[tail++] = source;\n    while (head < tail) {\n        int node = queue[head++];\n        int next;\n        for (next = 0; next < vertices; ++next) {\n            if (graph[node][next] > 0 && graph[node][next] < INF && hops[next] < 0) {\n                hops[next] = hops[node] + 1;\n                queue[tail++] = next;\n            }\n        }\n    }\n    return hops[target];\n}\n\nstatic void print_distance(long long distance)\n{\n    if (distance == INF) {\n        printf(\"INF\");\n    } else {\n        printf(\"%lld\", distance);\n    }\n}\n\nstatic void print_all(int source)\n{\n    long long distance[LIMIT];\n    int i;\n    shortest_paths(source, distance);\n    for (i = 0; i < vertices; ++i) {\n        if (i != 0) {\n            putchar(' ');\n        }\n        if (distance[i] == INF) {\n            printf(\"INF\");\n        } else {\n            printf(\"%lld\", distance[i]);\n        }\n    }\n    putchar('\\n');\n}\n\nstatic int reachable_count(int source)\n{\n    long long distance[LIMIT];\n    int result = 0;\n    int i;\n    shortest_paths(source, distance);\n    for (i = 0; i < vertices; ++i) {\n        if (distance[i] != INF) {\n            ++result;\n        }\n    }\n    return result;\n}\n\nstatic void print_round_sum(int source)\n{\n    long long distance[LIMIT];\n    long long total = 0;\n    int i;\n    shortest_paths(source, distance);\n    for (i = 0; i < vertices; ++i) {\n        if (distance[i] == INF) {\n            puts(\"INF\");\n            return;\n        }\n        total += distance[i];\n    }\n    printf(\"%lld\\n\", total);\n}\n\nstatic void process_command(void)\n{\n    char command[16];\n    int source;\n    int target;\n    int weight;\n    long long distance[LIMIT];\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"EDGE\") == 0) {\n        scanf(\"%d%d%d\", &source, &target, &weight);\n        add_edge(source, target, weight);\n        puts(\"OK\");\n    } else if (strcmp(command, \"DIST\") == 0) {\n        scanf(\"%d%d\", &source, &target);\n        shortest_paths(source, distance);\n        print_distance(distance[target]);\n        putchar('\\n');\n    } else if (strcmp(command, \"ALL\") == 0) {\n        scanf(\"%d\", &source);\n        print_all(source);\n    } else if (strcmp(command, \"BFS\") == 0) {\n        scanf(\"%d%d\", &source, &target);\n        printf(\"%d\\n\", minimum_hops(source, target));\n    } else if (strcmp(command, \"REACH\") == 0) {\n        scanf(\"%d\", &source);\n        printf(\"%d\\n\", reachable_count(source));\n    } else if (strcmp(command, \"ROUND\") == 0) {\n        scanf(\"%d\", &source);\n        print_round_sum(source);\n    } else if (strcmp(command, \"RESET\") == 0) {\n        reset_graph(vertices);\n        puts(\"OK\");\n    }\n}\n\nint main(void)\n{\n    int edges;\n    int commands;\n    int size;\n    int i;\n    if (scanf(\"%d%d%d\", &size, &edges, &commands) != 3) {\n        return 0;\n    }\n    reset_graph(size);\n    for (i = 0; i < edges; ++i) {\n        int from;\n        int to;\n        int weight;\n        scanf(\"%d%d%d\", &from, &to, &weight);\n        add_edge(from, to, weight);\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n",
+      "reason": "unchanged"
+    },
+    {
+      "request": {
+        "name": "main",
+        "retry": 0,
+        "source_sha256": "5e91e379618490fe7a828a276f81b7edd68b79d6ca44a8a76e631b6f1a760769",
+        "prompt": "Program behavior:\nDirected weighted graph service. Input n m q, n=1..32, m<=100, q<=100. Next m rows are u v w, then q commands. Vertices are 0..n-1; weights 0..1000000. Parallel edges retain their minimum weight, including EDGE updates. Self-distance is zero; edges are directed. EDGE u v w adds/min-updates an edge and prints OK. DIST s t prints exact shortest distance or INF if unreachable. ALL s prints n shortest distances in vertex order, separated by single spaces, using INF. BFS s t prints minimum number of edges ignoring weights (zero-weight edges are valid), or -1 when unreachable; BFS s s is 0. REACH s counts reachable vertices INCLUDING s. ROUND s prints the sum of all shortest distances from s if every vertex is reachable, otherwise INF. RESET removes all edges, preserving n and zero self-distances, and prints OK. Output each command's result on one line.\nShared declarations:\n#include <stdio.h>\n#include <string.h>\n\n#define LIMIT 32\n#define INF 4000000000000000LL\n\nstatic long long graph[LIMIT][LIMIT];\nstatic int vertices;\nRelated function interfaces (do not implement these):\nstatic void add_edge(int from, int to, int weight);\nstatic void process_command(void);\nstatic void reset_graph(int size);\nAssigned function main:\n```c\nint main(void)\n{\n    int edges;\n    int commands;\n    int size;\n    int i;\n    if (scanf(\"%d%d%d\", &size, &edges, &commands) != 3) {\n        return 0;\n    }\n    reset_graph(size);\n    for (i = 0; i < edges; ++i) {\n        int from;\n        int to;\n        int weight;\n        scanf(\"%d%d%d\", &from, &to, &weight);\n        add_edge(from, to, weight);\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"4 3 8\\n0 1 9\\n0 1 2\\n1 2 0\\nALL 0\\nDIST 2 0\\nBFS 0 2\\nREACH 0\\nROUND 0\\nEDGE 2 3 1\\nALL 0\\nROUND 0\\n\", \"expected\": \"0 2 2 INF\\nINF\\n2\\n3\\nINF\\nOK\\n0 2 2 3\\n7\", \"actual\": \"0 2 2 INF\\nINF\\n-1\\n3\\nINF\\nOK\\n0 2 2 3\\n7\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void process_command(void) {\n    char command[10];\n    int s, t, u, v, w;\n    if (scanf(\"%9s\", command) != 1) {\n        return;\n    }\n    if (strcmp(command, \"EDGE\") == 0) {\n        if (scanf(\"%d%d%d\", &u, &v, &w) != 3) {\n            return;\n        }\n        if (u >= vertices || v >= vertices || w < 0 || w > 1000000) {\n            return;\n        }\n        if (graph[u][v] == 0 || w < graph[u][v]) {\n            graph[u][v] = w;\n        }\n        printf(\"OK\\n\");\n    } else if (strcmp(command, \"DIST\") == 0) {\n        if (scanf(\"%d%d\", &s, &t) != 2) {\n            return;\n        }\n        if (s >= vertices || t >= vertices) {\n            return;\n        }\n        long long dist[LIMIT];\n        for (int i = 0; i < vertices; ++i) {\n            dist[i] = (i == s) ? 0 : INF;\n        }\n        for (int k = 0; k < vertices; ++k) {\n            for (int i = 0; i < vertices; ++i) {\n                for (int j = 0; j < vertices; ++j) {\n                    if (graph[i][k] != 0 && graph[k][j] != 0 && dist[i] + graph[k][j] < dist[i][j]) {\n                        dist[i][j] = dist[i][k] + graph[k][j];\n                    }\n                }\n            }\n        }\n",
+        "usage": {
+          "prompt_tokens": 725,
+          "completion_tokens": 374,
+          "total_tokens": 1099
+        },
+        "finish_reason": "length",
+        "max_output_tokens": 374,
+        "seconds": 64.333
+      },
+      "accepted": false,
+      "check": null,
+      "reason": "structure_rejected",
+      "error": "Truncated function"
+    },
+    {
+      "request": {
+        "name": "main",
+        "retry": 1,
+        "source_sha256": "5e91e379618490fe7a828a276f81b7edd68b79d6ca44a8a76e631b6f1a760769",
+        "prompt": "Program behavior:\nDirected weighted graph service. Input n m q, n=1..32, m<=100, q<=100. Next m rows are u v w, then q commands. Vertices are 0..n-1; weights 0..1000000. Parallel edges retain their minimum weight, including EDGE updates. Self-distance is zero; edges are directed. EDGE u v w adds/min-updates an edge and prints OK. DIST s t prints exact shortest distance or INF if unreachable. ALL s prints n shortest distances in vertex order, separated by single spaces, using INF. BFS s t prints minimum number of edges ignoring weights (zero-weight edges are valid), or -1 when unreachable; BFS s s is 0. REACH s counts reachable vertices INCLUDING s. ROUND s prints the sum of all shortest distances from s if every vertex is reachable, otherwise INF. RESET removes all edges, preserving n and zero self-distances, and prints OK. Output each command's result on one line.\nShared declarations:\n#include <stdio.h>\n#include <string.h>\n\n#define LIMIT 32\n#define INF 4000000000000000LL\n\nstatic long long graph[LIMIT][LIMIT];\nstatic int vertices;\nRelated function interfaces (do not implement these):\nstatic void add_edge(int from, int to, int weight);\nstatic void process_command(void);\nstatic void reset_graph(int size);\nRead-only dependency bodies:\nstatic void add_edge(int from, int to, int weight)\n{\n    if (from >= 0 && from < vertices && to >= 0 && to < vertices) {\n        if (graph[from][to] == 0 || weight < graph[from][to]) {\n            graph[from][to] = weight;\n        }\n    }\n}\n\nstatic void process_command(void)\n{\n    char command[16];\n    int source;\n    int target;\n    int weight;\n    long long distance[LIMIT];\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"EDGE\") == 0) {\n        scanf(\"%d%d%d\", &source, &target, &weight);\n        add_edge(source, target, weight);\n        puts(\"OK\");\n    } else if (strcmp(command, \"DIST\") == 0) {\n        scanf(\"%d%d\", &source, &target);\n        shortest_paths(source, distance);\n        print_distance(distance[target]);\n        putchar('\\n');\n    } else if (strcmp(command, \"ALL\") == 0) {\n        scanf(\"%d\", &source);\n        print_all(source);\n    } else if (strcmp(command, \"BFS\") == 0) {\n        scanf(\"%d%d\", &source, &target);\n        printf(\"%d\\n\", minimum_hops(source, target));\n    } else if (strcmp(command, \"REACH\") == 0) {\n        scanf(\"%d\", &source);\n        printf(\"%d\\n\", reachable_count(source));\n    } else if (strcmp(command, \"ROUND\") == 0) {\n        scanf(\"%d\", &source);\n        print_round_sum(source);\n    } else if (strcmp(command, \"RESET\") == 0) {\n        reset_graph(vertices);\n        puts(\"OK\");\n    }\n}\n\nstatic void reset_graph(int size)\n{\n    int i;\n    int j;\n    vertices = size;\n    for (i = 0; i < vertices; ++i) {\n        for (j = 0; j < vertices; ++j) {\n            graph[i][j] = i == j ? 0 : INF;\n        }\n    }\n}\nAssigned function main:\n```c\nint main(void)\n{\n    int edges;\n    int commands;\n    int size;\n    int i;\n    if (scanf(\"%d%d%d\", &size, &edges, &commands) != 3) {\n        return 0;\n    }\n    reset_graph(size);\n    for (i = 0; i < edges; ++i) {\n        int from;\n        int to;\n        int weight;\n        scanf(\"%d%d%d\", &from, &to, &weight);\n        add_edge(from, to, weight);\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"4 3 8\\n0 1 9\\n0 1 2\\n1 2 0\\nALL 0\\nDIST 2 0\\nBFS 0 2\\nREACH 0\\nROUND 0\\nEDGE 2 3 1\\nALL 0\\nROUND 0\\n\", \"expected\": \"0 2 2 INF\\nINF\\n2\\n3\\nINF\\nOK\\n0 2 2 3\\n7\", \"actual\": \"0 2 2 INF\\nINF\\n-1\\n3\\nINF\\nOK\\n0 2 2 3\\n7\\n\", \"exit\": 0}]\nPrevious replacement failed:\n{\"reason\": \"structure_rejected\", \"error\": \"Truncated function\", \"diagnostics\": \"\", \"replacement\": \"```c\\nstatic void process_command(void) {\\n    char command[10];\\n    int s, t, u, v, w;\\n    if (scanf(\\\"%9s\\\", command) != 1) {\\n        return;\\n    }\\n    if (strcmp(command, \\\"EDGE\\\") == 0) {\\n        if (scanf(\\\"%d%d%d\\\", &u, &v, &w) != 3) {\\n            return;\\n        }\\n        if (u >= vertices || v >= vertices || w < 0 || w > 1000000) {\\n            return;\\n        }\\n        if (graph[u][v] == 0 || w < graph[u][v]) {\\n            graph[u][v] = w;\\n        }\\n        printf(\\\"OK\\\\n\\\");\\n    } else if (strcmp(command, \\\"DIST\\\") == 0) {\\n        if (scanf(\\\"%d%d\\\", &s, &t) != 2) {\\n            return;\\n        }\\n        if (s >= vertices || t >= vertices) {\\n            return;\\n        }\\n        long long dist[LIMIT];\\n        for (int i = 0; i < vertices; ++i) {\\n            dist[i] = (i == s) ? 0 : INF;\\n        }\\n        for (int k = 0; k < vertices; ++k) {\\n            for (int i = 0; i < vertices; ++i) {\\n                for (int j = 0; j < vertices; ++j) {\\n                    if (graph[i][k] != 0 && graph[k][j] != 0 && dist[i] + graph[k][j] < dist[i][j]) {\\n                        dist[i][j] = dist[i][k] + graph[k][j];\\n                    }\\n                }\\n            }\\n        }\\n\", \"failed_outputs\": []}\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void process_command(void)\n{\n    char command[16];\n    int source;\n    int target;\n    int weight;\n    long long distance[LIMIT];\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"EDGE\") == 0) {\n        scanf(\"%d%d%d\", &source, &target, &weight);\n        if (source >= 0 && source < vertices && target >= 0 && target < vertices && weight >= 0 && weight <= 1000000) {\n            if (graph[source][target] == 0 || weight < graph[source][target]) {\n                graph[source][target] = weight;\n            }\n        }\n        puts(\"OK\");\n    } else if (strcmp(command, \"DIST\") == 0) {\n        scanf(\"%d%d\", &source, &target);\n        if (source >= 0 && source < vertices && target >= 0 && target < vertices) {\n            shortest_paths(source, distance);\n            print_distance(distance[target]);\n            putchar('\\n');\n        }\n    } else if (strcmp(command, \"ALL\") == 0) {\n        scanf(\"%d\", &source);\n        if (source >= 0 && source < vertices) {\n            print_all(source);\n        }\n    } else if (strcmp(command, \"BFS\") == 0) {\n        scanf(\"%d%d\", &source, &target);\n        if (source >= 0 && source < vertices && target >= 0 && target < vertices) {\n            printf(\"%d\\n\", minimum_hops(source, target));\n        }\n    } else if (strcmp(command, \"REACH\") == 0) {\n        scanf(\"%d\", &source);\n        if (source >= 0 && source < vertices) {\n            printf(\"%d\\n",
+        "usage": {
+          "prompt_tokens": 1627,
+          "completion_tokens": 374,
+          "total_tokens": 2001
+        },
+        "finish_reason": "length",
+        "max_output_tokens": 374,
+        "seconds": 102.049
+      },
+      "accepted": false,
+      "check": null,
+      "reason": "structure_rejected",
+      "error": "Truncated function"
+    }
+  ],
+  "calls": 12,
+  "function_count": 11,
+  "control_probe": false
+}

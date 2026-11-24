@@ -1,0 +1,245 @@
+{
+  "policy": {
+    "version": 1,
+    "model": "Qwen2.5-Coder-7B-Instruct Q4_K_M",
+    "gpu_layers": 0,
+    "threads": 2,
+    "context_tokens": 8192,
+    "seed": 172,
+    "temperature": 0,
+    "passes": 1,
+    "extra_retry_budget": 3,
+    "output": "one_complete_C_function",
+    "preserve_passing_scenarios": true,
+    "accept_neutral_compiling_changes": true,
+    "heldout_feedback": false
+  },
+  "baseline": {
+    "compiled": true,
+    "diagnostics": "",
+    "tests": [
+      {
+        "returncode": 0,
+        "stdout": "0\n",
+        "stderr": "",
+        "input": "0\n",
+        "expected": "0\n",
+        "passed": true
+      },
+      {
+        "returncode": 0,
+        "stdout": "0\n",
+        "stderr": "",
+        "input": "1\n",
+        "expected": "1\n",
+        "passed": false
+      },
+      {
+        "returncode": 0,
+        "stdout": "10\n",
+        "stderr": "",
+        "input": "5\n",
+        "expected": "15\n",
+        "passed": false
+      },
+      {
+        "returncode": 0,
+        "stdout": "4950\n",
+        "stderr": "",
+        "input": "100\n",
+        "expected": "5050\n",
+        "passed": false
+      }
+    ],
+    "passed": false
+  },
+  "final": {
+    "compiled": true,
+    "diagnostics": "",
+    "tests": [
+      {
+        "returncode": 0,
+        "stdout": "0\n",
+        "stderr": "",
+        "input": "0\n",
+        "expected": "0\n",
+        "passed": true
+      },
+      {
+        "returncode": 0,
+        "stdout": "1\n",
+        "stderr": "",
+        "input": "1\n",
+        "expected": "1\n",
+        "passed": true
+      },
+      {
+        "returncode": 0,
+        "stdout": "15\n",
+        "stderr": "",
+        "input": "5\n",
+        "expected": "15\n",
+        "passed": true
+      },
+      {
+        "returncode": 0,
+        "stdout": "5050\n",
+        "stderr": "",
+        "input": "100\n",
+        "expected": "5050\n",
+        "passed": true
+      }
+    ],
+    "passed": true
+  },
+  "history": [
+    {
+      "request": {
+        "name": "sum_to",
+        "retry": 0,
+        "source_sha256": "c71aae23e73a19d447e6de20d826462a2085ea32795008032465e51a1e1c468c",
+        "prompt": "Program behavior:\nRead an integer n (0 through 1000). Print the sum of integers 1 through n, inclusive, followed by a newline.\n\nShared declarations:\n#include <stdio.h>\nRelated function interfaces (do not implement these):\nint main(void);\nAssigned function sum_to:\n```c\nint sum_to(int n) {\n    int total = 0;\n    for (int i = 1; i < n; ++i) total += i;\n    return total;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"1\\n\", \"expected\": \"1\\n\", \"actual\": \"0\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nint sum_to(int n) {\n    int total = 0;\n    for (int i = 1; i <= n; ++i) total += i;\n    return total;\n}\n```",
+        "usage": {
+          "prompt_tokens": 263,
+          "completion_tokens": 43,
+          "total_tokens": 306
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 27.154
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "0\n",
+            "stderr": "",
+            "input": "0\n",
+            "expected": "0\n",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "1\n",
+            "stderr": "",
+            "input": "1\n",
+            "expected": "1\n",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "15\n",
+            "stderr": "",
+            "input": "5\n",
+            "expected": "15\n",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "5050\n",
+            "stderr": "",
+            "input": "100\n",
+            "expected": "5050\n",
+            "passed": true
+          }
+        ],
+        "passed": true
+      },
+      "candidate": "#include <stdio.h>\nint sum_to(int n) {\n    int total = 0;\n    for (int i = 1; i <= n; ++i) total += i;\n    return total;\n}\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 1;\n    printf(\"%d\\n\", sum_to(n));\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "main",
+        "retry": 0,
+        "source_sha256": "d641850f0195fe305a0dcabb1b0be420f600df6a9066f024038964891cfa924f",
+        "prompt": "Program behavior:\nRead an integer n (0 through 1000). Print the sum of integers 1 through n, inclusive, followed by a newline.\n\nShared declarations:\n#include <stdio.h>\nRelated function interfaces (do not implement these):\nint sum_to(int n);\nAssigned function main:\n```c\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 1;\n    printf(\"%d\\n\", sum_to(n));\n    return 0;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nint sum_to(int n) {\n    int sum = 0;\n    for (int i = 1; i <= n; i++) {\n        sum += i;\n    }\n    return sum;\n}\n```",
+        "usage": {
+          "prompt_tokens": 241,
+          "completion_tokens": 46,
+          "total_tokens": 287
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 17.994
+      },
+      "accepted": false,
+      "check": null,
+      "reason": "structure_rejected",
+      "error": "Expected only the assigned function"
+    },
+    {
+      "request": {
+        "name": "main",
+        "retry": 1,
+        "source_sha256": "d641850f0195fe305a0dcabb1b0be420f600df6a9066f024038964891cfa924f",
+        "prompt": "Program behavior:\nRead an integer n (0 through 1000). Print the sum of integers 1 through n, inclusive, followed by a newline.\n\nShared declarations:\n#include <stdio.h>\nRelated function interfaces (do not implement these):\nint sum_to(int n);\nRead-only dependency bodies:\nint sum_to(int n) {\n    int total = 0;\n    for (int i = 1; i <= n; ++i) total += i;\n    return total;\n}\nAssigned function main:\n```c\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 1;\n    printf(\"%d\\n\", sum_to(n));\n    return 0;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[]\nPrevious replacement failed:\n{\"reason\": \"structure_rejected\", \"error\": \"Expected only the assigned function\", \"diagnostics\": \"\", \"replacement\": \"```c\\nint sum_to(int n) {\\n    int sum = 0;\\n    for (int i = 1; i <= n; i++) {\\n        sum += i;\\n    }\\n    return sum;\\n}\\n```\", \"failed_outputs\": []}\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 1;\n    printf(\"%d\\n\", sum_to(n));\n    return 0;\n}\n```",
+        "usage": {
+          "prompt_tokens": 376,
+          "completion_tokens": 47,
+          "total_tokens": 423
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 28.576
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "0\n",
+            "stderr": "",
+            "input": "0\n",
+            "expected": "0\n",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "1\n",
+            "stderr": "",
+            "input": "1\n",
+            "expected": "1\n",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "15\n",
+            "stderr": "",
+            "input": "5\n",
+            "expected": "15\n",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "5050\n",
+            "stderr": "",
+            "input": "100\n",
+            "expected": "5050\n",
+            "passed": true
+          }
+        ],
+        "passed": true
+      },
+      "candidate": "#include <stdio.h>\nint sum_to(int n) {\n    int total = 0;\n    for (int i = 1; i <= n; ++i) total += i;\n    return total;\n}\nint main(void) {\n    int n;\n    if (scanf(\"%d\", &n) != 1) return 1;\n    printf(\"%d\\n\", sum_to(n));\n    return 0;\n}\n",
+      "reason": "unchanged"
+    }
+  ],
+  "calls": 3,
+  "function_count": 2,
+  "control_probe": false
+}

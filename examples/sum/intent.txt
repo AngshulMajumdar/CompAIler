@@ -1,0 +1,1 @@
+Read an integer n (0 through 1000). Print the sum of integers 1 through n, inclusive, followed by a newline.

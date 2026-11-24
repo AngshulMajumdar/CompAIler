@@ -1,0 +1,1015 @@
+{
+  "policy": {
+    "version": 1,
+    "model": "Qwen2.5-Coder-7B-Instruct Q4_K_M",
+    "gpu_layers": 0,
+    "threads": 4,
+    "context_tokens": 8192,
+    "seed": 172,
+    "temperature": 0,
+    "passes": 1,
+    "extra_retry_budget": 3,
+    "output": "one_complete_C_function",
+    "preserve_passing_scenarios": true,
+    "accept_neutral_compiling_changes": true,
+    "heldout_feedback": false
+  },
+  "baseline": {
+    "compiled": true,
+    "diagnostics": "",
+    "tests": [
+      {
+        "returncode": 0,
+        "stdout": "OK\nOK\nMISS\nOK\n1 1\n60\nOK\nMISS\n2 1 1\n",
+        "stderr": "",
+        "input": "2 9\nPUT 1 10\nPUT 2 20\nGET 1\nPUT 3 30\nKEYS\nGET 2\nPUT 1 99\nGET 1\nKEYS\n",
+        "expected": "OK\nOK\n10\nOK\n2 3 1\nMISS\nOK\n99\n2 1 3",
+        "passed": false
+      },
+      {
+        "returncode": 0,
+        "stdout": "OK\nOK\nOK\nOK\nOK\n1 1\n1\nOK\n1\n1\nOK\n1\n",
+        "stderr": "",
+        "input": "4 12\nPUT 1 1\nPUT 2 2\nPUT 3 3\nPUT 4 4\nRESIZE 1\nKEYS\nSIZE\nDEL 4\nSIZE\nKEYS\nCLEAR\nKEYS\n",
+        "expected": "OK\nOK\nOK\nOK\nOK\n1 4\n1\nOK\n0\n0\nOK\n0",
+        "passed": false
+      },
+      {
+        "returncode": 0,
+        "stdout": "OK\nOK\nOK\nOK\n1\nMISS\n1\nOK\nOK\n2 4\n",
+        "stderr": "",
+        "input": "3 10\nPUT 1 1\nPUT 2 2\nPUT 3 3\nDEL 2\nKEYS\nGET 1\nKEYS\nPUT 4 4\nPUT 5 5\nKEYS\n",
+        "expected": "OK\nOK\nOK\nOK\n2 3 1\n1\n2 1 3\nOK\nOK\n3 5 4 1",
+        "passed": false
+      },
+      {
+        "returncode": 0,
+        "stdout": "MISS\nMISS\nOK\nOK\nMISS\nOK\nMISS\n-6\n2\nOK\n2\n",
+        "stderr": "",
+        "input": "1 11\nGET 9\nDEL 9\nPUT 4 8\nPUT 4 3\nGET 4\nPUT 5 -9\nGET 4\nGET 5\nSIZE\nCLEAR\nSIZE\n",
+        "expected": "MISS\nMISS\nOK\nOK\n3\nOK\nMISS\n-9\n1\nOK\n0",
+        "passed": false
+      }
+    ],
+    "passed": false
+  },
+  "final": {
+    "compiled": true,
+    "diagnostics": "",
+    "tests": [
+      {
+        "returncode": 0,
+        "stdout": "OK\nOK\n10\nOK\n1 3\nMISS\nOK\n99\n2 1 3\n",
+        "stderr": "",
+        "input": "2 9\nPUT 1 10\nPUT 2 20\nGET 1\nPUT 3 30\nKEYS\nGET 2\nPUT 1 99\nGET 1\nKEYS\n",
+        "expected": "OK\nOK\n10\nOK\n2 3 1\nMISS\nOK\n99\n2 1 3",
+        "passed": false
+      },
+      {
+        "returncode": 0,
+        "stdout": "OK\nOK\nOK\nOK\nOK\n0\n0\nMISS\n0\n0\nOK\n0\n",
+        "stderr": "",
+        "input": "4 12\nPUT 1 1\nPUT 2 2\nPUT 3 3\nPUT 4 4\nRESIZE 1\nKEYS\nSIZE\nDEL 4\nSIZE\nKEYS\nCLEAR\nKEYS\n",
+        "expected": "OK\nOK\nOK\nOK\nOK\n1 4\n1\nOK\n0\n0\nOK\n0",
+        "passed": false
+      },
+      {
+        "returncode": 0,
+        "stdout": "OK\nOK\nOK\nOK\n1 3 1\n1\n1 1 3\nOK\nOK\n3 5 4 1 3\n",
+        "stderr": "",
+        "input": "3 10\nPUT 1 1\nPUT 2 2\nPUT 3 3\nDEL 2\nKEYS\nGET 1\nKEYS\nPUT 4 4\nPUT 5 5\nKEYS\n",
+        "expected": "OK\nOK\nOK\nOK\n2 3 1\n1\n2 1 3\nOK\nOK\n3 5 4 1",
+        "passed": false
+      },
+      {
+        "returncode": 139,
+        "stdout": "",
+        "stderr": "",
+        "input": "1 11\nGET 9\nDEL 9\nPUT 4 8\nPUT 4 3\nGET 4\nPUT 5 -9\nGET 4\nGET 5\nSIZE\nCLEAR\nSIZE\n",
+        "expected": "MISS\nMISS\nOK\nOK\n3\nOK\nMISS\n-9\n1\nOK\n0",
+        "passed": false
+      }
+    ],
+    "passed": false
+  },
+  "history": [
+    {
+      "request": {
+        "name": "find_node",
+        "retry": 0,
+        "source_sha256": "cd6815e127e49f89cd33cabe7f23b3f009f33cdee9090a51c57bfc443d02893c",
+        "prompt": "Program behavior:\nLRU cache. Input capacity q, capacity=1..20 and q<=200, then q commands. Keys and values are signed integers of magnitude <=1000000. PUT key value inserts or replaces; an existing key's value is replaced and it becomes most recently used. A new key at full capacity evicts the least recently used key. PUT prints OK. GET key prints its value and makes it most recently used, or MISS and leaves the cache unchanged. DEL key prints OK and removes it, or MISS if absent. RESIZE capacity (1..20) changes capacity, repeatedly evicting least-recently-used entries if needed, and prints OK. CLEAR empties the cache and prints OK. SIZE prints the number of entries. KEYS prints count followed by keys in MOST-to-LEAST-recent order on one line, single spaces, with just 0 when empty. All command output ends with newline.\nShared declarations:\n#include <stdio.h>\n#include <string.h>\n\n#define POOL_SIZE 64\n\ntypedef struct Node {\n    int key;\n    int value;\n    int used;\n    struct Node *previous;\n    struct Node *next;\n} Node;\n\ntypedef struct {\n    Node *head;\n    Node *tail;\n    int count;\n    int capacity;\n} Cache;\n\nstatic Node pool[POOL_SIZE];\nstatic Cache cache;\nRelated function interfaces (do not implement these):\nstatic void cache_delete(int key);\nstatic void cache_get(int key);\nstatic int cache_put(int key, int value);\nAssigned function find_node:\n```c\nstatic Node *find_node(int key)\n{\n    Node *node = cache.head;\n    while (node != NULL) {\n        if (node->key != key) {\n            return node;\n        }\n        node = node->next;\n    }\n    return NULL;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"2 9\\nPUT 1 10\\nPUT 2 20\\nGET 1\\nPUT 3 30\\nKEYS\\nGET 2\\nPUT 1 99\\nGET 1\\nKEYS\\n\", \"expected\": \"OK\\nOK\\n10\\nOK\\n2 3 1\\nMISS\\nOK\\n99\\n2 1 3\", \"actual\": \"OK\\nOK\\nMISS\\nOK\\n1 1\\n60\\nOK\\nMISS\\n2 1 1\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic Node *find_node(int key)\n{\n    Node *node = cache.head;\n    while (node != NULL) {\n        if (node->key == key) {\n            return node;\n        }\n        node = node->next;\n    }\n    return NULL;\n}\n```",
+        "usage": {
+          "prompt_tokens": 640,
+          "completion_tokens": 59,
+          "total_tokens": 699
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 29.376
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\n10\nOK\n3 3 1\nMISS\nOK\n109\n3 1 3\n",
+            "stderr": "",
+            "input": "2 9\nPUT 1 10\nPUT 2 20\nGET 1\nPUT 3 30\nKEYS\nGET 2\nPUT 1 99\nGET 1\nKEYS\n",
+            "expected": "OK\nOK\n10\nOK\n2 3 1\nMISS\nOK\n99\n2 1 3",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\nOK\n4 3 2 1\n4\nMISS\n4\n4 3 2 1\nOK\n4\n",
+            "stderr": "",
+            "input": "4 12\nPUT 1 1\nPUT 2 2\nPUT 3 3\nPUT 4 4\nRESIZE 1\nKEYS\nSIZE\nDEL 4\nSIZE\nKEYS\nCLEAR\nKEYS\n",
+            "expected": "OK\nOK\nOK\nOK\nOK\n1 4\n1\nOK\n0\n0\nOK\n0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n3 3 1\n1\n3 3 1\nOK\nOK\n5 5 4 1\n",
+            "stderr": "",
+            "input": "3 10\nPUT 1 1\nPUT 2 2\nPUT 3 3\nDEL 2\nKEYS\nGET 1\nKEYS\nPUT 4 4\nPUT 5 5\nKEYS\n",
+            "expected": "OK\nOK\nOK\nOK\n2 3 1\n1\n2 1 3\nOK\nOK\n3 5 4 1",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "MISS\nMISS\nOK\nOK\n11\nOK\nMISS\n-9\n2\nOK\n2\n",
+            "stderr": "",
+            "input": "1 11\nGET 9\nDEL 9\nPUT 4 8\nPUT 4 3\nGET 4\nPUT 5 -9\nGET 4\nGET 5\nSIZE\nCLEAR\nSIZE\n",
+            "expected": "MISS\nMISS\nOK\nOK\n3\nOK\nMISS\n-9\n1\nOK\n0",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <string.h>\n\n#define POOL_SIZE 64\n\ntypedef struct Node {\n    int key;\n    int value;\n    int used;\n    struct Node *previous;\n    struct Node *next;\n} Node;\n\ntypedef struct {\n    Node *head;\n    Node *tail;\n    int count;\n    int capacity;\n} Cache;\n\nstatic Node pool[POOL_SIZE];\nstatic Cache cache;\n\nstatic Node *find_node(int key)\n{\n    Node *node = cache.head;\n    while (node != NULL) {\n        if (node->key == key) {\n            return node;\n        }\n        node = node->next;\n    }\n    return NULL;\n}\n\nstatic Node *allocate_node(int key, int value)\n{\n    int i;\n    for (i = 0; i < POOL_SIZE; ++i) {\n        if (!pool[i].used) {\n            pool[i].used = 1;\n            pool[i].key = key;\n            pool[i].value = value;\n            pool[i].previous = NULL;\n            pool[i].next = NULL;\n            return &pool[i];\n        }\n    }\n    return NULL;\n}\n\nstatic void unlink_node(Node *node)\n{\n    if (node->previous != NULL) {\n        node->previous->next = node->next;\n    } else {\n        cache.head = node->next;\n    }\n    if (node->next != NULL) {\n        node->next->previous = NULL;\n    } else {\n        cache.tail = node->previous;\n    }\n    node->previous = NULL;\n    node->next = NULL;\n}\n\nstatic void link_front(Node *node)\n{\n    node->previous = NULL;\n    node->next = cache.head;\n    if (cache.head != NULL) {\n        cache.head->previous = node;\n    } else {\n        cache.tail = node;\n    }\n    cache.head = node;\n}\n\nstatic void move_to_front(Node *node)\n{\n    if (node == cache.head) {\n        return;\n    }\n    unlink_node(node);\n    link_front(node);\n}\n\nstatic void release_node(Node *node)\n{\n    unlink_node(node);\n    node->used = 0;\n    cache.count = cache.count;\n}\n\nstatic void evict_tail(void)\n{\n    if (cache.tail != NULL) {\n        release_node(cache.head);\n    }\n}\n\nstatic int cache_put(int key, int value)\n{\n    Node *node = find_node(key);\n    if (node != NULL) {\n        node->value += value;\n        move_to_front(node);\n        return 1;\n    }\n    if (cache.count == cache.capacity) {\n        evict_tail();\n    }\n    node = allocate_node(key, value);\n    if (node == NULL) {\n        return 0;\n    }\n    link_front(node);\n    ++cache.count;\n    return 1;\n}\n\nstatic void cache_get(int key)\n{\n    Node *node = find_node(key);\n    if (node == NULL) {\n        puts(\"MISS\");\n        return;\n    }\n    printf(\"%d\\n\", node->value);\n}\n\nstatic void cache_delete(int key)\n{\n    Node *node = find_node(key);\n    if (node == NULL) {\n        puts(\"MISS\");\n    } else {\n        release_node(node);\n        puts(\"OK\");\n    }\n}\n\nstatic void cache_resize(int capacity)\n{\n    cache.capacity = capacity;\n    if (cache.count > cache.capacity) {\n        evict_tail();\n    }\n}\n\nstatic void cache_clear(void)\n{\n    while (cache.tail != NULL) {\n        release_node(cache.tail);\n    }\n}\n\nstatic void cache_keys(void)\n{\n    Node *node = cache.head;\n    printf(\"%d\", cache.count);\n    while (node != NULL) {\n        printf(\" %d\", node->key);\n        node = node->next;\n    }\n    putchar('\\n');\n}\n\nstatic void process_command(void)\n{\n    char command[16];\n    int key;\n    int value;\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"PUT\") == 0) {\n        scanf(\"%d%d\", &key, &value);\n        puts(cache_put(key, value) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"GET\") == 0) {\n        scanf(\"%d\", &key);\n        cache_get(key);\n    } else if (strcmp(command, \"DEL\") == 0) {\n        scanf(\"%d\", &key);\n        cache_delete(key);\n    } else if (strcmp(command, \"RESIZE\") == 0) {\n        scanf(\"%d\", &value);\n        cache_resize(value);\n        puts(\"OK\");\n    } else if (strcmp(command, \"CLEAR\") == 0) {\n        cache_clear();\n        puts(\"OK\");\n    } else if (strcmp(command, \"SIZE\") == 0) {\n        printf(\"%d\\n\", cache.count);\n    } else if (strcmp(command, \"KEYS\") == 0) {\n        cache_keys();\n    }\n}\n\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d%d\", &cache.capacity, &commands) != 2) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "allocate_node",
+        "retry": 0,
+        "source_sha256": "67944cdcc6eceb49ef6b44b87d3500ca884acea5429fbd23c8f9c38c0b5dba3e",
+        "prompt": "Program behavior:\nLRU cache. Input capacity q, capacity=1..20 and q<=200, then q commands. Keys and values are signed integers of magnitude <=1000000. PUT key value inserts or replaces; an existing key's value is replaced and it becomes most recently used. A new key at full capacity evicts the least recently used key. PUT prints OK. GET key prints its value and makes it most recently used, or MISS and leaves the cache unchanged. DEL key prints OK and removes it, or MISS if absent. RESIZE capacity (1..20) changes capacity, repeatedly evicting least-recently-used entries if needed, and prints OK. CLEAR empties the cache and prints OK. SIZE prints the number of entries. KEYS prints count followed by keys in MOST-to-LEAST-recent order on one line, single spaces, with just 0 when empty. All command output ends with newline.\nShared declarations:\n#include <stdio.h>\n#include <string.h>\n\n#define POOL_SIZE 64\n\ntypedef struct Node {\n    int key;\n    int value;\n    int used;\n    struct Node *previous;\n    struct Node *next;\n} Node;\n\ntypedef struct {\n    Node *head;\n    Node *tail;\n    int count;\n    int capacity;\n} Cache;\n\nstatic Node pool[POOL_SIZE];\nstatic Cache cache;\nRelated function interfaces (do not implement these):\nstatic int cache_put(int key, int value);\nAssigned function allocate_node:\n```c\nstatic Node *allocate_node(int key, int value)\n{\n    int i;\n    for (i = 0; i < POOL_SIZE; ++i) {\n        if (!pool[i].used) {\n            pool[i].used = 1;\n            pool[i].key = key;\n            pool[i].value = value;\n            pool[i].previous = NULL;\n            pool[i].next = NULL;\n            return &pool[i];\n        }\n    }\n    return NULL;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"2 9\\nPUT 1 10\\nPUT 2 20\\nGET 1\\nPUT 3 30\\nKEYS\\nGET 2\\nPUT 1 99\\nGET 1\\nKEYS\\n\", \"expected\": \"OK\\nOK\\n10\\nOK\\n2 3 1\\nMISS\\nOK\\n99\\n2 1 3\", \"actual\": \"OK\\nOK\\n10\\nOK\\n3 3 1\\nMISS\\nOK\\n109\\n3 1 3\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic Node *allocate_node(int key, int value)\n{\n    int i;\n    for (i = 0; i < POOL_SIZE; ++i) {\n        if (!pool[i].used) {\n            pool[i].used = 1;\n            pool[i].key = key;\n            pool[i].value = value;\n            pool[i].previous = NULL;\n            pool[i].next = NULL;\n            return &pool[i];\n        }\n    }\n    return NULL;\n}\n```",
+        "usage": {
+          "prompt_tokens": 674,
+          "completion_tokens": 103,
+          "total_tokens": 777
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 294,
+        "seconds": 25.455
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\n10\nOK\n3 3 1\nMISS\nOK\n109\n3 1 3\n",
+            "stderr": "",
+            "input": "2 9\nPUT 1 10\nPUT 2 20\nGET 1\nPUT 3 30\nKEYS\nGET 2\nPUT 1 99\nGET 1\nKEYS\n",
+            "expected": "OK\nOK\n10\nOK\n2 3 1\nMISS\nOK\n99\n2 1 3",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\nOK\n4 3 2 1\n4\nMISS\n4\n4 3 2 1\nOK\n4\n",
+            "stderr": "",
+            "input": "4 12\nPUT 1 1\nPUT 2 2\nPUT 3 3\nPUT 4 4\nRESIZE 1\nKEYS\nSIZE\nDEL 4\nSIZE\nKEYS\nCLEAR\nKEYS\n",
+            "expected": "OK\nOK\nOK\nOK\nOK\n1 4\n1\nOK\n0\n0\nOK\n0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n3 3 1\n1\n3 3 1\nOK\nOK\n5 5 4 1\n",
+            "stderr": "",
+            "input": "3 10\nPUT 1 1\nPUT 2 2\nPUT 3 3\nDEL 2\nKEYS\nGET 1\nKEYS\nPUT 4 4\nPUT 5 5\nKEYS\n",
+            "expected": "OK\nOK\nOK\nOK\n2 3 1\n1\n2 1 3\nOK\nOK\n3 5 4 1",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "MISS\nMISS\nOK\nOK\n11\nOK\nMISS\n-9\n2\nOK\n2\n",
+            "stderr": "",
+            "input": "1 11\nGET 9\nDEL 9\nPUT 4 8\nPUT 4 3\nGET 4\nPUT 5 -9\nGET 4\nGET 5\nSIZE\nCLEAR\nSIZE\n",
+            "expected": "MISS\nMISS\nOK\nOK\n3\nOK\nMISS\n-9\n1\nOK\n0",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <string.h>\n\n#define POOL_SIZE 64\n\ntypedef struct Node {\n    int key;\n    int value;\n    int used;\n    struct Node *previous;\n    struct Node *next;\n} Node;\n\ntypedef struct {\n    Node *head;\n    Node *tail;\n    int count;\n    int capacity;\n} Cache;\n\nstatic Node pool[POOL_SIZE];\nstatic Cache cache;\n\nstatic Node *find_node(int key)\n{\n    Node *node = cache.head;\n    while (node != NULL) {\n        if (node->key == key) {\n            return node;\n        }\n        node = node->next;\n    }\n    return NULL;\n}\n\nstatic Node *allocate_node(int key, int value)\n{\n    int i;\n    for (i = 0; i < POOL_SIZE; ++i) {\n        if (!pool[i].used) {\n            pool[i].used = 1;\n            pool[i].key = key;\n            pool[i].value = value;\n            pool[i].previous = NULL;\n            pool[i].next = NULL;\n            return &pool[i];\n        }\n    }\n    return NULL;\n}\n\nstatic void unlink_node(Node *node)\n{\n    if (node->previous != NULL) {\n        node->previous->next = node->next;\n    } else {\n        cache.head = node->next;\n    }\n    if (node->next != NULL) {\n        node->next->previous = NULL;\n    } else {\n        cache.tail = node->previous;\n    }\n    node->previous = NULL;\n    node->next = NULL;\n}\n\nstatic void link_front(Node *node)\n{\n    node->previous = NULL;\n    node->next = cache.head;\n    if (cache.head != NULL) {\n        cache.head->previous = node;\n    } else {\n        cache.tail = node;\n    }\n    cache.head = node;\n}\n\nstatic void move_to_front(Node *node)\n{\n    if (node == cache.head) {\n        return;\n    }\n    unlink_node(node);\n    link_front(node);\n}\n\nstatic void release_node(Node *node)\n{\n    unlink_node(node);\n    node->used = 0;\n    cache.count = cache.count;\n}\n\nstatic void evict_tail(void)\n{\n    if (cache.tail != NULL) {\n        release_node(cache.head);\n    }\n}\n\nstatic int cache_put(int key, int value)\n{\n    Node *node = find_node(key);\n    if (node != NULL) {\n        node->value += value;\n        move_to_front(node);\n        return 1;\n    }\n    if (cache.count == cache.capacity) {\n        evict_tail();\n    }\n    node = allocate_node(key, value);\n    if (node == NULL) {\n        return 0;\n    }\n    link_front(node);\n    ++cache.count;\n    return 1;\n}\n\nstatic void cache_get(int key)\n{\n    Node *node = find_node(key);\n    if (node == NULL) {\n        puts(\"MISS\");\n        return;\n    }\n    printf(\"%d\\n\", node->value);\n}\n\nstatic void cache_delete(int key)\n{\n    Node *node = find_node(key);\n    if (node == NULL) {\n        puts(\"MISS\");\n    } else {\n        release_node(node);\n        puts(\"OK\");\n    }\n}\n\nstatic void cache_resize(int capacity)\n{\n    cache.capacity = capacity;\n    if (cache.count > cache.capacity) {\n        evict_tail();\n    }\n}\n\nstatic void cache_clear(void)\n{\n    while (cache.tail != NULL) {\n        release_node(cache.tail);\n    }\n}\n\nstatic void cache_keys(void)\n{\n    Node *node = cache.head;\n    printf(\"%d\", cache.count);\n    while (node != NULL) {\n        printf(\" %d\", node->key);\n        node = node->next;\n    }\n    putchar('\\n');\n}\n\nstatic void process_command(void)\n{\n    char command[16];\n    int key;\n    int value;\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"PUT\") == 0) {\n        scanf(\"%d%d\", &key, &value);\n        puts(cache_put(key, value) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"GET\") == 0) {\n        scanf(\"%d\", &key);\n        cache_get(key);\n    } else if (strcmp(command, \"DEL\") == 0) {\n        scanf(\"%d\", &key);\n        cache_delete(key);\n    } else if (strcmp(command, \"RESIZE\") == 0) {\n        scanf(\"%d\", &value);\n        cache_resize(value);\n        puts(\"OK\");\n    } else if (strcmp(command, \"CLEAR\") == 0) {\n        cache_clear();\n        puts(\"OK\");\n    } else if (strcmp(command, \"SIZE\") == 0) {\n        printf(\"%d\\n\", cache.count);\n    } else if (strcmp(command, \"KEYS\") == 0) {\n        cache_keys();\n    }\n}\n\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d%d\", &cache.capacity, &commands) != 2) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n",
+      "reason": "unchanged"
+    },
+    {
+      "request": {
+        "name": "unlink_node",
+        "retry": 0,
+        "source_sha256": "67944cdcc6eceb49ef6b44b87d3500ca884acea5429fbd23c8f9c38c0b5dba3e",
+        "prompt": "Program behavior:\nLRU cache. Input capacity q, capacity=1..20 and q<=200, then q commands. Keys and values are signed integers of magnitude <=1000000. PUT key value inserts or replaces; an existing key's value is replaced and it becomes most recently used. A new key at full capacity evicts the least recently used key. PUT prints OK. GET key prints its value and makes it most recently used, or MISS and leaves the cache unchanged. DEL key prints OK and removes it, or MISS if absent. RESIZE capacity (1..20) changes capacity, repeatedly evicting least-recently-used entries if needed, and prints OK. CLEAR empties the cache and prints OK. SIZE prints the number of entries. KEYS prints count followed by keys in MOST-to-LEAST-recent order on one line, single spaces, with just 0 when empty. All command output ends with newline.\nShared declarations:\n#include <stdio.h>\n#include <string.h>\n\n#define POOL_SIZE 64\n\ntypedef struct Node {\n    int key;\n    int value;\n    int used;\n    struct Node *previous;\n    struct Node *next;\n} Node;\n\ntypedef struct {\n    Node *head;\n    Node *tail;\n    int count;\n    int capacity;\n} Cache;\n\nstatic Node pool[POOL_SIZE];\nstatic Cache cache;\nRelated function interfaces (do not implement these):\nstatic void move_to_front(Node *node);\nstatic void release_node(Node *node);\nAssigned function unlink_node:\n```c\nstatic void unlink_node(Node *node)\n{\n    if (node->previous != NULL) {\n        node->previous->next = node->next;\n    } else {\n        cache.head = node->next;\n    }\n    if (node->next != NULL) {\n        node->next->previous = NULL;\n    } else {\n        cache.tail = node->previous;\n    }\n    node->previous = NULL;\n    node->next = NULL;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"2 9\\nPUT 1 10\\nPUT 2 20\\nGET 1\\nPUT 3 30\\nKEYS\\nGET 2\\nPUT 1 99\\nGET 1\\nKEYS\\n\", \"expected\": \"OK\\nOK\\n10\\nOK\\n2 3 1\\nMISS\\nOK\\n99\\n2 1 3\", \"actual\": \"OK\\nOK\\n10\\nOK\\n3 3 1\\nMISS\\nOK\\n109\\n3 1 3\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void unlink_node(Node *node)\n{\n    if (node->previous != NULL) {\n        node->previous->next = node->next;\n    } else {\n        cache.head = node->next;\n    }\n    if (node->next != NULL) {\n        node->next->previous = node->previous;\n    } else {\n        cache.tail = node->previous;\n    }\n    node->previous = NULL;\n    node->next = NULL;\n}\n```",
+        "usage": {
+          "prompt_tokens": 674,
+          "completion_tokens": 98,
+          "total_tokens": 772
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 280,
+        "seconds": 24.939
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\n10\nOK\n3 3 1\nMISS\nOK\n109\n3 1 3\n",
+            "stderr": "",
+            "input": "2 9\nPUT 1 10\nPUT 2 20\nGET 1\nPUT 3 30\nKEYS\nGET 2\nPUT 1 99\nGET 1\nKEYS\n",
+            "expected": "OK\nOK\n10\nOK\n2 3 1\nMISS\nOK\n99\n2 1 3",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\nOK\n4 3 2 1\n4\nMISS\n4\n4 3 2 1\nOK\n4\n",
+            "stderr": "",
+            "input": "4 12\nPUT 1 1\nPUT 2 2\nPUT 3 3\nPUT 4 4\nRESIZE 1\nKEYS\nSIZE\nDEL 4\nSIZE\nKEYS\nCLEAR\nKEYS\n",
+            "expected": "OK\nOK\nOK\nOK\nOK\n1 4\n1\nOK\n0\n0\nOK\n0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n3 3 1\n1\n3 3 1\nOK\nOK\n5 5 4 1\n",
+            "stderr": "",
+            "input": "3 10\nPUT 1 1\nPUT 2 2\nPUT 3 3\nDEL 2\nKEYS\nGET 1\nKEYS\nPUT 4 4\nPUT 5 5\nKEYS\n",
+            "expected": "OK\nOK\nOK\nOK\n2 3 1\n1\n2 1 3\nOK\nOK\n3 5 4 1",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "MISS\nMISS\nOK\nOK\n11\nOK\nMISS\n-9\n2\nOK\n2\n",
+            "stderr": "",
+            "input": "1 11\nGET 9\nDEL 9\nPUT 4 8\nPUT 4 3\nGET 4\nPUT 5 -9\nGET 4\nGET 5\nSIZE\nCLEAR\nSIZE\n",
+            "expected": "MISS\nMISS\nOK\nOK\n3\nOK\nMISS\n-9\n1\nOK\n0",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <string.h>\n\n#define POOL_SIZE 64\n\ntypedef struct Node {\n    int key;\n    int value;\n    int used;\n    struct Node *previous;\n    struct Node *next;\n} Node;\n\ntypedef struct {\n    Node *head;\n    Node *tail;\n    int count;\n    int capacity;\n} Cache;\n\nstatic Node pool[POOL_SIZE];\nstatic Cache cache;\n\nstatic Node *find_node(int key)\n{\n    Node *node = cache.head;\n    while (node != NULL) {\n        if (node->key == key) {\n            return node;\n        }\n        node = node->next;\n    }\n    return NULL;\n}\n\nstatic Node *allocate_node(int key, int value)\n{\n    int i;\n    for (i = 0; i < POOL_SIZE; ++i) {\n        if (!pool[i].used) {\n            pool[i].used = 1;\n            pool[i].key = key;\n            pool[i].value = value;\n            pool[i].previous = NULL;\n            pool[i].next = NULL;\n            return &pool[i];\n        }\n    }\n    return NULL;\n}\n\nstatic void unlink_node(Node *node)\n{\n    if (node->previous != NULL) {\n        node->previous->next = node->next;\n    } else {\n        cache.head = node->next;\n    }\n    if (node->next != NULL) {\n        node->next->previous = node->previous;\n    } else {\n        cache.tail = node->previous;\n    }\n    node->previous = NULL;\n    node->next = NULL;\n}\n\nstatic void link_front(Node *node)\n{\n    node->previous = NULL;\n    node->next = cache.head;\n    if (cache.head != NULL) {\n        cache.head->previous = node;\n    } else {\n        cache.tail = node;\n    }\n    cache.head = node;\n}\n\nstatic void move_to_front(Node *node)\n{\n    if (node == cache.head) {\n        return;\n    }\n    unlink_node(node);\n    link_front(node);\n}\n\nstatic void release_node(Node *node)\n{\n    unlink_node(node);\n    node->used = 0;\n    cache.count = cache.count;\n}\n\nstatic void evict_tail(void)\n{\n    if (cache.tail != NULL) {\n        release_node(cache.head);\n    }\n}\n\nstatic int cache_put(int key, int value)\n{\n    Node *node = find_node(key);\n    if (node != NULL) {\n        node->value += value;\n        move_to_front(node);\n        return 1;\n    }\n    if (cache.count == cache.capacity) {\n        evict_tail();\n    }\n    node = allocate_node(key, value);\n    if (node == NULL) {\n        return 0;\n    }\n    link_front(node);\n    ++cache.count;\n    return 1;\n}\n\nstatic void cache_get(int key)\n{\n    Node *node = find_node(key);\n    if (node == NULL) {\n        puts(\"MISS\");\n        return;\n    }\n    printf(\"%d\\n\", node->value);\n}\n\nstatic void cache_delete(int key)\n{\n    Node *node = find_node(key);\n    if (node == NULL) {\n        puts(\"MISS\");\n    } else {\n        release_node(node);\n        puts(\"OK\");\n    }\n}\n\nstatic void cache_resize(int capacity)\n{\n    cache.capacity = capacity;\n    if (cache.count > cache.capacity) {\n        evict_tail();\n    }\n}\n\nstatic void cache_clear(void)\n{\n    while (cache.tail != NULL) {\n        release_node(cache.tail);\n    }\n}\n\nstatic void cache_keys(void)\n{\n    Node *node = cache.head;\n    printf(\"%d\", cache.count);\n    while (node != NULL) {\n        printf(\" %d\", node->key);\n        node = node->next;\n    }\n    putchar('\\n');\n}\n\nstatic void process_command(void)\n{\n    char command[16];\n    int key;\n    int value;\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"PUT\") == 0) {\n        scanf(\"%d%d\", &key, &value);\n        puts(cache_put(key, value) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"GET\") == 0) {\n        scanf(\"%d\", &key);\n        cache_get(key);\n    } else if (strcmp(command, \"DEL\") == 0) {\n        scanf(\"%d\", &key);\n        cache_delete(key);\n    } else if (strcmp(command, \"RESIZE\") == 0) {\n        scanf(\"%d\", &value);\n        cache_resize(value);\n        puts(\"OK\");\n    } else if (strcmp(command, \"CLEAR\") == 0) {\n        cache_clear();\n        puts(\"OK\");\n    } else if (strcmp(command, \"SIZE\") == 0) {\n        printf(\"%d\\n\", cache.count);\n    } else if (strcmp(command, \"KEYS\") == 0) {\n        cache_keys();\n    }\n}\n\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d%d\", &cache.capacity, &commands) != 2) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "link_front",
+        "retry": 0,
+        "source_sha256": "8390001feee4bdebb3f1525478f8aac25e866afbb87135f21052bfef2037b5ce",
+        "prompt": "Program behavior:\nLRU cache. Input capacity q, capacity=1..20 and q<=200, then q commands. Keys and values are signed integers of magnitude <=1000000. PUT key value inserts or replaces; an existing key's value is replaced and it becomes most recently used. A new key at full capacity evicts the least recently used key. PUT prints OK. GET key prints its value and makes it most recently used, or MISS and leaves the cache unchanged. DEL key prints OK and removes it, or MISS if absent. RESIZE capacity (1..20) changes capacity, repeatedly evicting least-recently-used entries if needed, and prints OK. CLEAR empties the cache and prints OK. SIZE prints the number of entries. KEYS prints count followed by keys in MOST-to-LEAST-recent order on one line, single spaces, with just 0 when empty. All command output ends with newline.\nShared declarations:\n#include <stdio.h>\n#include <string.h>\n\n#define POOL_SIZE 64\n\ntypedef struct Node {\n    int key;\n    int value;\n    int used;\n    struct Node *previous;\n    struct Node *next;\n} Node;\n\ntypedef struct {\n    Node *head;\n    Node *tail;\n    int count;\n    int capacity;\n} Cache;\n\nstatic Node pool[POOL_SIZE];\nstatic Cache cache;\nRelated function interfaces (do not implement these):\nstatic int cache_put(int key, int value);\nstatic void move_to_front(Node *node);\nAssigned function link_front:\n```c\nstatic void link_front(Node *node)\n{\n    node->previous = NULL;\n    node->next = cache.head;\n    if (cache.head != NULL) {\n        cache.head->previous = node;\n    } else {\n        cache.tail = node;\n    }\n    cache.head = node;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"2 9\\nPUT 1 10\\nPUT 2 20\\nGET 1\\nPUT 3 30\\nKEYS\\nGET 2\\nPUT 1 99\\nGET 1\\nKEYS\\n\", \"expected\": \"OK\\nOK\\n10\\nOK\\n2 3 1\\nMISS\\nOK\\n99\\n2 1 3\", \"actual\": \"OK\\nOK\\n10\\nOK\\n3 3 1\\nMISS\\nOK\\n109\\n3 1 3\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void link_front(Node *node)\n{\n    node->previous = NULL;\n    node->next = cache.head;\n    if (cache.head != NULL) {\n        cache.head->previous = node;\n    } else {\n        cache.tail = node;\n    }\n    cache.head = node;\n}\n```",
+        "usage": {
+          "prompt_tokens": 644,
+          "completion_tokens": 64,
+          "total_tokens": 708
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 20.404
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\n10\nOK\n3 3 1\nMISS\nOK\n109\n3 1 3\n",
+            "stderr": "",
+            "input": "2 9\nPUT 1 10\nPUT 2 20\nGET 1\nPUT 3 30\nKEYS\nGET 2\nPUT 1 99\nGET 1\nKEYS\n",
+            "expected": "OK\nOK\n10\nOK\n2 3 1\nMISS\nOK\n99\n2 1 3",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\nOK\n4 3 2 1\n4\nMISS\n4\n4 3 2 1\nOK\n4\n",
+            "stderr": "",
+            "input": "4 12\nPUT 1 1\nPUT 2 2\nPUT 3 3\nPUT 4 4\nRESIZE 1\nKEYS\nSIZE\nDEL 4\nSIZE\nKEYS\nCLEAR\nKEYS\n",
+            "expected": "OK\nOK\nOK\nOK\nOK\n1 4\n1\nOK\n0\n0\nOK\n0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n3 3 1\n1\n3 3 1\nOK\nOK\n5 5 4 1\n",
+            "stderr": "",
+            "input": "3 10\nPUT 1 1\nPUT 2 2\nPUT 3 3\nDEL 2\nKEYS\nGET 1\nKEYS\nPUT 4 4\nPUT 5 5\nKEYS\n",
+            "expected": "OK\nOK\nOK\nOK\n2 3 1\n1\n2 1 3\nOK\nOK\n3 5 4 1",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "MISS\nMISS\nOK\nOK\n11\nOK\nMISS\n-9\n2\nOK\n2\n",
+            "stderr": "",
+            "input": "1 11\nGET 9\nDEL 9\nPUT 4 8\nPUT 4 3\nGET 4\nPUT 5 -9\nGET 4\nGET 5\nSIZE\nCLEAR\nSIZE\n",
+            "expected": "MISS\nMISS\nOK\nOK\n3\nOK\nMISS\n-9\n1\nOK\n0",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <string.h>\n\n#define POOL_SIZE 64\n\ntypedef struct Node {\n    int key;\n    int value;\n    int used;\n    struct Node *previous;\n    struct Node *next;\n} Node;\n\ntypedef struct {\n    Node *head;\n    Node *tail;\n    int count;\n    int capacity;\n} Cache;\n\nstatic Node pool[POOL_SIZE];\nstatic Cache cache;\n\nstatic Node *find_node(int key)\n{\n    Node *node = cache.head;\n    while (node != NULL) {\n        if (node->key == key) {\n            return node;\n        }\n        node = node->next;\n    }\n    return NULL;\n}\n\nstatic Node *allocate_node(int key, int value)\n{\n    int i;\n    for (i = 0; i < POOL_SIZE; ++i) {\n        if (!pool[i].used) {\n            pool[i].used = 1;\n            pool[i].key = key;\n            pool[i].value = value;\n            pool[i].previous = NULL;\n            pool[i].next = NULL;\n            return &pool[i];\n        }\n    }\n    return NULL;\n}\n\nstatic void unlink_node(Node *node)\n{\n    if (node->previous != NULL) {\n        node->previous->next = node->next;\n    } else {\n        cache.head = node->next;\n    }\n    if (node->next != NULL) {\n        node->next->previous = node->previous;\n    } else {\n        cache.tail = node->previous;\n    }\n    node->previous = NULL;\n    node->next = NULL;\n}\n\nstatic void link_front(Node *node)\n{\n    node->previous = NULL;\n    node->next = cache.head;\n    if (cache.head != NULL) {\n        cache.head->previous = node;\n    } else {\n        cache.tail = node;\n    }\n    cache.head = node;\n}\n\nstatic void move_to_front(Node *node)\n{\n    if (node == cache.head) {\n        return;\n    }\n    unlink_node(node);\n    link_front(node);\n}\n\nstatic void release_node(Node *node)\n{\n    unlink_node(node);\n    node->used = 0;\n    cache.count = cache.count;\n}\n\nstatic void evict_tail(void)\n{\n    if (cache.tail != NULL) {\n        release_node(cache.head);\n    }\n}\n\nstatic int cache_put(int key, int value)\n{\n    Node *node = find_node(key);\n    if (node != NULL) {\n        node->value += value;\n        move_to_front(node);\n        return 1;\n    }\n    if (cache.count == cache.capacity) {\n        evict_tail();\n    }\n    node = allocate_node(key, value);\n    if (node == NULL) {\n        return 0;\n    }\n    link_front(node);\n    ++cache.count;\n    return 1;\n}\n\nstatic void cache_get(int key)\n{\n    Node *node = find_node(key);\n    if (node == NULL) {\n        puts(\"MISS\");\n        return;\n    }\n    printf(\"%d\\n\", node->value);\n}\n\nstatic void cache_delete(int key)\n{\n    Node *node = find_node(key);\n    if (node == NULL) {\n        puts(\"MISS\");\n    } else {\n        release_node(node);\n        puts(\"OK\");\n    }\n}\n\nstatic void cache_resize(int capacity)\n{\n    cache.capacity = capacity;\n    if (cache.count > cache.capacity) {\n        evict_tail();\n    }\n}\n\nstatic void cache_clear(void)\n{\n    while (cache.tail != NULL) {\n        release_node(cache.tail);\n    }\n}\n\nstatic void cache_keys(void)\n{\n    Node *node = cache.head;\n    printf(\"%d\", cache.count);\n    while (node != NULL) {\n        printf(\" %d\", node->key);\n        node = node->next;\n    }\n    putchar('\\n');\n}\n\nstatic void process_command(void)\n{\n    char command[16];\n    int key;\n    int value;\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"PUT\") == 0) {\n        scanf(\"%d%d\", &key, &value);\n        puts(cache_put(key, value) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"GET\") == 0) {\n        scanf(\"%d\", &key);\n        cache_get(key);\n    } else if (strcmp(command, \"DEL\") == 0) {\n        scanf(\"%d\", &key);\n        cache_delete(key);\n    } else if (strcmp(command, \"RESIZE\") == 0) {\n        scanf(\"%d\", &value);\n        cache_resize(value);\n        puts(\"OK\");\n    } else if (strcmp(command, \"CLEAR\") == 0) {\n        cache_clear();\n        puts(\"OK\");\n    } else if (strcmp(command, \"SIZE\") == 0) {\n        printf(\"%d\\n\", cache.count);\n    } else if (strcmp(command, \"KEYS\") == 0) {\n        cache_keys();\n    }\n}\n\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d%d\", &cache.capacity, &commands) != 2) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n",
+      "reason": "unchanged"
+    },
+    {
+      "request": {
+        "name": "move_to_front",
+        "retry": 0,
+        "source_sha256": "8390001feee4bdebb3f1525478f8aac25e866afbb87135f21052bfef2037b5ce",
+        "prompt": "Program behavior:\nLRU cache. Input capacity q, capacity=1..20 and q<=200, then q commands. Keys and values are signed integers of magnitude <=1000000. PUT key value inserts or replaces; an existing key's value is replaced and it becomes most recently used. A new key at full capacity evicts the least recently used key. PUT prints OK. GET key prints its value and makes it most recently used, or MISS and leaves the cache unchanged. DEL key prints OK and removes it, or MISS if absent. RESIZE capacity (1..20) changes capacity, repeatedly evicting least-recently-used entries if needed, and prints OK. CLEAR empties the cache and prints OK. SIZE prints the number of entries. KEYS prints count followed by keys in MOST-to-LEAST-recent order on one line, single spaces, with just 0 when empty. All command output ends with newline.\nShared declarations:\n#include <stdio.h>\n#include <string.h>\n\n#define POOL_SIZE 64\n\ntypedef struct Node {\n    int key;\n    int value;\n    int used;\n    struct Node *previous;\n    struct Node *next;\n} Node;\n\ntypedef struct {\n    Node *head;\n    Node *tail;\n    int count;\n    int capacity;\n} Cache;\n\nstatic Node pool[POOL_SIZE];\nstatic Cache cache;\nRelated function interfaces (do not implement these):\nstatic int cache_put(int key, int value);\nstatic void link_front(Node *node);\nstatic void unlink_node(Node *node);\nAssigned function move_to_front:\n```c\nstatic void move_to_front(Node *node)\n{\n    if (node == cache.head) {\n        return;\n    }\n    unlink_node(node);\n    link_front(node);\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"2 9\\nPUT 1 10\\nPUT 2 20\\nGET 1\\nPUT 3 30\\nKEYS\\nGET 2\\nPUT 1 99\\nGET 1\\nKEYS\\n\", \"expected\": \"OK\\nOK\\n10\\nOK\\n2 3 1\\nMISS\\nOK\\n99\\n2 1 3\", \"actual\": \"OK\\nOK\\n10\\nOK\\n3 3 1\\nMISS\\nOK\\n109\\n3 1 3\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void move_to_front(Node *node)\n{\n    if (node == cache.head) {\n        return;\n    }\n    unlink_node(node);\n    link_front(node);\n}\n```",
+        "usage": {
+          "prompt_tokens": 627,
+          "completion_tokens": 39,
+          "total_tokens": 666
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 15.849
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\n10\nOK\n3 3 1\nMISS\nOK\n109\n3 1 3\n",
+            "stderr": "",
+            "input": "2 9\nPUT 1 10\nPUT 2 20\nGET 1\nPUT 3 30\nKEYS\nGET 2\nPUT 1 99\nGET 1\nKEYS\n",
+            "expected": "OK\nOK\n10\nOK\n2 3 1\nMISS\nOK\n99\n2 1 3",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\nOK\n4 3 2 1\n4\nMISS\n4\n4 3 2 1\nOK\n4\n",
+            "stderr": "",
+            "input": "4 12\nPUT 1 1\nPUT 2 2\nPUT 3 3\nPUT 4 4\nRESIZE 1\nKEYS\nSIZE\nDEL 4\nSIZE\nKEYS\nCLEAR\nKEYS\n",
+            "expected": "OK\nOK\nOK\nOK\nOK\n1 4\n1\nOK\n0\n0\nOK\n0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n3 3 1\n1\n3 3 1\nOK\nOK\n5 5 4 1\n",
+            "stderr": "",
+            "input": "3 10\nPUT 1 1\nPUT 2 2\nPUT 3 3\nDEL 2\nKEYS\nGET 1\nKEYS\nPUT 4 4\nPUT 5 5\nKEYS\n",
+            "expected": "OK\nOK\nOK\nOK\n2 3 1\n1\n2 1 3\nOK\nOK\n3 5 4 1",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "MISS\nMISS\nOK\nOK\n11\nOK\nMISS\n-9\n2\nOK\n2\n",
+            "stderr": "",
+            "input": "1 11\nGET 9\nDEL 9\nPUT 4 8\nPUT 4 3\nGET 4\nPUT 5 -9\nGET 4\nGET 5\nSIZE\nCLEAR\nSIZE\n",
+            "expected": "MISS\nMISS\nOK\nOK\n3\nOK\nMISS\n-9\n1\nOK\n0",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <string.h>\n\n#define POOL_SIZE 64\n\ntypedef struct Node {\n    int key;\n    int value;\n    int used;\n    struct Node *previous;\n    struct Node *next;\n} Node;\n\ntypedef struct {\n    Node *head;\n    Node *tail;\n    int count;\n    int capacity;\n} Cache;\n\nstatic Node pool[POOL_SIZE];\nstatic Cache cache;\n\nstatic Node *find_node(int key)\n{\n    Node *node = cache.head;\n    while (node != NULL) {\n        if (node->key == key) {\n            return node;\n        }\n        node = node->next;\n    }\n    return NULL;\n}\n\nstatic Node *allocate_node(int key, int value)\n{\n    int i;\n    for (i = 0; i < POOL_SIZE; ++i) {\n        if (!pool[i].used) {\n            pool[i].used = 1;\n            pool[i].key = key;\n            pool[i].value = value;\n            pool[i].previous = NULL;\n            pool[i].next = NULL;\n            return &pool[i];\n        }\n    }\n    return NULL;\n}\n\nstatic void unlink_node(Node *node)\n{\n    if (node->previous != NULL) {\n        node->previous->next = node->next;\n    } else {\n        cache.head = node->next;\n    }\n    if (node->next != NULL) {\n        node->next->previous = node->previous;\n    } else {\n        cache.tail = node->previous;\n    }\n    node->previous = NULL;\n    node->next = NULL;\n}\n\nstatic void link_front(Node *node)\n{\n    node->previous = NULL;\n    node->next = cache.head;\n    if (cache.head != NULL) {\n        cache.head->previous = node;\n    } else {\n        cache.tail = node;\n    }\n    cache.head = node;\n}\n\nstatic void move_to_front(Node *node)\n{\n    if (node == cache.head) {\n        return;\n    }\n    unlink_node(node);\n    link_front(node);\n}\n\nstatic void release_node(Node *node)\n{\n    unlink_node(node);\n    node->used = 0;\n    cache.count = cache.count;\n}\n\nstatic void evict_tail(void)\n{\n    if (cache.tail != NULL) {\n        release_node(cache.head);\n    }\n}\n\nstatic int cache_put(int key, int value)\n{\n    Node *node = find_node(key);\n    if (node != NULL) {\n        node->value += value;\n        move_to_front(node);\n        return 1;\n    }\n    if (cache.count == cache.capacity) {\n        evict_tail();\n    }\n    node = allocate_node(key, value);\n    if (node == NULL) {\n        return 0;\n    }\n    link_front(node);\n    ++cache.count;\n    return 1;\n}\n\nstatic void cache_get(int key)\n{\n    Node *node = find_node(key);\n    if (node == NULL) {\n        puts(\"MISS\");\n        return;\n    }\n    printf(\"%d\\n\", node->value);\n}\n\nstatic void cache_delete(int key)\n{\n    Node *node = find_node(key);\n    if (node == NULL) {\n        puts(\"MISS\");\n    } else {\n        release_node(node);\n        puts(\"OK\");\n    }\n}\n\nstatic void cache_resize(int capacity)\n{\n    cache.capacity = capacity;\n    if (cache.count > cache.capacity) {\n        evict_tail();\n    }\n}\n\nstatic void cache_clear(void)\n{\n    while (cache.tail != NULL) {\n        release_node(cache.tail);\n    }\n}\n\nstatic void cache_keys(void)\n{\n    Node *node = cache.head;\n    printf(\"%d\", cache.count);\n    while (node != NULL) {\n        printf(\" %d\", node->key);\n        node = node->next;\n    }\n    putchar('\\n');\n}\n\nstatic void process_command(void)\n{\n    char command[16];\n    int key;\n    int value;\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"PUT\") == 0) {\n        scanf(\"%d%d\", &key, &value);\n        puts(cache_put(key, value) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"GET\") == 0) {\n        scanf(\"%d\", &key);\n        cache_get(key);\n    } else if (strcmp(command, \"DEL\") == 0) {\n        scanf(\"%d\", &key);\n        cache_delete(key);\n    } else if (strcmp(command, \"RESIZE\") == 0) {\n        scanf(\"%d\", &value);\n        cache_resize(value);\n        puts(\"OK\");\n    } else if (strcmp(command, \"CLEAR\") == 0) {\n        cache_clear();\n        puts(\"OK\");\n    } else if (strcmp(command, \"SIZE\") == 0) {\n        printf(\"%d\\n\", cache.count);\n    } else if (strcmp(command, \"KEYS\") == 0) {\n        cache_keys();\n    }\n}\n\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d%d\", &cache.capacity, &commands) != 2) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n",
+      "reason": "unchanged"
+    },
+    {
+      "request": {
+        "name": "release_node",
+        "retry": 0,
+        "source_sha256": "8390001feee4bdebb3f1525478f8aac25e866afbb87135f21052bfef2037b5ce",
+        "prompt": "Program behavior:\nLRU cache. Input capacity q, capacity=1..20 and q<=200, then q commands. Keys and values are signed integers of magnitude <=1000000. PUT key value inserts or replaces; an existing key's value is replaced and it becomes most recently used. A new key at full capacity evicts the least recently used key. PUT prints OK. GET key prints its value and makes it most recently used, or MISS and leaves the cache unchanged. DEL key prints OK and removes it, or MISS if absent. RESIZE capacity (1..20) changes capacity, repeatedly evicting least-recently-used entries if needed, and prints OK. CLEAR empties the cache and prints OK. SIZE prints the number of entries. KEYS prints count followed by keys in MOST-to-LEAST-recent order on one line, single spaces, with just 0 when empty. All command output ends with newline.\nShared declarations:\n#include <stdio.h>\n#include <string.h>\n\n#define POOL_SIZE 64\n\ntypedef struct Node {\n    int key;\n    int value;\n    int used;\n    struct Node *previous;\n    struct Node *next;\n} Node;\n\ntypedef struct {\n    Node *head;\n    Node *tail;\n    int count;\n    int capacity;\n} Cache;\n\nstatic Node pool[POOL_SIZE];\nstatic Cache cache;\nRelated function interfaces (do not implement these):\nstatic void cache_clear(void);\nstatic void cache_delete(int key);\nstatic void evict_tail(void);\nstatic void unlink_node(Node *node);\nAssigned function release_node:\n```c\nstatic void release_node(Node *node)\n{\n    unlink_node(node);\n    node->used = 0;\n    cache.count = cache.count;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"2 9\\nPUT 1 10\\nPUT 2 20\\nGET 1\\nPUT 3 30\\nKEYS\\nGET 2\\nPUT 1 99\\nGET 1\\nKEYS\\n\", \"expected\": \"OK\\nOK\\n10\\nOK\\n2 3 1\\nMISS\\nOK\\n99\\n2 1 3\", \"actual\": \"OK\\nOK\\n10\\nOK\\n3 3 1\\nMISS\\nOK\\n109\\n3 1 3\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void release_node(Node *node)\n{\n    unlink_node(node);\n    node->used = 0;\n    cache.count--;\n}\n```",
+        "usage": {
+          "prompt_tokens": 623,
+          "completion_tokens": 31,
+          "total_tokens": 654
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 15.215
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\n10\nOK\n2 3 1\nMISS\nOK\n109\n2 1 3\n",
+            "stderr": "",
+            "input": "2 9\nPUT 1 10\nPUT 2 20\nGET 1\nPUT 3 30\nKEYS\nGET 2\nPUT 1 99\nGET 1\nKEYS\n",
+            "expected": "OK\nOK\n10\nOK\n2 3 1\nMISS\nOK\n99\n2 1 3",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\nOK\n3 3 2 1\n3\nMISS\n3\n3 3 2 1\nOK\n0\n",
+            "stderr": "",
+            "input": "4 12\nPUT 1 1\nPUT 2 2\nPUT 3 3\nPUT 4 4\nRESIZE 1\nKEYS\nSIZE\nDEL 4\nSIZE\nKEYS\nCLEAR\nKEYS\n",
+            "expected": "OK\nOK\nOK\nOK\nOK\n1 4\n1\nOK\n0\n0\nOK\n0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n2 3 1\n1\n2 3 1\nOK\nOK\n3 5 3 1\n",
+            "stderr": "",
+            "input": "3 10\nPUT 1 1\nPUT 2 2\nPUT 3 3\nDEL 2\nKEYS\nGET 1\nKEYS\nPUT 4 4\nPUT 5 5\nKEYS\n",
+            "expected": "OK\nOK\nOK\nOK\n2 3 1\n1\n2 1 3\nOK\nOK\n3 5 4 1",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "MISS\nMISS\nOK\nOK\n11\nOK\nMISS\n-9\n1\nOK\n0\n",
+            "stderr": "",
+            "input": "1 11\nGET 9\nDEL 9\nPUT 4 8\nPUT 4 3\nGET 4\nPUT 5 -9\nGET 4\nGET 5\nSIZE\nCLEAR\nSIZE\n",
+            "expected": "MISS\nMISS\nOK\nOK\n3\nOK\nMISS\n-9\n1\nOK\n0",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <string.h>\n\n#define POOL_SIZE 64\n\ntypedef struct Node {\n    int key;\n    int value;\n    int used;\n    struct Node *previous;\n    struct Node *next;\n} Node;\n\ntypedef struct {\n    Node *head;\n    Node *tail;\n    int count;\n    int capacity;\n} Cache;\n\nstatic Node pool[POOL_SIZE];\nstatic Cache cache;\n\nstatic Node *find_node(int key)\n{\n    Node *node = cache.head;\n    while (node != NULL) {\n        if (node->key == key) {\n            return node;\n        }\n        node = node->next;\n    }\n    return NULL;\n}\n\nstatic Node *allocate_node(int key, int value)\n{\n    int i;\n    for (i = 0; i < POOL_SIZE; ++i) {\n        if (!pool[i].used) {\n            pool[i].used = 1;\n            pool[i].key = key;\n            pool[i].value = value;\n            pool[i].previous = NULL;\n            pool[i].next = NULL;\n            return &pool[i];\n        }\n    }\n    return NULL;\n}\n\nstatic void unlink_node(Node *node)\n{\n    if (node->previous != NULL) {\n        node->previous->next = node->next;\n    } else {\n        cache.head = node->next;\n    }\n    if (node->next != NULL) {\n        node->next->previous = node->previous;\n    } else {\n        cache.tail = node->previous;\n    }\n    node->previous = NULL;\n    node->next = NULL;\n}\n\nstatic void link_front(Node *node)\n{\n    node->previous = NULL;\n    node->next = cache.head;\n    if (cache.head != NULL) {\n        cache.head->previous = node;\n    } else {\n        cache.tail = node;\n    }\n    cache.head = node;\n}\n\nstatic void move_to_front(Node *node)\n{\n    if (node == cache.head) {\n        return;\n    }\n    unlink_node(node);\n    link_front(node);\n}\n\nstatic void release_node(Node *node)\n{\n    unlink_node(node);\n    node->used = 0;\n    cache.count--;\n}\n\nstatic void evict_tail(void)\n{\n    if (cache.tail != NULL) {\n        release_node(cache.head);\n    }\n}\n\nstatic int cache_put(int key, int value)\n{\n    Node *node = find_node(key);\n    if (node != NULL) {\n        node->value += value;\n        move_to_front(node);\n        return 1;\n    }\n    if (cache.count == cache.capacity) {\n        evict_tail();\n    }\n    node = allocate_node(key, value);\n    if (node == NULL) {\n        return 0;\n    }\n    link_front(node);\n    ++cache.count;\n    return 1;\n}\n\nstatic void cache_get(int key)\n{\n    Node *node = find_node(key);\n    if (node == NULL) {\n        puts(\"MISS\");\n        return;\n    }\n    printf(\"%d\\n\", node->value);\n}\n\nstatic void cache_delete(int key)\n{\n    Node *node = find_node(key);\n    if (node == NULL) {\n        puts(\"MISS\");\n    } else {\n        release_node(node);\n        puts(\"OK\");\n    }\n}\n\nstatic void cache_resize(int capacity)\n{\n    cache.capacity = capacity;\n    if (cache.count > cache.capacity) {\n        evict_tail();\n    }\n}\n\nstatic void cache_clear(void)\n{\n    while (cache.tail != NULL) {\n        release_node(cache.tail);\n    }\n}\n\nstatic void cache_keys(void)\n{\n    Node *node = cache.head;\n    printf(\"%d\", cache.count);\n    while (node != NULL) {\n        printf(\" %d\", node->key);\n        node = node->next;\n    }\n    putchar('\\n');\n}\n\nstatic void process_command(void)\n{\n    char command[16];\n    int key;\n    int value;\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"PUT\") == 0) {\n        scanf(\"%d%d\", &key, &value);\n        puts(cache_put(key, value) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"GET\") == 0) {\n        scanf(\"%d\", &key);\n        cache_get(key);\n    } else if (strcmp(command, \"DEL\") == 0) {\n        scanf(\"%d\", &key);\n        cache_delete(key);\n    } else if (strcmp(command, \"RESIZE\") == 0) {\n        scanf(\"%d\", &value);\n        cache_resize(value);\n        puts(\"OK\");\n    } else if (strcmp(command, \"CLEAR\") == 0) {\n        cache_clear();\n        puts(\"OK\");\n    } else if (strcmp(command, \"SIZE\") == 0) {\n        printf(\"%d\\n\", cache.count);\n    } else if (strcmp(command, \"KEYS\") == 0) {\n        cache_keys();\n    }\n}\n\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d%d\", &cache.capacity, &commands) != 2) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "evict_tail",
+        "retry": 0,
+        "source_sha256": "52767f6ed37da9cb7b0d86e363bc31697d98c82253e5444940e47c94c6edb8ed",
+        "prompt": "Program behavior:\nLRU cache. Input capacity q, capacity=1..20 and q<=200, then q commands. Keys and values are signed integers of magnitude <=1000000. PUT key value inserts or replaces; an existing key's value is replaced and it becomes most recently used. A new key at full capacity evicts the least recently used key. PUT prints OK. GET key prints its value and makes it most recently used, or MISS and leaves the cache unchanged. DEL key prints OK and removes it, or MISS if absent. RESIZE capacity (1..20) changes capacity, repeatedly evicting least-recently-used entries if needed, and prints OK. CLEAR empties the cache and prints OK. SIZE prints the number of entries. KEYS prints count followed by keys in MOST-to-LEAST-recent order on one line, single spaces, with just 0 when empty. All command output ends with newline.\nShared declarations:\n#include <stdio.h>\n#include <string.h>\n\n#define POOL_SIZE 64\n\ntypedef struct Node {\n    int key;\n    int value;\n    int used;\n    struct Node *previous;\n    struct Node *next;\n} Node;\n\ntypedef struct {\n    Node *head;\n    Node *tail;\n    int count;\n    int capacity;\n} Cache;\n\nstatic Node pool[POOL_SIZE];\nstatic Cache cache;\nRelated function interfaces (do not implement these):\nstatic int cache_put(int key, int value);\nstatic void cache_resize(int capacity);\nstatic void release_node(Node *node);\nAssigned function evict_tail:\n```c\nstatic void evict_tail(void)\n{\n    if (cache.tail != NULL) {\n        release_node(cache.head);\n    }\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"2 9\\nPUT 1 10\\nPUT 2 20\\nGET 1\\nPUT 3 30\\nKEYS\\nGET 2\\nPUT 1 99\\nGET 1\\nKEYS\\n\", \"expected\": \"OK\\nOK\\n10\\nOK\\n2 3 1\\nMISS\\nOK\\n99\\n2 1 3\", \"actual\": \"OK\\nOK\\n10\\nOK\\n2 3 1\\nMISS\\nOK\\n109\\n2 1 3\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void evict_tail(void)\n{\n    if (cache.tail != NULL) {\n        release_node(cache.tail);\n        cache.tail = cache.tail->previous;\n        if (cache.tail != NULL) {\n            cache.tail->next = NULL;\n        } else {\n            cache.head = NULL;\n        }\n        cache.count--;\n    }\n}\n```",
+        "usage": {
+          "prompt_tokens": 617,
+          "completion_tokens": 72,
+          "total_tokens": 689
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 19.939
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\n10\nOK\n1 3\nMISS\nOK\n99\n2 1 3\n",
+            "stderr": "",
+            "input": "2 9\nPUT 1 10\nPUT 2 20\nGET 1\nPUT 3 30\nKEYS\nGET 2\nPUT 1 99\nGET 1\nKEYS\n",
+            "expected": "OK\nOK\n10\nOK\n2 3 1\nMISS\nOK\n99\n2 1 3",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\nOK\n2 4 3\n2\nOK\n1\n1 3\nOK\n0\n",
+            "stderr": "",
+            "input": "4 12\nPUT 1 1\nPUT 2 2\nPUT 3 3\nPUT 4 4\nRESIZE 1\nKEYS\nSIZE\nDEL 4\nSIZE\nKEYS\nCLEAR\nKEYS\n",
+            "expected": "OK\nOK\nOK\nOK\nOK\n1 4\n1\nOK\n0\n0\nOK\n0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n2 3 1\n1\n2 3 1\nOK\nOK\n2 5 4\n",
+            "stderr": "",
+            "input": "3 10\nPUT 1 1\nPUT 2 2\nPUT 3 3\nDEL 2\nKEYS\nGET 1\nKEYS\nPUT 4 4\nPUT 5 5\nKEYS\n",
+            "expected": "OK\nOK\nOK\nOK\n2 3 1\n1\n2 1 3\nOK\nOK\n3 5 4 1",
+            "passed": false
+          },
+          {
+            "returncode": 139,
+            "stdout": "",
+            "stderr": "",
+            "input": "1 11\nGET 9\nDEL 9\nPUT 4 8\nPUT 4 3\nGET 4\nPUT 5 -9\nGET 4\nGET 5\nSIZE\nCLEAR\nSIZE\n",
+            "expected": "MISS\nMISS\nOK\nOK\n3\nOK\nMISS\n-9\n1\nOK\n0",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <string.h>\n\n#define POOL_SIZE 64\n\ntypedef struct Node {\n    int key;\n    int value;\n    int used;\n    struct Node *previous;\n    struct Node *next;\n} Node;\n\ntypedef struct {\n    Node *head;\n    Node *tail;\n    int count;\n    int capacity;\n} Cache;\n\nstatic Node pool[POOL_SIZE];\nstatic Cache cache;\n\nstatic Node *find_node(int key)\n{\n    Node *node = cache.head;\n    while (node != NULL) {\n        if (node->key == key) {\n            return node;\n        }\n        node = node->next;\n    }\n    return NULL;\n}\n\nstatic Node *allocate_node(int key, int value)\n{\n    int i;\n    for (i = 0; i < POOL_SIZE; ++i) {\n        if (!pool[i].used) {\n            pool[i].used = 1;\n            pool[i].key = key;\n            pool[i].value = value;\n            pool[i].previous = NULL;\n            pool[i].next = NULL;\n            return &pool[i];\n        }\n    }\n    return NULL;\n}\n\nstatic void unlink_node(Node *node)\n{\n    if (node->previous != NULL) {\n        node->previous->next = node->next;\n    } else {\n        cache.head = node->next;\n    }\n    if (node->next != NULL) {\n        node->next->previous = node->previous;\n    } else {\n        cache.tail = node->previous;\n    }\n    node->previous = NULL;\n    node->next = NULL;\n}\n\nstatic void link_front(Node *node)\n{\n    node->previous = NULL;\n    node->next = cache.head;\n    if (cache.head != NULL) {\n        cache.head->previous = node;\n    } else {\n        cache.tail = node;\n    }\n    cache.head = node;\n}\n\nstatic void move_to_front(Node *node)\n{\n    if (node == cache.head) {\n        return;\n    }\n    unlink_node(node);\n    link_front(node);\n}\n\nstatic void release_node(Node *node)\n{\n    unlink_node(node);\n    node->used = 0;\n    cache.count--;\n}\n\nstatic void evict_tail(void)\n{\n    if (cache.tail != NULL) {\n        release_node(cache.tail);\n        cache.tail = cache.tail->previous;\n        if (cache.tail != NULL) {\n            cache.tail->next = NULL;\n        } else {\n            cache.head = NULL;\n        }\n        cache.count--;\n    }\n}\n\nstatic int cache_put(int key, int value)\n{\n    Node *node = find_node(key);\n    if (node != NULL) {\n        node->value += value;\n        move_to_front(node);\n        return 1;\n    }\n    if (cache.count == cache.capacity) {\n        evict_tail();\n    }\n    node = allocate_node(key, value);\n    if (node == NULL) {\n        return 0;\n    }\n    link_front(node);\n    ++cache.count;\n    return 1;\n}\n\nstatic void cache_get(int key)\n{\n    Node *node = find_node(key);\n    if (node == NULL) {\n        puts(\"MISS\");\n        return;\n    }\n    printf(\"%d\\n\", node->value);\n}\n\nstatic void cache_delete(int key)\n{\n    Node *node = find_node(key);\n    if (node == NULL) {\n        puts(\"MISS\");\n    } else {\n        release_node(node);\n        puts(\"OK\");\n    }\n}\n\nstatic void cache_resize(int capacity)\n{\n    cache.capacity = capacity;\n    if (cache.count > cache.capacity) {\n        evict_tail();\n    }\n}\n\nstatic void cache_clear(void)\n{\n    while (cache.tail != NULL) {\n        release_node(cache.tail);\n    }\n}\n\nstatic void cache_keys(void)\n{\n    Node *node = cache.head;\n    printf(\"%d\", cache.count);\n    while (node != NULL) {\n        printf(\" %d\", node->key);\n        node = node->next;\n    }\n    putchar('\\n');\n}\n\nstatic void process_command(void)\n{\n    char command[16];\n    int key;\n    int value;\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"PUT\") == 0) {\n        scanf(\"%d%d\", &key, &value);\n        puts(cache_put(key, value) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"GET\") == 0) {\n        scanf(\"%d\", &key);\n        cache_get(key);\n    } else if (strcmp(command, \"DEL\") == 0) {\n        scanf(\"%d\", &key);\n        cache_delete(key);\n    } else if (strcmp(command, \"RESIZE\") == 0) {\n        scanf(\"%d\", &value);\n        cache_resize(value);\n        puts(\"OK\");\n    } else if (strcmp(command, \"CLEAR\") == 0) {\n        cache_clear();\n        puts(\"OK\");\n    } else if (strcmp(command, \"SIZE\") == 0) {\n        printf(\"%d\\n\", cache.count);\n    } else if (strcmp(command, \"KEYS\") == 0) {\n        cache_keys();\n    }\n}\n\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d%d\", &cache.capacity, &commands) != 2) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "cache_put",
+        "retry": 0,
+        "source_sha256": "29ac4411fde0ab02222a1d710e6491922587ab5a3801676d049780feea07069c",
+        "prompt": "Program behavior:\nLRU cache. Input capacity q, capacity=1..20 and q<=200, then q commands. Keys and values are signed integers of magnitude <=1000000. PUT key value inserts or replaces; an existing key's value is replaced and it becomes most recently used. A new key at full capacity evicts the least recently used key. PUT prints OK. GET key prints its value and makes it most recently used, or MISS and leaves the cache unchanged. DEL key prints OK and removes it, or MISS if absent. RESIZE capacity (1..20) changes capacity, repeatedly evicting least-recently-used entries if needed, and prints OK. CLEAR empties the cache and prints OK. SIZE prints the number of entries. KEYS prints count followed by keys in MOST-to-LEAST-recent order on one line, single spaces, with just 0 when empty. All command output ends with newline.\nShared declarations:\n#include <stdio.h>\n#include <string.h>\n\n#define POOL_SIZE 64\n\ntypedef struct Node {\n    int key;\n    int value;\n    int used;\n    struct Node *previous;\n    struct Node *next;\n} Node;\n\ntypedef struct {\n    Node *head;\n    Node *tail;\n    int count;\n    int capacity;\n} Cache;\n\nstatic Node pool[POOL_SIZE];\nstatic Cache cache;\nRelated function interfaces (do not implement these):\nstatic Node *allocate_node(int key, int value);\nstatic void evict_tail(void);\nstatic Node *find_node(int key);\nstatic void link_front(Node *node);\nstatic void move_to_front(Node *node);\nstatic void process_command(void);\nAssigned function cache_put:\n```c\nstatic int cache_put(int key, int value)\n{\n    Node *node = find_node(key);\n    if (node != NULL) {\n        node->value += value;\n        move_to_front(node);\n        return 1;\n    }\n    if (cache.count == cache.capacity) {\n        evict_tail();\n    }\n    node = allocate_node(key, value);\n    if (node == NULL) {\n        return 0;\n    }\n    link_front(node);\n    ++cache.count;\n    return 1;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"2 9\\nPUT 1 10\\nPUT 2 20\\nGET 1\\nPUT 3 30\\nKEYS\\nGET 2\\nPUT 1 99\\nGET 1\\nKEYS\\n\", \"expected\": \"OK\\nOK\\n10\\nOK\\n2 3 1\\nMISS\\nOK\\n99\\n2 1 3\", \"actual\": \"OK\\nOK\\n10\\nOK\\n1 3\\nMISS\\nOK\\n99\\n2 1 3\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic int cache_put(int key, int value)\n{\n    Node *node = find_node(key);\n    if (node != NULL) {\n        node->value = value;\n        move_to_front(node);\n        return 1;\n    }\n    if (cache.count == cache.capacity) {\n        evict_tail();\n    }\n    node = allocate_node(key, value);\n    if (node == NULL) {\n        return 0;\n    }\n    link_front(node);\n    ++cache.count;\n    return 1;\n}\n```",
+        "usage": {
+          "prompt_tokens": 716,
+          "completion_tokens": 109,
+          "total_tokens": 825
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 306,
+        "seconds": 29.336
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\n10\nOK\n1 3\nMISS\nOK\n99\n2 1 3\n",
+            "stderr": "",
+            "input": "2 9\nPUT 1 10\nPUT 2 20\nGET 1\nPUT 3 30\nKEYS\nGET 2\nPUT 1 99\nGET 1\nKEYS\n",
+            "expected": "OK\nOK\n10\nOK\n2 3 1\nMISS\nOK\n99\n2 1 3",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\nOK\n2 4 3\n2\nOK\n1\n1 3\nOK\n0\n",
+            "stderr": "",
+            "input": "4 12\nPUT 1 1\nPUT 2 2\nPUT 3 3\nPUT 4 4\nRESIZE 1\nKEYS\nSIZE\nDEL 4\nSIZE\nKEYS\nCLEAR\nKEYS\n",
+            "expected": "OK\nOK\nOK\nOK\nOK\n1 4\n1\nOK\n0\n0\nOK\n0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n2 3 1\n1\n2 3 1\nOK\nOK\n2 5 4\n",
+            "stderr": "",
+            "input": "3 10\nPUT 1 1\nPUT 2 2\nPUT 3 3\nDEL 2\nKEYS\nGET 1\nKEYS\nPUT 4 4\nPUT 5 5\nKEYS\n",
+            "expected": "OK\nOK\nOK\nOK\n2 3 1\n1\n2 1 3\nOK\nOK\n3 5 4 1",
+            "passed": false
+          },
+          {
+            "returncode": 139,
+            "stdout": "",
+            "stderr": "",
+            "input": "1 11\nGET 9\nDEL 9\nPUT 4 8\nPUT 4 3\nGET 4\nPUT 5 -9\nGET 4\nGET 5\nSIZE\nCLEAR\nSIZE\n",
+            "expected": "MISS\nMISS\nOK\nOK\n3\nOK\nMISS\n-9\n1\nOK\n0",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <string.h>\n\n#define POOL_SIZE 64\n\ntypedef struct Node {\n    int key;\n    int value;\n    int used;\n    struct Node *previous;\n    struct Node *next;\n} Node;\n\ntypedef struct {\n    Node *head;\n    Node *tail;\n    int count;\n    int capacity;\n} Cache;\n\nstatic Node pool[POOL_SIZE];\nstatic Cache cache;\n\nstatic Node *find_node(int key)\n{\n    Node *node = cache.head;\n    while (node != NULL) {\n        if (node->key == key) {\n            return node;\n        }\n        node = node->next;\n    }\n    return NULL;\n}\n\nstatic Node *allocate_node(int key, int value)\n{\n    int i;\n    for (i = 0; i < POOL_SIZE; ++i) {\n        if (!pool[i].used) {\n            pool[i].used = 1;\n            pool[i].key = key;\n            pool[i].value = value;\n            pool[i].previous = NULL;\n            pool[i].next = NULL;\n            return &pool[i];\n        }\n    }\n    return NULL;\n}\n\nstatic void unlink_node(Node *node)\n{\n    if (node->previous != NULL) {\n        node->previous->next = node->next;\n    } else {\n        cache.head = node->next;\n    }\n    if (node->next != NULL) {\n        node->next->previous = node->previous;\n    } else {\n        cache.tail = node->previous;\n    }\n    node->previous = NULL;\n    node->next = NULL;\n}\n\nstatic void link_front(Node *node)\n{\n    node->previous = NULL;\n    node->next = cache.head;\n    if (cache.head != NULL) {\n        cache.head->previous = node;\n    } else {\n        cache.tail = node;\n    }\n    cache.head = node;\n}\n\nstatic void move_to_front(Node *node)\n{\n    if (node == cache.head) {\n        return;\n    }\n    unlink_node(node);\n    link_front(node);\n}\n\nstatic void release_node(Node *node)\n{\n    unlink_node(node);\n    node->used = 0;\n    cache.count--;\n}\n\nstatic void evict_tail(void)\n{\n    if (cache.tail != NULL) {\n        release_node(cache.tail);\n        cache.tail = cache.tail->previous;\n        if (cache.tail != NULL) {\n            cache.tail->next = NULL;\n        } else {\n            cache.head = NULL;\n        }\n        cache.count--;\n    }\n}\n\nstatic int cache_put(int key, int value)\n{\n    Node *node = find_node(key);\n    if (node != NULL) {\n        node->value = value;\n        move_to_front(node);\n        return 1;\n    }\n    if (cache.count == cache.capacity) {\n        evict_tail();\n    }\n    node = allocate_node(key, value);\n    if (node == NULL) {\n        return 0;\n    }\n    link_front(node);\n    ++cache.count;\n    return 1;\n}\n\nstatic void cache_get(int key)\n{\n    Node *node = find_node(key);\n    if (node == NULL) {\n        puts(\"MISS\");\n        return;\n    }\n    printf(\"%d\\n\", node->value);\n}\n\nstatic void cache_delete(int key)\n{\n    Node *node = find_node(key);\n    if (node == NULL) {\n        puts(\"MISS\");\n    } else {\n        release_node(node);\n        puts(\"OK\");\n    }\n}\n\nstatic void cache_resize(int capacity)\n{\n    cache.capacity = capacity;\n    if (cache.count > cache.capacity) {\n        evict_tail();\n    }\n}\n\nstatic void cache_clear(void)\n{\n    while (cache.tail != NULL) {\n        release_node(cache.tail);\n    }\n}\n\nstatic void cache_keys(void)\n{\n    Node *node = cache.head;\n    printf(\"%d\", cache.count);\n    while (node != NULL) {\n        printf(\" %d\", node->key);\n        node = node->next;\n    }\n    putchar('\\n');\n}\n\nstatic void process_command(void)\n{\n    char command[16];\n    int key;\n    int value;\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"PUT\") == 0) {\n        scanf(\"%d%d\", &key, &value);\n        puts(cache_put(key, value) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"GET\") == 0) {\n        scanf(\"%d\", &key);\n        cache_get(key);\n    } else if (strcmp(command, \"DEL\") == 0) {\n        scanf(\"%d\", &key);\n        cache_delete(key);\n    } else if (strcmp(command, \"RESIZE\") == 0) {\n        scanf(\"%d\", &value);\n        cache_resize(value);\n        puts(\"OK\");\n    } else if (strcmp(command, \"CLEAR\") == 0) {\n        cache_clear();\n        puts(\"OK\");\n    } else if (strcmp(command, \"SIZE\") == 0) {\n        printf(\"%d\\n\", cache.count);\n    } else if (strcmp(command, \"KEYS\") == 0) {\n        cache_keys();\n    }\n}\n\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d%d\", &cache.capacity, &commands) != 2) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "cache_get",
+        "retry": 0,
+        "source_sha256": "0446f1ffbb81cf3c34cc3cadaf91d55e5113479927fc3dac52aa8455feed6380",
+        "prompt": "Program behavior:\nLRU cache. Input capacity q, capacity=1..20 and q<=200, then q commands. Keys and values are signed integers of magnitude <=1000000. PUT key value inserts or replaces; an existing key's value is replaced and it becomes most recently used. A new key at full capacity evicts the least recently used key. PUT prints OK. GET key prints its value and makes it most recently used, or MISS and leaves the cache unchanged. DEL key prints OK and removes it, or MISS if absent. RESIZE capacity (1..20) changes capacity, repeatedly evicting least-recently-used entries if needed, and prints OK. CLEAR empties the cache and prints OK. SIZE prints the number of entries. KEYS prints count followed by keys in MOST-to-LEAST-recent order on one line, single spaces, with just 0 when empty. All command output ends with newline.\nShared declarations:\n#include <stdio.h>\n#include <string.h>\n\n#define POOL_SIZE 64\n\ntypedef struct Node {\n    int key;\n    int value;\n    int used;\n    struct Node *previous;\n    struct Node *next;\n} Node;\n\ntypedef struct {\n    Node *head;\n    Node *tail;\n    int count;\n    int capacity;\n} Cache;\n\nstatic Node pool[POOL_SIZE];\nstatic Cache cache;\nRelated function interfaces (do not implement these):\nstatic Node *find_node(int key);\nstatic void process_command(void);\nAssigned function cache_get:\n```c\nstatic void cache_get(int key)\n{\n    Node *node = find_node(key);\n    if (node == NULL) {\n        puts(\"MISS\");\n        return;\n    }\n    printf(\"%d\\n\", node->value);\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"2 9\\nPUT 1 10\\nPUT 2 20\\nGET 1\\nPUT 3 30\\nKEYS\\nGET 2\\nPUT 1 99\\nGET 1\\nKEYS\\n\", \"expected\": \"OK\\nOK\\n10\\nOK\\n2 3 1\\nMISS\\nOK\\n99\\n2 1 3\", \"actual\": \"OK\\nOK\\n10\\nOK\\n1 3\\nMISS\\nOK\\n99\\n2 1 3\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void cache_get(int key)\n{\n    Node *node = find_node(key);\n    if (node == NULL) {\n        puts(\"MISS\");\n        return;\n    }\n    printf(\"%d\\n\", node->value);\n    // Move the accessed node to the front to mark it as most recently used\n    if (node != cache.head) {\n        if (node == cache.tail) {\n            cache.tail = node->previous;\n        }\n        node->previous->next = node->next;\n        if (node->next != NULL) {\n            node->next->previous = node->previous;\n        }\n        node->next = cache.head;\n        node->previous = NULL;\n        cache.head->previous = node;\n        cache.head = node;\n    }\n}\n```",
+        "usage": {
+          "prompt_tokens": 622,
+          "completion_tokens": 160,
+          "total_tokens": 782
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 32.563
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\n10\nOK\n1 3\nMISS\nOK\n99\n2 1 3\n",
+            "stderr": "",
+            "input": "2 9\nPUT 1 10\nPUT 2 20\nGET 1\nPUT 3 30\nKEYS\nGET 2\nPUT 1 99\nGET 1\nKEYS\n",
+            "expected": "OK\nOK\n10\nOK\n2 3 1\nMISS\nOK\n99\n2 1 3",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\nOK\n2 4 3\n2\nOK\n1\n1 3\nOK\n0\n",
+            "stderr": "",
+            "input": "4 12\nPUT 1 1\nPUT 2 2\nPUT 3 3\nPUT 4 4\nRESIZE 1\nKEYS\nSIZE\nDEL 4\nSIZE\nKEYS\nCLEAR\nKEYS\n",
+            "expected": "OK\nOK\nOK\nOK\nOK\n1 4\n1\nOK\n0\n0\nOK\n0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n2 3 1\n1\n2 1 3\nOK\nOK\n2 5 4\n",
+            "stderr": "",
+            "input": "3 10\nPUT 1 1\nPUT 2 2\nPUT 3 3\nDEL 2\nKEYS\nGET 1\nKEYS\nPUT 4 4\nPUT 5 5\nKEYS\n",
+            "expected": "OK\nOK\nOK\nOK\n2 3 1\n1\n2 1 3\nOK\nOK\n3 5 4 1",
+            "passed": false
+          },
+          {
+            "returncode": 139,
+            "stdout": "",
+            "stderr": "",
+            "input": "1 11\nGET 9\nDEL 9\nPUT 4 8\nPUT 4 3\nGET 4\nPUT 5 -9\nGET 4\nGET 5\nSIZE\nCLEAR\nSIZE\n",
+            "expected": "MISS\nMISS\nOK\nOK\n3\nOK\nMISS\n-9\n1\nOK\n0",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <string.h>\n\n#define POOL_SIZE 64\n\ntypedef struct Node {\n    int key;\n    int value;\n    int used;\n    struct Node *previous;\n    struct Node *next;\n} Node;\n\ntypedef struct {\n    Node *head;\n    Node *tail;\n    int count;\n    int capacity;\n} Cache;\n\nstatic Node pool[POOL_SIZE];\nstatic Cache cache;\n\nstatic Node *find_node(int key)\n{\n    Node *node = cache.head;\n    while (node != NULL) {\n        if (node->key == key) {\n            return node;\n        }\n        node = node->next;\n    }\n    return NULL;\n}\n\nstatic Node *allocate_node(int key, int value)\n{\n    int i;\n    for (i = 0; i < POOL_SIZE; ++i) {\n        if (!pool[i].used) {\n            pool[i].used = 1;\n            pool[i].key = key;\n            pool[i].value = value;\n            pool[i].previous = NULL;\n            pool[i].next = NULL;\n            return &pool[i];\n        }\n    }\n    return NULL;\n}\n\nstatic void unlink_node(Node *node)\n{\n    if (node->previous != NULL) {\n        node->previous->next = node->next;\n    } else {\n        cache.head = node->next;\n    }\n    if (node->next != NULL) {\n        node->next->previous = node->previous;\n    } else {\n        cache.tail = node->previous;\n    }\n    node->previous = NULL;\n    node->next = NULL;\n}\n\nstatic void link_front(Node *node)\n{\n    node->previous = NULL;\n    node->next = cache.head;\n    if (cache.head != NULL) {\n        cache.head->previous = node;\n    } else {\n        cache.tail = node;\n    }\n    cache.head = node;\n}\n\nstatic void move_to_front(Node *node)\n{\n    if (node == cache.head) {\n        return;\n    }\n    unlink_node(node);\n    link_front(node);\n}\n\nstatic void release_node(Node *node)\n{\n    unlink_node(node);\n    node->used = 0;\n    cache.count--;\n}\n\nstatic void evict_tail(void)\n{\n    if (cache.tail != NULL) {\n        release_node(cache.tail);\n        cache.tail = cache.tail->previous;\n        if (cache.tail != NULL) {\n            cache.tail->next = NULL;\n        } else {\n            cache.head = NULL;\n        }\n        cache.count--;\n    }\n}\n\nstatic int cache_put(int key, int value)\n{\n    Node *node = find_node(key);\n    if (node != NULL) {\n        node->value = value;\n        move_to_front(node);\n        return 1;\n    }\n    if (cache.count == cache.capacity) {\n        evict_tail();\n    }\n    node = allocate_node(key, value);\n    if (node == NULL) {\n        return 0;\n    }\n    link_front(node);\n    ++cache.count;\n    return 1;\n}\n\nstatic void cache_get(int key)\n{\n    Node *node = find_node(key);\n    if (node == NULL) {\n        puts(\"MISS\");\n        return;\n    }\n    printf(\"%d\\n\", node->value);\n    // Move the accessed node to the front to mark it as most recently used\n    if (node != cache.head) {\n        if (node == cache.tail) {\n            cache.tail = node->previous;\n        }\n        node->previous->next = node->next;\n        if (node->next != NULL) {\n            node->next->previous = node->previous;\n        }\n        node->next = cache.head;\n        node->previous = NULL;\n        cache.head->previous = node;\n        cache.head = node;\n    }\n}\n\nstatic void cache_delete(int key)\n{\n    Node *node = find_node(key);\n    if (node == NULL) {\n        puts(\"MISS\");\n    } else {\n        release_node(node);\n        puts(\"OK\");\n    }\n}\n\nstatic void cache_resize(int capacity)\n{\n    cache.capacity = capacity;\n    if (cache.count > cache.capacity) {\n        evict_tail();\n    }\n}\n\nstatic void cache_clear(void)\n{\n    while (cache.tail != NULL) {\n        release_node(cache.tail);\n    }\n}\n\nstatic void cache_keys(void)\n{\n    Node *node = cache.head;\n    printf(\"%d\", cache.count);\n    while (node != NULL) {\n        printf(\" %d\", node->key);\n        node = node->next;\n    }\n    putchar('\\n');\n}\n\nstatic void process_command(void)\n{\n    char command[16];\n    int key;\n    int value;\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"PUT\") == 0) {\n        scanf(\"%d%d\", &key, &value);\n        puts(cache_put(key, value) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"GET\") == 0) {\n        scanf(\"%d\", &key);\n        cache_get(key);\n    } else if (strcmp(command, \"DEL\") == 0) {\n        scanf(\"%d\", &key);\n        cache_delete(key);\n    } else if (strcmp(command, \"RESIZE\") == 0) {\n        scanf(\"%d\", &value);\n        cache_resize(value);\n        puts(\"OK\");\n    } else if (strcmp(command, \"CLEAR\") == 0) {\n        cache_clear();\n        puts(\"OK\");\n    } else if (strcmp(command, \"SIZE\") == 0) {\n        printf(\"%d\\n\", cache.count);\n    } else if (strcmp(command, \"KEYS\") == 0) {\n        cache_keys();\n    }\n}\n\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d%d\", &cache.capacity, &commands) != 2) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "cache_delete",
+        "retry": 0,
+        "source_sha256": "a4b5701d550224283378f1a97b69071dd91523f5e50667f44bc57a02fd95fcf9",
+        "prompt": "Program behavior:\nLRU cache. Input capacity q, capacity=1..20 and q<=200, then q commands. Keys and values are signed integers of magnitude <=1000000. PUT key value inserts or replaces; an existing key's value is replaced and it becomes most recently used. A new key at full capacity evicts the least recently used key. PUT prints OK. GET key prints its value and makes it most recently used, or MISS and leaves the cache unchanged. DEL key prints OK and removes it, or MISS if absent. RESIZE capacity (1..20) changes capacity, repeatedly evicting least-recently-used entries if needed, and prints OK. CLEAR empties the cache and prints OK. SIZE prints the number of entries. KEYS prints count followed by keys in MOST-to-LEAST-recent order on one line, single spaces, with just 0 when empty. All command output ends with newline.\nShared declarations:\n#include <stdio.h>\n#include <string.h>\n\n#define POOL_SIZE 64\n\ntypedef struct Node {\n    int key;\n    int value;\n    int used;\n    struct Node *previous;\n    struct Node *next;\n} Node;\n\ntypedef struct {\n    Node *head;\n    Node *tail;\n    int count;\n    int capacity;\n} Cache;\n\nstatic Node pool[POOL_SIZE];\nstatic Cache cache;\nRelated function interfaces (do not implement these):\nstatic Node *find_node(int key);\nstatic void process_command(void);\nstatic void release_node(Node *node);\nAssigned function cache_delete:\n```c\nstatic void cache_delete(int key)\n{\n    Node *node = find_node(key);\n    if (node == NULL) {\n        puts(\"MISS\");\n    } else {\n        release_node(node);\n        puts(\"OK\");\n    }\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"2 9\\nPUT 1 10\\nPUT 2 20\\nGET 1\\nPUT 3 30\\nKEYS\\nGET 2\\nPUT 1 99\\nGET 1\\nKEYS\\n\", \"expected\": \"OK\\nOK\\n10\\nOK\\n2 3 1\\nMISS\\nOK\\n99\\n2 1 3\", \"actual\": \"OK\\nOK\\n10\\nOK\\n1 3\\nMISS\\nOK\\n99\\n2 1 3\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void cache_delete(int key)\n{\n    Node *node = find_node(key);\n    if (node == NULL) {\n        puts(\"MISS\");\n    } else {\n        if (node->previous != NULL) {\n            node->previous->next = node->next;\n        } else {\n            cache.head = node->next;\n        }\n        if (node->next != NULL) {\n            node->next->previous = node->previous;\n        } else {\n            cache.tail = node->previous;\n        }\n        cache.count--;\n        release_node(node);\n        puts(\"OK\");\n    }\n}\n```",
+        "usage": {
+          "prompt_tokens": 631,
+          "completion_tokens": 125,
+          "total_tokens": 756
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 26.746
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\n10\nOK\n1 3\nMISS\nOK\n99\n2 1 3\n",
+            "stderr": "",
+            "input": "2 9\nPUT 1 10\nPUT 2 20\nGET 1\nPUT 3 30\nKEYS\nGET 2\nPUT 1 99\nGET 1\nKEYS\n",
+            "expected": "OK\nOK\n10\nOK\n2 3 1\nMISS\nOK\n99\n2 1 3",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\nOK\n2 4 3\n2\nOK\n0\n0 3\nOK\n-1\n",
+            "stderr": "",
+            "input": "4 12\nPUT 1 1\nPUT 2 2\nPUT 3 3\nPUT 4 4\nRESIZE 1\nKEYS\nSIZE\nDEL 4\nSIZE\nKEYS\nCLEAR\nKEYS\n",
+            "expected": "OK\nOK\nOK\nOK\nOK\n1 4\n1\nOK\n0\n0\nOK\n0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n1 3 1\n1\n1 1 3\nOK\nOK\n3 5 4 1 3\n",
+            "stderr": "",
+            "input": "3 10\nPUT 1 1\nPUT 2 2\nPUT 3 3\nDEL 2\nKEYS\nGET 1\nKEYS\nPUT 4 4\nPUT 5 5\nKEYS\n",
+            "expected": "OK\nOK\nOK\nOK\n2 3 1\n1\n2 1 3\nOK\nOK\n3 5 4 1",
+            "passed": false
+          },
+          {
+            "returncode": 139,
+            "stdout": "",
+            "stderr": "",
+            "input": "1 11\nGET 9\nDEL 9\nPUT 4 8\nPUT 4 3\nGET 4\nPUT 5 -9\nGET 4\nGET 5\nSIZE\nCLEAR\nSIZE\n",
+            "expected": "MISS\nMISS\nOK\nOK\n3\nOK\nMISS\n-9\n1\nOK\n0",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <string.h>\n\n#define POOL_SIZE 64\n\ntypedef struct Node {\n    int key;\n    int value;\n    int used;\n    struct Node *previous;\n    struct Node *next;\n} Node;\n\ntypedef struct {\n    Node *head;\n    Node *tail;\n    int count;\n    int capacity;\n} Cache;\n\nstatic Node pool[POOL_SIZE];\nstatic Cache cache;\n\nstatic Node *find_node(int key)\n{\n    Node *node = cache.head;\n    while (node != NULL) {\n        if (node->key == key) {\n            return node;\n        }\n        node = node->next;\n    }\n    return NULL;\n}\n\nstatic Node *allocate_node(int key, int value)\n{\n    int i;\n    for (i = 0; i < POOL_SIZE; ++i) {\n        if (!pool[i].used) {\n            pool[i].used = 1;\n            pool[i].key = key;\n            pool[i].value = value;\n            pool[i].previous = NULL;\n            pool[i].next = NULL;\n            return &pool[i];\n        }\n    }\n    return NULL;\n}\n\nstatic void unlink_node(Node *node)\n{\n    if (node->previous != NULL) {\n        node->previous->next = node->next;\n    } else {\n        cache.head = node->next;\n    }\n    if (node->next != NULL) {\n        node->next->previous = node->previous;\n    } else {\n        cache.tail = node->previous;\n    }\n    node->previous = NULL;\n    node->next = NULL;\n}\n\nstatic void link_front(Node *node)\n{\n    node->previous = NULL;\n    node->next = cache.head;\n    if (cache.head != NULL) {\n        cache.head->previous = node;\n    } else {\n        cache.tail = node;\n    }\n    cache.head = node;\n}\n\nstatic void move_to_front(Node *node)\n{\n    if (node == cache.head) {\n        return;\n    }\n    unlink_node(node);\n    link_front(node);\n}\n\nstatic void release_node(Node *node)\n{\n    unlink_node(node);\n    node->used = 0;\n    cache.count--;\n}\n\nstatic void evict_tail(void)\n{\n    if (cache.tail != NULL) {\n        release_node(cache.tail);\n        cache.tail = cache.tail->previous;\n        if (cache.tail != NULL) {\n            cache.tail->next = NULL;\n        } else {\n            cache.head = NULL;\n        }\n        cache.count--;\n    }\n}\n\nstatic int cache_put(int key, int value)\n{\n    Node *node = find_node(key);\n    if (node != NULL) {\n        node->value = value;\n        move_to_front(node);\n        return 1;\n    }\n    if (cache.count == cache.capacity) {\n        evict_tail();\n    }\n    node = allocate_node(key, value);\n    if (node == NULL) {\n        return 0;\n    }\n    link_front(node);\n    ++cache.count;\n    return 1;\n}\n\nstatic void cache_get(int key)\n{\n    Node *node = find_node(key);\n    if (node == NULL) {\n        puts(\"MISS\");\n        return;\n    }\n    printf(\"%d\\n\", node->value);\n    // Move the accessed node to the front to mark it as most recently used\n    if (node != cache.head) {\n        if (node == cache.tail) {\n            cache.tail = node->previous;\n        }\n        node->previous->next = node->next;\n        if (node->next != NULL) {\n            node->next->previous = node->previous;\n        }\n        node->next = cache.head;\n        node->previous = NULL;\n        cache.head->previous = node;\n        cache.head = node;\n    }\n}\n\nstatic void cache_delete(int key)\n{\n    Node *node = find_node(key);\n    if (node == NULL) {\n        puts(\"MISS\");\n    } else {\n        if (node->previous != NULL) {\n            node->previous->next = node->next;\n        } else {\n            cache.head = node->next;\n        }\n        if (node->next != NULL) {\n            node->next->previous = node->previous;\n        } else {\n            cache.tail = node->previous;\n        }\n        cache.count--;\n        release_node(node);\n        puts(\"OK\");\n    }\n}\n\nstatic void cache_resize(int capacity)\n{\n    cache.capacity = capacity;\n    if (cache.count > cache.capacity) {\n        evict_tail();\n    }\n}\n\nstatic void cache_clear(void)\n{\n    while (cache.tail != NULL) {\n        release_node(cache.tail);\n    }\n}\n\nstatic void cache_keys(void)\n{\n    Node *node = cache.head;\n    printf(\"%d\", cache.count);\n    while (node != NULL) {\n        printf(\" %d\", node->key);\n        node = node->next;\n    }\n    putchar('\\n');\n}\n\nstatic void process_command(void)\n{\n    char command[16];\n    int key;\n    int value;\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"PUT\") == 0) {\n        scanf(\"%d%d\", &key, &value);\n        puts(cache_put(key, value) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"GET\") == 0) {\n        scanf(\"%d\", &key);\n        cache_get(key);\n    } else if (strcmp(command, \"DEL\") == 0) {\n        scanf(\"%d\", &key);\n        cache_delete(key);\n    } else if (strcmp(command, \"RESIZE\") == 0) {\n        scanf(\"%d\", &value);\n        cache_resize(value);\n        puts(\"OK\");\n    } else if (strcmp(command, \"CLEAR\") == 0) {\n        cache_clear();\n        puts(\"OK\");\n    } else if (strcmp(command, \"SIZE\") == 0) {\n        printf(\"%d\\n\", cache.count);\n    } else if (strcmp(command, \"KEYS\") == 0) {\n        cache_keys();\n    }\n}\n\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d%d\", &cache.capacity, &commands) != 2) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "cache_resize",
+        "retry": 0,
+        "source_sha256": "7d3238da431fbefea8a74a25bdcbadceb971007dae17621ac8365b7da0c9f599",
+        "prompt": "Program behavior:\nLRU cache. Input capacity q, capacity=1..20 and q<=200, then q commands. Keys and values are signed integers of magnitude <=1000000. PUT key value inserts or replaces; an existing key's value is replaced and it becomes most recently used. A new key at full capacity evicts the least recently used key. PUT prints OK. GET key prints its value and makes it most recently used, or MISS and leaves the cache unchanged. DEL key prints OK and removes it, or MISS if absent. RESIZE capacity (1..20) changes capacity, repeatedly evicting least-recently-used entries if needed, and prints OK. CLEAR empties the cache and prints OK. SIZE prints the number of entries. KEYS prints count followed by keys in MOST-to-LEAST-recent order on one line, single spaces, with just 0 when empty. All command output ends with newline.\nShared declarations:\n#include <stdio.h>\n#include <string.h>\n\n#define POOL_SIZE 64\n\ntypedef struct Node {\n    int key;\n    int value;\n    int used;\n    struct Node *previous;\n    struct Node *next;\n} Node;\n\ntypedef struct {\n    Node *head;\n    Node *tail;\n    int count;\n    int capacity;\n} Cache;\n\nstatic Node pool[POOL_SIZE];\nstatic Cache cache;\nRelated function interfaces (do not implement these):\nstatic void evict_tail(void);\nstatic void process_command(void);\nAssigned function cache_resize:\n```c\nstatic void cache_resize(int capacity)\n{\n    cache.capacity = capacity;\n    if (cache.count > cache.capacity) {\n        evict_tail();\n    }\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"2 9\\nPUT 1 10\\nPUT 2 20\\nGET 1\\nPUT 3 30\\nKEYS\\nGET 2\\nPUT 1 99\\nGET 1\\nKEYS\\n\", \"expected\": \"OK\\nOK\\n10\\nOK\\n2 3 1\\nMISS\\nOK\\n99\\n2 1 3\", \"actual\": \"OK\\nOK\\n10\\nOK\\n1 3\\nMISS\\nOK\\n99\\n2 1 3\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void cache_resize(int capacity)\n{\n    if (capacity < 1 || capacity > 20) {\n        return;\n    }\n    cache.capacity = capacity;\n    while (cache.count > cache.capacity) {\n        evict_tail();\n    }\n}\n```",
+        "usage": {
+          "prompt_tokens": 607,
+          "completion_tokens": 56,
+          "total_tokens": 663
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 19.971
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\n10\nOK\n1 3\nMISS\nOK\n99\n2 1 3\n",
+            "stderr": "",
+            "input": "2 9\nPUT 1 10\nPUT 2 20\nGET 1\nPUT 3 30\nKEYS\nGET 2\nPUT 1 99\nGET 1\nKEYS\n",
+            "expected": "OK\nOK\n10\nOK\n2 3 1\nMISS\nOK\n99\n2 1 3",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\nOK\n0\n0\nMISS\n0\n0\nOK\n0\n",
+            "stderr": "",
+            "input": "4 12\nPUT 1 1\nPUT 2 2\nPUT 3 3\nPUT 4 4\nRESIZE 1\nKEYS\nSIZE\nDEL 4\nSIZE\nKEYS\nCLEAR\nKEYS\n",
+            "expected": "OK\nOK\nOK\nOK\nOK\n1 4\n1\nOK\n0\n0\nOK\n0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n1 3 1\n1\n1 1 3\nOK\nOK\n3 5 4 1 3\n",
+            "stderr": "",
+            "input": "3 10\nPUT 1 1\nPUT 2 2\nPUT 3 3\nDEL 2\nKEYS\nGET 1\nKEYS\nPUT 4 4\nPUT 5 5\nKEYS\n",
+            "expected": "OK\nOK\nOK\nOK\n2 3 1\n1\n2 1 3\nOK\nOK\n3 5 4 1",
+            "passed": false
+          },
+          {
+            "returncode": 139,
+            "stdout": "",
+            "stderr": "",
+            "input": "1 11\nGET 9\nDEL 9\nPUT 4 8\nPUT 4 3\nGET 4\nPUT 5 -9\nGET 4\nGET 5\nSIZE\nCLEAR\nSIZE\n",
+            "expected": "MISS\nMISS\nOK\nOK\n3\nOK\nMISS\n-9\n1\nOK\n0",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <string.h>\n\n#define POOL_SIZE 64\n\ntypedef struct Node {\n    int key;\n    int value;\n    int used;\n    struct Node *previous;\n    struct Node *next;\n} Node;\n\ntypedef struct {\n    Node *head;\n    Node *tail;\n    int count;\n    int capacity;\n} Cache;\n\nstatic Node pool[POOL_SIZE];\nstatic Cache cache;\n\nstatic Node *find_node(int key)\n{\n    Node *node = cache.head;\n    while (node != NULL) {\n        if (node->key == key) {\n            return node;\n        }\n        node = node->next;\n    }\n    return NULL;\n}\n\nstatic Node *allocate_node(int key, int value)\n{\n    int i;\n    for (i = 0; i < POOL_SIZE; ++i) {\n        if (!pool[i].used) {\n            pool[i].used = 1;\n            pool[i].key = key;\n            pool[i].value = value;\n            pool[i].previous = NULL;\n            pool[i].next = NULL;\n            return &pool[i];\n        }\n    }\n    return NULL;\n}\n\nstatic void unlink_node(Node *node)\n{\n    if (node->previous != NULL) {\n        node->previous->next = node->next;\n    } else {\n        cache.head = node->next;\n    }\n    if (node->next != NULL) {\n        node->next->previous = node->previous;\n    } else {\n        cache.tail = node->previous;\n    }\n    node->previous = NULL;\n    node->next = NULL;\n}\n\nstatic void link_front(Node *node)\n{\n    node->previous = NULL;\n    node->next = cache.head;\n    if (cache.head != NULL) {\n        cache.head->previous = node;\n    } else {\n        cache.tail = node;\n    }\n    cache.head = node;\n}\n\nstatic void move_to_front(Node *node)\n{\n    if (node == cache.head) {\n        return;\n    }\n    unlink_node(node);\n    link_front(node);\n}\n\nstatic void release_node(Node *node)\n{\n    unlink_node(node);\n    node->used = 0;\n    cache.count--;\n}\n\nstatic void evict_tail(void)\n{\n    if (cache.tail != NULL) {\n        release_node(cache.tail);\n        cache.tail = cache.tail->previous;\n        if (cache.tail != NULL) {\n            cache.tail->next = NULL;\n        } else {\n            cache.head = NULL;\n        }\n        cache.count--;\n    }\n}\n\nstatic int cache_put(int key, int value)\n{\n    Node *node = find_node(key);\n    if (node != NULL) {\n        node->value = value;\n        move_to_front(node);\n        return 1;\n    }\n    if (cache.count == cache.capacity) {\n        evict_tail();\n    }\n    node = allocate_node(key, value);\n    if (node == NULL) {\n        return 0;\n    }\n    link_front(node);\n    ++cache.count;\n    return 1;\n}\n\nstatic void cache_get(int key)\n{\n    Node *node = find_node(key);\n    if (node == NULL) {\n        puts(\"MISS\");\n        return;\n    }\n    printf(\"%d\\n\", node->value);\n    // Move the accessed node to the front to mark it as most recently used\n    if (node != cache.head) {\n        if (node == cache.tail) {\n            cache.tail = node->previous;\n        }\n        node->previous->next = node->next;\n        if (node->next != NULL) {\n            node->next->previous = node->previous;\n        }\n        node->next = cache.head;\n        node->previous = NULL;\n        cache.head->previous = node;\n        cache.head = node;\n    }\n}\n\nstatic void cache_delete(int key)\n{\n    Node *node = find_node(key);\n    if (node == NULL) {\n        puts(\"MISS\");\n    } else {\n        if (node->previous != NULL) {\n            node->previous->next = node->next;\n        } else {\n            cache.head = node->next;\n        }\n        if (node->next != NULL) {\n            node->next->previous = node->previous;\n        } else {\n            cache.tail = node->previous;\n        }\n        cache.count--;\n        release_node(node);\n        puts(\"OK\");\n    }\n}\n\nstatic void cache_resize(int capacity)\n{\n    if (capacity < 1 || capacity > 20) {\n        return;\n    }\n    cache.capacity = capacity;\n    while (cache.count > cache.capacity) {\n        evict_tail();\n    }\n}\n\nstatic void cache_clear(void)\n{\n    while (cache.tail != NULL) {\n        release_node(cache.tail);\n    }\n}\n\nstatic void cache_keys(void)\n{\n    Node *node = cache.head;\n    printf(\"%d\", cache.count);\n    while (node != NULL) {\n        printf(\" %d\", node->key);\n        node = node->next;\n    }\n    putchar('\\n');\n}\n\nstatic void process_command(void)\n{\n    char command[16];\n    int key;\n    int value;\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"PUT\") == 0) {\n        scanf(\"%d%d\", &key, &value);\n        puts(cache_put(key, value) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"GET\") == 0) {\n        scanf(\"%d\", &key);\n        cache_get(key);\n    } else if (strcmp(command, \"DEL\") == 0) {\n        scanf(\"%d\", &key);\n        cache_delete(key);\n    } else if (strcmp(command, \"RESIZE\") == 0) {\n        scanf(\"%d\", &value);\n        cache_resize(value);\n        puts(\"OK\");\n    } else if (strcmp(command, \"CLEAR\") == 0) {\n        cache_clear();\n        puts(\"OK\");\n    } else if (strcmp(command, \"SIZE\") == 0) {\n        printf(\"%d\\n\", cache.count);\n    } else if (strcmp(command, \"KEYS\") == 0) {\n        cache_keys();\n    }\n}\n\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d%d\", &cache.capacity, &commands) != 2) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "cache_clear",
+        "retry": 0,
+        "source_sha256": "fed1f510849e63ec56b8a7f2c3c73f161be7c90df0d5e59ee4673eb8010ee98c",
+        "prompt": "Program behavior:\nLRU cache. Input capacity q, capacity=1..20 and q<=200, then q commands. Keys and values are signed integers of magnitude <=1000000. PUT key value inserts or replaces; an existing key's value is replaced and it becomes most recently used. A new key at full capacity evicts the least recently used key. PUT prints OK. GET key prints its value and makes it most recently used, or MISS and leaves the cache unchanged. DEL key prints OK and removes it, or MISS if absent. RESIZE capacity (1..20) changes capacity, repeatedly evicting least-recently-used entries if needed, and prints OK. CLEAR empties the cache and prints OK. SIZE prints the number of entries. KEYS prints count followed by keys in MOST-to-LEAST-recent order on one line, single spaces, with just 0 when empty. All command output ends with newline.\nShared declarations:\n#include <stdio.h>\n#include <string.h>\n\n#define POOL_SIZE 64\n\ntypedef struct Node {\n    int key;\n    int value;\n    int used;\n    struct Node *previous;\n    struct Node *next;\n} Node;\n\ntypedef struct {\n    Node *head;\n    Node *tail;\n    int count;\n    int capacity;\n} Cache;\n\nstatic Node pool[POOL_SIZE];\nstatic Cache cache;\nRelated function interfaces (do not implement these):\nstatic void process_command(void);\nstatic void release_node(Node *node);\nAssigned function cache_clear:\n```c\nstatic void cache_clear(void)\n{\n    while (cache.tail != NULL) {\n        release_node(cache.tail);\n    }\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"2 9\\nPUT 1 10\\nPUT 2 20\\nGET 1\\nPUT 3 30\\nKEYS\\nGET 2\\nPUT 1 99\\nGET 1\\nKEYS\\n\", \"expected\": \"OK\\nOK\\n10\\nOK\\n2 3 1\\nMISS\\nOK\\n99\\n2 1 3\", \"actual\": \"OK\\nOK\\n10\\nOK\\n1 3\\nMISS\\nOK\\n99\\n2 1 3\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void cache_clear(void)\n{\n    while (cache.tail != NULL) {\n        Node *node = cache.tail;\n        cache.tail = cache.tail->previous;\n        if (cache.tail != NULL) {\n            cache.tail->next = NULL;\n        } else {\n            cache.head = NULL;\n        }\n        cache.count--;\n        release_node(node);\n    }\n}\n```",
+        "usage": {
+          "prompt_tokens": 601,
+          "completion_tokens": 78,
+          "total_tokens": 679
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 22.635
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\n10\nOK\n1 3\nMISS\nOK\n99\n2 1 3\n",
+            "stderr": "",
+            "input": "2 9\nPUT 1 10\nPUT 2 20\nGET 1\nPUT 3 30\nKEYS\nGET 2\nPUT 1 99\nGET 1\nKEYS\n",
+            "expected": "OK\nOK\n10\nOK\n2 3 1\nMISS\nOK\n99\n2 1 3",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\nOK\n0\n0\nMISS\n0\n0\nOK\n0\n",
+            "stderr": "",
+            "input": "4 12\nPUT 1 1\nPUT 2 2\nPUT 3 3\nPUT 4 4\nRESIZE 1\nKEYS\nSIZE\nDEL 4\nSIZE\nKEYS\nCLEAR\nKEYS\n",
+            "expected": "OK\nOK\nOK\nOK\nOK\n1 4\n1\nOK\n0\n0\nOK\n0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n1 3 1\n1\n1 1 3\nOK\nOK\n3 5 4 1 3\n",
+            "stderr": "",
+            "input": "3 10\nPUT 1 1\nPUT 2 2\nPUT 3 3\nDEL 2\nKEYS\nGET 1\nKEYS\nPUT 4 4\nPUT 5 5\nKEYS\n",
+            "expected": "OK\nOK\nOK\nOK\n2 3 1\n1\n2 1 3\nOK\nOK\n3 5 4 1",
+            "passed": false
+          },
+          {
+            "returncode": 139,
+            "stdout": "",
+            "stderr": "",
+            "input": "1 11\nGET 9\nDEL 9\nPUT 4 8\nPUT 4 3\nGET 4\nPUT 5 -9\nGET 4\nGET 5\nSIZE\nCLEAR\nSIZE\n",
+            "expected": "MISS\nMISS\nOK\nOK\n3\nOK\nMISS\n-9\n1\nOK\n0",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <string.h>\n\n#define POOL_SIZE 64\n\ntypedef struct Node {\n    int key;\n    int value;\n    int used;\n    struct Node *previous;\n    struct Node *next;\n} Node;\n\ntypedef struct {\n    Node *head;\n    Node *tail;\n    int count;\n    int capacity;\n} Cache;\n\nstatic Node pool[POOL_SIZE];\nstatic Cache cache;\n\nstatic Node *find_node(int key)\n{\n    Node *node = cache.head;\n    while (node != NULL) {\n        if (node->key == key) {\n            return node;\n        }\n        node = node->next;\n    }\n    return NULL;\n}\n\nstatic Node *allocate_node(int key, int value)\n{\n    int i;\n    for (i = 0; i < POOL_SIZE; ++i) {\n        if (!pool[i].used) {\n            pool[i].used = 1;\n            pool[i].key = key;\n            pool[i].value = value;\n            pool[i].previous = NULL;\n            pool[i].next = NULL;\n            return &pool[i];\n        }\n    }\n    return NULL;\n}\n\nstatic void unlink_node(Node *node)\n{\n    if (node->previous != NULL) {\n        node->previous->next = node->next;\n    } else {\n        cache.head = node->next;\n    }\n    if (node->next != NULL) {\n        node->next->previous = node->previous;\n    } else {\n        cache.tail = node->previous;\n    }\n    node->previous = NULL;\n    node->next = NULL;\n}\n\nstatic void link_front(Node *node)\n{\n    node->previous = NULL;\n    node->next = cache.head;\n    if (cache.head != NULL) {\n        cache.head->previous = node;\n    } else {\n        cache.tail = node;\n    }\n    cache.head = node;\n}\n\nstatic void move_to_front(Node *node)\n{\n    if (node == cache.head) {\n        return;\n    }\n    unlink_node(node);\n    link_front(node);\n}\n\nstatic void release_node(Node *node)\n{\n    unlink_node(node);\n    node->used = 0;\n    cache.count--;\n}\n\nstatic void evict_tail(void)\n{\n    if (cache.tail != NULL) {\n        release_node(cache.tail);\n        cache.tail = cache.tail->previous;\n        if (cache.tail != NULL) {\n            cache.tail->next = NULL;\n        } else {\n            cache.head = NULL;\n        }\n        cache.count--;\n    }\n}\n\nstatic int cache_put(int key, int value)\n{\n    Node *node = find_node(key);\n    if (node != NULL) {\n        node->value = value;\n        move_to_front(node);\n        return 1;\n    }\n    if (cache.count == cache.capacity) {\n        evict_tail();\n    }\n    node = allocate_node(key, value);\n    if (node == NULL) {\n        return 0;\n    }\n    link_front(node);\n    ++cache.count;\n    return 1;\n}\n\nstatic void cache_get(int key)\n{\n    Node *node = find_node(key);\n    if (node == NULL) {\n        puts(\"MISS\");\n        return;\n    }\n    printf(\"%d\\n\", node->value);\n    // Move the accessed node to the front to mark it as most recently used\n    if (node != cache.head) {\n        if (node == cache.tail) {\n            cache.tail = node->previous;\n        }\n        node->previous->next = node->next;\n        if (node->next != NULL) {\n            node->next->previous = node->previous;\n        }\n        node->next = cache.head;\n        node->previous = NULL;\n        cache.head->previous = node;\n        cache.head = node;\n    }\n}\n\nstatic void cache_delete(int key)\n{\n    Node *node = find_node(key);\n    if (node == NULL) {\n        puts(\"MISS\");\n    } else {\n        if (node->previous != NULL) {\n            node->previous->next = node->next;\n        } else {\n            cache.head = node->next;\n        }\n        if (node->next != NULL) {\n            node->next->previous = node->previous;\n        } else {\n            cache.tail = node->previous;\n        }\n        cache.count--;\n        release_node(node);\n        puts(\"OK\");\n    }\n}\n\nstatic void cache_resize(int capacity)\n{\n    if (capacity < 1 || capacity > 20) {\n        return;\n    }\n    cache.capacity = capacity;\n    while (cache.count > cache.capacity) {\n        evict_tail();\n    }\n}\n\nstatic void cache_clear(void)\n{\n    while (cache.tail != NULL) {\n        Node *node = cache.tail;\n        cache.tail = cache.tail->previous;\n        if (cache.tail != NULL) {\n            cache.tail->next = NULL;\n        } else {\n            cache.head = NULL;\n        }\n        cache.count--;\n        release_node(node);\n    }\n}\n\nstatic void cache_keys(void)\n{\n    Node *node = cache.head;\n    printf(\"%d\", cache.count);\n    while (node != NULL) {\n        printf(\" %d\", node->key);\n        node = node->next;\n    }\n    putchar('\\n');\n}\n\nstatic void process_command(void)\n{\n    char command[16];\n    int key;\n    int value;\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"PUT\") == 0) {\n        scanf(\"%d%d\", &key, &value);\n        puts(cache_put(key, value) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"GET\") == 0) {\n        scanf(\"%d\", &key);\n        cache_get(key);\n    } else if (strcmp(command, \"DEL\") == 0) {\n        scanf(\"%d\", &key);\n        cache_delete(key);\n    } else if (strcmp(command, \"RESIZE\") == 0) {\n        scanf(\"%d\", &value);\n        cache_resize(value);\n        puts(\"OK\");\n    } else if (strcmp(command, \"CLEAR\") == 0) {\n        cache_clear();\n        puts(\"OK\");\n    } else if (strcmp(command, \"SIZE\") == 0) {\n        printf(\"%d\\n\", cache.count);\n    } else if (strcmp(command, \"KEYS\") == 0) {\n        cache_keys();\n    }\n}\n\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d%d\", &cache.capacity, &commands) != 2) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "cache_keys",
+        "retry": 0,
+        "source_sha256": "02d1b4cb47e6814d038c06f2154afc415d2806e090f74e0fa855ef6958c6b668",
+        "prompt": "Program behavior:\nLRU cache. Input capacity q, capacity=1..20 and q<=200, then q commands. Keys and values are signed integers of magnitude <=1000000. PUT key value inserts or replaces; an existing key's value is replaced and it becomes most recently used. A new key at full capacity evicts the least recently used key. PUT prints OK. GET key prints its value and makes it most recently used, or MISS and leaves the cache unchanged. DEL key prints OK and removes it, or MISS if absent. RESIZE capacity (1..20) changes capacity, repeatedly evicting least-recently-used entries if needed, and prints OK. CLEAR empties the cache and prints OK. SIZE prints the number of entries. KEYS prints count followed by keys in MOST-to-LEAST-recent order on one line, single spaces, with just 0 when empty. All command output ends with newline.\nShared declarations:\n#include <stdio.h>\n#include <string.h>\n\n#define POOL_SIZE 64\n\ntypedef struct Node {\n    int key;\n    int value;\n    int used;\n    struct Node *previous;\n    struct Node *next;\n} Node;\n\ntypedef struct {\n    Node *head;\n    Node *tail;\n    int count;\n    int capacity;\n} Cache;\n\nstatic Node pool[POOL_SIZE];\nstatic Cache cache;\nRelated function interfaces (do not implement these):\nstatic void process_command(void);\nAssigned function cache_keys:\n```c\nstatic void cache_keys(void)\n{\n    Node *node = cache.head;\n    printf(\"%d\", cache.count);\n    while (node != NULL) {\n        printf(\" %d\", node->key);\n        node = node->next;\n    }\n    putchar('\\n');\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"2 9\\nPUT 1 10\\nPUT 2 20\\nGET 1\\nPUT 3 30\\nKEYS\\nGET 2\\nPUT 1 99\\nGET 1\\nKEYS\\n\", \"expected\": \"OK\\nOK\\n10\\nOK\\n2 3 1\\nMISS\\nOK\\n99\\n2 1 3\", \"actual\": \"OK\\nOK\\n10\\nOK\\n1 3\\nMISS\\nOK\\n99\\n2 1 3\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void cache_keys(void)\n{\n    Node *node = cache.head;\n    printf(\"%d\", cache.count);\n    while (node != NULL) {\n        printf(\" %d\", node->key);\n        node = node->next;\n    }\n    putchar('\\n');\n}\n```",
+        "usage": {
+          "prompt_tokens": 624,
+          "completion_tokens": 60,
+          "total_tokens": 684
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 18.462
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\n10\nOK\n1 3\nMISS\nOK\n99\n2 1 3\n",
+            "stderr": "",
+            "input": "2 9\nPUT 1 10\nPUT 2 20\nGET 1\nPUT 3 30\nKEYS\nGET 2\nPUT 1 99\nGET 1\nKEYS\n",
+            "expected": "OK\nOK\n10\nOK\n2 3 1\nMISS\nOK\n99\n2 1 3",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\nOK\n0\n0\nMISS\n0\n0\nOK\n0\n",
+            "stderr": "",
+            "input": "4 12\nPUT 1 1\nPUT 2 2\nPUT 3 3\nPUT 4 4\nRESIZE 1\nKEYS\nSIZE\nDEL 4\nSIZE\nKEYS\nCLEAR\nKEYS\n",
+            "expected": "OK\nOK\nOK\nOK\nOK\n1 4\n1\nOK\n0\n0\nOK\n0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n1 3 1\n1\n1 1 3\nOK\nOK\n3 5 4 1 3\n",
+            "stderr": "",
+            "input": "3 10\nPUT 1 1\nPUT 2 2\nPUT 3 3\nDEL 2\nKEYS\nGET 1\nKEYS\nPUT 4 4\nPUT 5 5\nKEYS\n",
+            "expected": "OK\nOK\nOK\nOK\n2 3 1\n1\n2 1 3\nOK\nOK\n3 5 4 1",
+            "passed": false
+          },
+          {
+            "returncode": 139,
+            "stdout": "",
+            "stderr": "",
+            "input": "1 11\nGET 9\nDEL 9\nPUT 4 8\nPUT 4 3\nGET 4\nPUT 5 -9\nGET 4\nGET 5\nSIZE\nCLEAR\nSIZE\n",
+            "expected": "MISS\nMISS\nOK\nOK\n3\nOK\nMISS\n-9\n1\nOK\n0",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <string.h>\n\n#define POOL_SIZE 64\n\ntypedef struct Node {\n    int key;\n    int value;\n    int used;\n    struct Node *previous;\n    struct Node *next;\n} Node;\n\ntypedef struct {\n    Node *head;\n    Node *tail;\n    int count;\n    int capacity;\n} Cache;\n\nstatic Node pool[POOL_SIZE];\nstatic Cache cache;\n\nstatic Node *find_node(int key)\n{\n    Node *node = cache.head;\n    while (node != NULL) {\n        if (node->key == key) {\n            return node;\n        }\n        node = node->next;\n    }\n    return NULL;\n}\n\nstatic Node *allocate_node(int key, int value)\n{\n    int i;\n    for (i = 0; i < POOL_SIZE; ++i) {\n        if (!pool[i].used) {\n            pool[i].used = 1;\n            pool[i].key = key;\n            pool[i].value = value;\n            pool[i].previous = NULL;\n            pool[i].next = NULL;\n            return &pool[i];\n        }\n    }\n    return NULL;\n}\n\nstatic void unlink_node(Node *node)\n{\n    if (node->previous != NULL) {\n        node->previous->next = node->next;\n    } else {\n        cache.head = node->next;\n    }\n    if (node->next != NULL) {\n        node->next->previous = node->previous;\n    } else {\n        cache.tail = node->previous;\n    }\n    node->previous = NULL;\n    node->next = NULL;\n}\n\nstatic void link_front(Node *node)\n{\n    node->previous = NULL;\n    node->next = cache.head;\n    if (cache.head != NULL) {\n        cache.head->previous = node;\n    } else {\n        cache.tail = node;\n    }\n    cache.head = node;\n}\n\nstatic void move_to_front(Node *node)\n{\n    if (node == cache.head) {\n        return;\n    }\n    unlink_node(node);\n    link_front(node);\n}\n\nstatic void release_node(Node *node)\n{\n    unlink_node(node);\n    node->used = 0;\n    cache.count--;\n}\n\nstatic void evict_tail(void)\n{\n    if (cache.tail != NULL) {\n        release_node(cache.tail);\n        cache.tail = cache.tail->previous;\n        if (cache.tail != NULL) {\n            cache.tail->next = NULL;\n        } else {\n            cache.head = NULL;\n        }\n        cache.count--;\n    }\n}\n\nstatic int cache_put(int key, int value)\n{\n    Node *node = find_node(key);\n    if (node != NULL) {\n        node->value = value;\n        move_to_front(node);\n        return 1;\n    }\n    if (cache.count == cache.capacity) {\n        evict_tail();\n    }\n    node = allocate_node(key, value);\n    if (node == NULL) {\n        return 0;\n    }\n    link_front(node);\n    ++cache.count;\n    return 1;\n}\n\nstatic void cache_get(int key)\n{\n    Node *node = find_node(key);\n    if (node == NULL) {\n        puts(\"MISS\");\n        return;\n    }\n    printf(\"%d\\n\", node->value);\n    // Move the accessed node to the front to mark it as most recently used\n    if (node != cache.head) {\n        if (node == cache.tail) {\n            cache.tail = node->previous;\n        }\n        node->previous->next = node->next;\n        if (node->next != NULL) {\n            node->next->previous = node->previous;\n        }\n        node->next = cache.head;\n        node->previous = NULL;\n        cache.head->previous = node;\n        cache.head = node;\n    }\n}\n\nstatic void cache_delete(int key)\n{\n    Node *node = find_node(key);\n    if (node == NULL) {\n        puts(\"MISS\");\n    } else {\n        if (node->previous != NULL) {\n            node->previous->next = node->next;\n        } else {\n            cache.head = node->next;\n        }\n        if (node->next != NULL) {\n            node->next->previous = node->previous;\n        } else {\n            cache.tail = node->previous;\n        }\n        cache.count--;\n        release_node(node);\n        puts(\"OK\");\n    }\n}\n\nstatic void cache_resize(int capacity)\n{\n    if (capacity < 1 || capacity > 20) {\n        return;\n    }\n    cache.capacity = capacity;\n    while (cache.count > cache.capacity) {\n        evict_tail();\n    }\n}\n\nstatic void cache_clear(void)\n{\n    while (cache.tail != NULL) {\n        Node *node = cache.tail;\n        cache.tail = cache.tail->previous;\n        if (cache.tail != NULL) {\n            cache.tail->next = NULL;\n        } else {\n            cache.head = NULL;\n        }\n        cache.count--;\n        release_node(node);\n    }\n}\n\nstatic void cache_keys(void)\n{\n    Node *node = cache.head;\n    printf(\"%d\", cache.count);\n    while (node != NULL) {\n        printf(\" %d\", node->key);\n        node = node->next;\n    }\n    putchar('\\n');\n}\n\nstatic void process_command(void)\n{\n    char command[16];\n    int key;\n    int value;\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"PUT\") == 0) {\n        scanf(\"%d%d\", &key, &value);\n        puts(cache_put(key, value) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"GET\") == 0) {\n        scanf(\"%d\", &key);\n        cache_get(key);\n    } else if (strcmp(command, \"DEL\") == 0) {\n        scanf(\"%d\", &key);\n        cache_delete(key);\n    } else if (strcmp(command, \"RESIZE\") == 0) {\n        scanf(\"%d\", &value);\n        cache_resize(value);\n        puts(\"OK\");\n    } else if (strcmp(command, \"CLEAR\") == 0) {\n        cache_clear();\n        puts(\"OK\");\n    } else if (strcmp(command, \"SIZE\") == 0) {\n        printf(\"%d\\n\", cache.count);\n    } else if (strcmp(command, \"KEYS\") == 0) {\n        cache_keys();\n    }\n}\n\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d%d\", &cache.capacity, &commands) != 2) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n",
+      "reason": "unchanged"
+    },
+    {
+      "request": {
+        "name": "process_command",
+        "retry": 0,
+        "source_sha256": "02d1b4cb47e6814d038c06f2154afc415d2806e090f74e0fa855ef6958c6b668",
+        "prompt": "Program behavior:\nLRU cache. Input capacity q, capacity=1..20 and q<=200, then q commands. Keys and values are signed integers of magnitude <=1000000. PUT key value inserts or replaces; an existing key's value is replaced and it becomes most recently used. A new key at full capacity evicts the least recently used key. PUT prints OK. GET key prints its value and makes it most recently used, or MISS and leaves the cache unchanged. DEL key prints OK and removes it, or MISS if absent. RESIZE capacity (1..20) changes capacity, repeatedly evicting least-recently-used entries if needed, and prints OK. CLEAR empties the cache and prints OK. SIZE prints the number of entries. KEYS prints count followed by keys in MOST-to-LEAST-recent order on one line, single spaces, with just 0 when empty. All command output ends with newline.\nShared declarations:\n#include <stdio.h>\n#include <string.h>\n\n#define POOL_SIZE 64\n\ntypedef struct Node {\n    int key;\n    int value;\n    int used;\n    struct Node *previous;\n    struct Node *next;\n} Node;\n\ntypedef struct {\n    Node *head;\n    Node *tail;\n    int count;\n    int capacity;\n} Cache;\n\nstatic Node pool[POOL_SIZE];\nstatic Cache cache;\nRelated function interfaces (do not implement these):\nstatic void cache_clear(void);\nstatic void cache_delete(int key);\nstatic void cache_get(int key);\nstatic void cache_keys(void);\nstatic int cache_put(int key, int value);\nstatic void cache_resize(int capacity);\nint main(void);\nAssigned function process_command:\n```c\nstatic void process_command(void)\n{\n    char command[16];\n    int key;\n    int value;\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"PUT\") == 0) {\n        scanf(\"%d%d\", &key, &value);\n        puts(cache_put(key, value) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"GET\") == 0) {\n        scanf(\"%d\", &key);\n        cache_get(key);\n    } else if (strcmp(command, \"DEL\") == 0) {\n        scanf(\"%d\", &key);\n        cache_delete(key);\n    } else if (strcmp(command, \"RESIZE\") == 0) {\n        scanf(\"%d\", &value);\n        cache_resize(value);\n        puts(\"OK\");\n    } else if (strcmp(command, \"CLEAR\") == 0) {\n        cache_clear();\n        puts(\"OK\");\n    } else if (strcmp(command, \"SIZE\") == 0) {\n        printf(\"%d\\n\", cache.count);\n    } else if (strcmp(command, \"KEYS\") == 0) {\n        cache_keys();\n    }\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"2 9\\nPUT 1 10\\nPUT 2 20\\nGET 1\\nPUT 3 30\\nKEYS\\nGET 2\\nPUT 1 99\\nGET 1\\nKEYS\\n\", \"expected\": \"OK\\nOK\\n10\\nOK\\n2 3 1\\nMISS\\nOK\\n99\\n2 1 3\", \"actual\": \"OK\\nOK\\n10\\nOK\\n1 3\\nMISS\\nOK\\n99\\n2 1 3\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void process_command(void)\n{\n    char command[16];\n    int key;\n    int value;\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"PUT\") == 0) {\n        scanf(\"%d%d\", &key, &value);\n        puts(cache_put(key, value) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"GET\") == 0) {\n        scanf(\"%d\", &key);\n        cache_get(key);\n    } else if (strcmp(command, \"DEL\") == 0) {\n        scanf(\"%d\", &key);\n        cache_delete(key);\n    } else if (strcmp(command, \"RESIZE\") == 0) {\n        scanf(\"%d\", &value);\n        cache_resize(value);\n        puts(\"OK\");\n    } else if (strcmp(command, \"CLEAR\") == 0) {\n        cache_clear();\n        puts(\"OK\");\n    } else if (strcmp(command, \"SIZE\") == 0) {\n        printf(\"%d\\n\", cache.count);\n    } else if (strcmp(command, \"KEYS\") == 0) {\n        cache_keys();\n    }\n}\n```",
+        "usage": {
+          "prompt_tokens": 849,
+          "completion_tokens": 244,
+          "total_tokens": 1093
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 576,
+        "seconds": 50.46
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\n10\nOK\n1 3\nMISS\nOK\n99\n2 1 3\n",
+            "stderr": "",
+            "input": "2 9\nPUT 1 10\nPUT 2 20\nGET 1\nPUT 3 30\nKEYS\nGET 2\nPUT 1 99\nGET 1\nKEYS\n",
+            "expected": "OK\nOK\n10\nOK\n2 3 1\nMISS\nOK\n99\n2 1 3",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\nOK\n0\n0\nMISS\n0\n0\nOK\n0\n",
+            "stderr": "",
+            "input": "4 12\nPUT 1 1\nPUT 2 2\nPUT 3 3\nPUT 4 4\nRESIZE 1\nKEYS\nSIZE\nDEL 4\nSIZE\nKEYS\nCLEAR\nKEYS\n",
+            "expected": "OK\nOK\nOK\nOK\nOK\n1 4\n1\nOK\n0\n0\nOK\n0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n1 3 1\n1\n1 1 3\nOK\nOK\n3 5 4 1 3\n",
+            "stderr": "",
+            "input": "3 10\nPUT 1 1\nPUT 2 2\nPUT 3 3\nDEL 2\nKEYS\nGET 1\nKEYS\nPUT 4 4\nPUT 5 5\nKEYS\n",
+            "expected": "OK\nOK\nOK\nOK\n2 3 1\n1\n2 1 3\nOK\nOK\n3 5 4 1",
+            "passed": false
+          },
+          {
+            "returncode": 139,
+            "stdout": "",
+            "stderr": "",
+            "input": "1 11\nGET 9\nDEL 9\nPUT 4 8\nPUT 4 3\nGET 4\nPUT 5 -9\nGET 4\nGET 5\nSIZE\nCLEAR\nSIZE\n",
+            "expected": "MISS\nMISS\nOK\nOK\n3\nOK\nMISS\n-9\n1\nOK\n0",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <string.h>\n\n#define POOL_SIZE 64\n\ntypedef struct Node {\n    int key;\n    int value;\n    int used;\n    struct Node *previous;\n    struct Node *next;\n} Node;\n\ntypedef struct {\n    Node *head;\n    Node *tail;\n    int count;\n    int capacity;\n} Cache;\n\nstatic Node pool[POOL_SIZE];\nstatic Cache cache;\n\nstatic Node *find_node(int key)\n{\n    Node *node = cache.head;\n    while (node != NULL) {\n        if (node->key == key) {\n            return node;\n        }\n        node = node->next;\n    }\n    return NULL;\n}\n\nstatic Node *allocate_node(int key, int value)\n{\n    int i;\n    for (i = 0; i < POOL_SIZE; ++i) {\n        if (!pool[i].used) {\n            pool[i].used = 1;\n            pool[i].key = key;\n            pool[i].value = value;\n            pool[i].previous = NULL;\n            pool[i].next = NULL;\n            return &pool[i];\n        }\n    }\n    return NULL;\n}\n\nstatic void unlink_node(Node *node)\n{\n    if (node->previous != NULL) {\n        node->previous->next = node->next;\n    } else {\n        cache.head = node->next;\n    }\n    if (node->next != NULL) {\n        node->next->previous = node->previous;\n    } else {\n        cache.tail = node->previous;\n    }\n    node->previous = NULL;\n    node->next = NULL;\n}\n\nstatic void link_front(Node *node)\n{\n    node->previous = NULL;\n    node->next = cache.head;\n    if (cache.head != NULL) {\n        cache.head->previous = node;\n    } else {\n        cache.tail = node;\n    }\n    cache.head = node;\n}\n\nstatic void move_to_front(Node *node)\n{\n    if (node == cache.head) {\n        return;\n    }\n    unlink_node(node);\n    link_front(node);\n}\n\nstatic void release_node(Node *node)\n{\n    unlink_node(node);\n    node->used = 0;\n    cache.count--;\n}\n\nstatic void evict_tail(void)\n{\n    if (cache.tail != NULL) {\n        release_node(cache.tail);\n        cache.tail = cache.tail->previous;\n        if (cache.tail != NULL) {\n            cache.tail->next = NULL;\n        } else {\n            cache.head = NULL;\n        }\n        cache.count--;\n    }\n}\n\nstatic int cache_put(int key, int value)\n{\n    Node *node = find_node(key);\n    if (node != NULL) {\n        node->value = value;\n        move_to_front(node);\n        return 1;\n    }\n    if (cache.count == cache.capacity) {\n        evict_tail();\n    }\n    node = allocate_node(key, value);\n    if (node == NULL) {\n        return 0;\n    }\n    link_front(node);\n    ++cache.count;\n    return 1;\n}\n\nstatic void cache_get(int key)\n{\n    Node *node = find_node(key);\n    if (node == NULL) {\n        puts(\"MISS\");\n        return;\n    }\n    printf(\"%d\\n\", node->value);\n    // Move the accessed node to the front to mark it as most recently used\n    if (node != cache.head) {\n        if (node == cache.tail) {\n            cache.tail = node->previous;\n        }\n        node->previous->next = node->next;\n        if (node->next != NULL) {\n            node->next->previous = node->previous;\n        }\n        node->next = cache.head;\n        node->previous = NULL;\n        cache.head->previous = node;\n        cache.head = node;\n    }\n}\n\nstatic void cache_delete(int key)\n{\n    Node *node = find_node(key);\n    if (node == NULL) {\n        puts(\"MISS\");\n    } else {\n        if (node->previous != NULL) {\n            node->previous->next = node->next;\n        } else {\n            cache.head = node->next;\n        }\n        if (node->next != NULL) {\n            node->next->previous = node->previous;\n        } else {\n            cache.tail = node->previous;\n        }\n        cache.count--;\n        release_node(node);\n        puts(\"OK\");\n    }\n}\n\nstatic void cache_resize(int capacity)\n{\n    if (capacity < 1 || capacity > 20) {\n        return;\n    }\n    cache.capacity = capacity;\n    while (cache.count > cache.capacity) {\n        evict_tail();\n    }\n}\n\nstatic void cache_clear(void)\n{\n    while (cache.tail != NULL) {\n        Node *node = cache.tail;\n        cache.tail = cache.tail->previous;\n        if (cache.tail != NULL) {\n            cache.tail->next = NULL;\n        } else {\n            cache.head = NULL;\n        }\n        cache.count--;\n        release_node(node);\n    }\n}\n\nstatic void cache_keys(void)\n{\n    Node *node = cache.head;\n    printf(\"%d\", cache.count);\n    while (node != NULL) {\n        printf(\" %d\", node->key);\n        node = node->next;\n    }\n    putchar('\\n');\n}\n\nstatic void process_command(void)\n{\n    char command[16];\n    int key;\n    int value;\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"PUT\") == 0) {\n        scanf(\"%d%d\", &key, &value);\n        puts(cache_put(key, value) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"GET\") == 0) {\n        scanf(\"%d\", &key);\n        cache_get(key);\n    } else if (strcmp(command, \"DEL\") == 0) {\n        scanf(\"%d\", &key);\n        cache_delete(key);\n    } else if (strcmp(command, \"RESIZE\") == 0) {\n        scanf(\"%d\", &value);\n        cache_resize(value);\n        puts(\"OK\");\n    } else if (strcmp(command, \"CLEAR\") == 0) {\n        cache_clear();\n        puts(\"OK\");\n    } else if (strcmp(command, \"SIZE\") == 0) {\n        printf(\"%d\\n\", cache.count);\n    } else if (strcmp(command, \"KEYS\") == 0) {\n        cache_keys();\n    }\n}\n\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d%d\", &cache.capacity, &commands) != 2) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n",
+      "reason": "unchanged"
+    },
+    {
+      "request": {
+        "name": "main",
+        "retry": 0,
+        "source_sha256": "02d1b4cb47e6814d038c06f2154afc415d2806e090f74e0fa855ef6958c6b668",
+        "prompt": "Program behavior:\nLRU cache. Input capacity q, capacity=1..20 and q<=200, then q commands. Keys and values are signed integers of magnitude <=1000000. PUT key value inserts or replaces; an existing key's value is replaced and it becomes most recently used. A new key at full capacity evicts the least recently used key. PUT prints OK. GET key prints its value and makes it most recently used, or MISS and leaves the cache unchanged. DEL key prints OK and removes it, or MISS if absent. RESIZE capacity (1..20) changes capacity, repeatedly evicting least-recently-used entries if needed, and prints OK. CLEAR empties the cache and prints OK. SIZE prints the number of entries. KEYS prints count followed by keys in MOST-to-LEAST-recent order on one line, single spaces, with just 0 when empty. All command output ends with newline.\nShared declarations:\n#include <stdio.h>\n#include <string.h>\n\n#define POOL_SIZE 64\n\ntypedef struct Node {\n    int key;\n    int value;\n    int used;\n    struct Node *previous;\n    struct Node *next;\n} Node;\n\ntypedef struct {\n    Node *head;\n    Node *tail;\n    int count;\n    int capacity;\n} Cache;\n\nstatic Node pool[POOL_SIZE];\nstatic Cache cache;\nRelated function interfaces (do not implement these):\nstatic void process_command(void);\nAssigned function main:\n```c\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d%d\", &cache.capacity, &commands) != 2) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"2 9\\nPUT 1 10\\nPUT 2 20\\nGET 1\\nPUT 3 30\\nKEYS\\nGET 2\\nPUT 1 99\\nGET 1\\nKEYS\\n\", \"expected\": \"OK\\nOK\\n10\\nOK\\n2 3 1\\nMISS\\nOK\\n99\\n2 1 3\", \"actual\": \"OK\\nOK\\n10\\nOK\\n1 3\\nMISS\\nOK\\n99\\n2 1 3\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d%d\", &cache.capacity, &commands) != 2) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n```",
+        "usage": {
+          "prompt_tokens": 635,
+          "completion_tokens": 72,
+          "total_tokens": 707
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 20.269
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\n10\nOK\n1 3\nMISS\nOK\n99\n2 1 3\n",
+            "stderr": "",
+            "input": "2 9\nPUT 1 10\nPUT 2 20\nGET 1\nPUT 3 30\nKEYS\nGET 2\nPUT 1 99\nGET 1\nKEYS\n",
+            "expected": "OK\nOK\n10\nOK\n2 3 1\nMISS\nOK\n99\n2 1 3",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\nOK\n0\n0\nMISS\n0\n0\nOK\n0\n",
+            "stderr": "",
+            "input": "4 12\nPUT 1 1\nPUT 2 2\nPUT 3 3\nPUT 4 4\nRESIZE 1\nKEYS\nSIZE\nDEL 4\nSIZE\nKEYS\nCLEAR\nKEYS\n",
+            "expected": "OK\nOK\nOK\nOK\nOK\n1 4\n1\nOK\n0\n0\nOK\n0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n1 3 1\n1\n1 1 3\nOK\nOK\n3 5 4 1 3\n",
+            "stderr": "",
+            "input": "3 10\nPUT 1 1\nPUT 2 2\nPUT 3 3\nDEL 2\nKEYS\nGET 1\nKEYS\nPUT 4 4\nPUT 5 5\nKEYS\n",
+            "expected": "OK\nOK\nOK\nOK\n2 3 1\n1\n2 1 3\nOK\nOK\n3 5 4 1",
+            "passed": false
+          },
+          {
+            "returncode": 139,
+            "stdout": "",
+            "stderr": "",
+            "input": "1 11\nGET 9\nDEL 9\nPUT 4 8\nPUT 4 3\nGET 4\nPUT 5 -9\nGET 4\nGET 5\nSIZE\nCLEAR\nSIZE\n",
+            "expected": "MISS\nMISS\nOK\nOK\n3\nOK\nMISS\n-9\n1\nOK\n0",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <string.h>\n\n#define POOL_SIZE 64\n\ntypedef struct Node {\n    int key;\n    int value;\n    int used;\n    struct Node *previous;\n    struct Node *next;\n} Node;\n\ntypedef struct {\n    Node *head;\n    Node *tail;\n    int count;\n    int capacity;\n} Cache;\n\nstatic Node pool[POOL_SIZE];\nstatic Cache cache;\n\nstatic Node *find_node(int key)\n{\n    Node *node = cache.head;\n    while (node != NULL) {\n        if (node->key == key) {\n            return node;\n        }\n        node = node->next;\n    }\n    return NULL;\n}\n\nstatic Node *allocate_node(int key, int value)\n{\n    int i;\n    for (i = 0; i < POOL_SIZE; ++i) {\n        if (!pool[i].used) {\n            pool[i].used = 1;\n            pool[i].key = key;\n            pool[i].value = value;\n            pool[i].previous = NULL;\n            pool[i].next = NULL;\n            return &pool[i];\n        }\n    }\n    return NULL;\n}\n\nstatic void unlink_node(Node *node)\n{\n    if (node->previous != NULL) {\n        node->previous->next = node->next;\n    } else {\n        cache.head = node->next;\n    }\n    if (node->next != NULL) {\n        node->next->previous = node->previous;\n    } else {\n        cache.tail = node->previous;\n    }\n    node->previous = NULL;\n    node->next = NULL;\n}\n\nstatic void link_front(Node *node)\n{\n    node->previous = NULL;\n    node->next = cache.head;\n    if (cache.head != NULL) {\n        cache.head->previous = node;\n    } else {\n        cache.tail = node;\n    }\n    cache.head = node;\n}\n\nstatic void move_to_front(Node *node)\n{\n    if (node == cache.head) {\n        return;\n    }\n    unlink_node(node);\n    link_front(node);\n}\n\nstatic void release_node(Node *node)\n{\n    unlink_node(node);\n    node->used = 0;\n    cache.count--;\n}\n\nstatic void evict_tail(void)\n{\n    if (cache.tail != NULL) {\n        release_node(cache.tail);\n        cache.tail = cache.tail->previous;\n        if (cache.tail != NULL) {\n            cache.tail->next = NULL;\n        } else {\n            cache.head = NULL;\n        }\n        cache.count--;\n    }\n}\n\nstatic int cache_put(int key, int value)\n{\n    Node *node = find_node(key);\n    if (node != NULL) {\n        node->value = value;\n        move_to_front(node);\n        return 1;\n    }\n    if (cache.count == cache.capacity) {\n        evict_tail();\n    }\n    node = allocate_node(key, value);\n    if (node == NULL) {\n        return 0;\n    }\n    link_front(node);\n    ++cache.count;\n    return 1;\n}\n\nstatic void cache_get(int key)\n{\n    Node *node = find_node(key);\n    if (node == NULL) {\n        puts(\"MISS\");\n        return;\n    }\n    printf(\"%d\\n\", node->value);\n    // Move the accessed node to the front to mark it as most recently used\n    if (node != cache.head) {\n        if (node == cache.tail) {\n            cache.tail = node->previous;\n        }\n        node->previous->next = node->next;\n        if (node->next != NULL) {\n            node->next->previous = node->previous;\n        }\n        node->next = cache.head;\n        node->previous = NULL;\n        cache.head->previous = node;\n        cache.head = node;\n    }\n}\n\nstatic void cache_delete(int key)\n{\n    Node *node = find_node(key);\n    if (node == NULL) {\n        puts(\"MISS\");\n    } else {\n        if (node->previous != NULL) {\n            node->previous->next = node->next;\n        } else {\n            cache.head = node->next;\n        }\n        if (node->next != NULL) {\n            node->next->previous = node->previous;\n        } else {\n            cache.tail = node->previous;\n        }\n        cache.count--;\n        release_node(node);\n        puts(\"OK\");\n    }\n}\n\nstatic void cache_resize(int capacity)\n{\n    if (capacity < 1 || capacity > 20) {\n        return;\n    }\n    cache.capacity = capacity;\n    while (cache.count > cache.capacity) {\n        evict_tail();\n    }\n}\n\nstatic void cache_clear(void)\n{\n    while (cache.tail != NULL) {\n        Node *node = cache.tail;\n        cache.tail = cache.tail->previous;\n        if (cache.tail != NULL) {\n            cache.tail->next = NULL;\n        } else {\n            cache.head = NULL;\n        }\n        cache.count--;\n        release_node(node);\n    }\n}\n\nstatic void cache_keys(void)\n{\n    Node *node = cache.head;\n    printf(\"%d\", cache.count);\n    while (node != NULL) {\n        printf(\" %d\", node->key);\n        node = node->next;\n    }\n    putchar('\\n');\n}\n\nstatic void process_command(void)\n{\n    char command[16];\n    int key;\n    int value;\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"PUT\") == 0) {\n        scanf(\"%d%d\", &key, &value);\n        puts(cache_put(key, value) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"GET\") == 0) {\n        scanf(\"%d\", &key);\n        cache_get(key);\n    } else if (strcmp(command, \"DEL\") == 0) {\n        scanf(\"%d\", &key);\n        cache_delete(key);\n    } else if (strcmp(command, \"RESIZE\") == 0) {\n        scanf(\"%d\", &value);\n        cache_resize(value);\n        puts(\"OK\");\n    } else if (strcmp(command, \"CLEAR\") == 0) {\n        cache_clear();\n        puts(\"OK\");\n    } else if (strcmp(command, \"SIZE\") == 0) {\n        printf(\"%d\\n\", cache.count);\n    } else if (strcmp(command, \"KEYS\") == 0) {\n        cache_keys();\n    }\n}\n\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d%d\", &cache.capacity, &commands) != 2) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n",
+      "reason": "unchanged"
+    }
+  ],
+  "calls": 15,
+  "function_count": 15,
+  "control_probe": false
+}

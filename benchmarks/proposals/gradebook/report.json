@@ -1,0 +1,832 @@
+{
+  "policy": {
+    "version": 1,
+    "model": "Qwen2.5-Coder-7B-Instruct Q4_K_M",
+    "gpu_layers": 0,
+    "threads": 4,
+    "context_tokens": 8192,
+    "seed": 172,
+    "temperature": 0,
+    "passes": 1,
+    "extra_retry_budget": 3,
+    "output": "one_complete_C_function",
+    "preserve_passing_scenarios": true,
+    "accept_neutral_compiling_changes": true,
+    "heldout_feedback": false
+  },
+  "baseline": {
+    "compiled": true,
+    "diagnostics": "",
+    "tests": [
+      {
+        "returncode": 0,
+        "stdout": "OK\nOK\nOK\n3\n8 50\n4 50\n2 50\n3 37 0\n50\n",
+        "stderr": "",
+        "input": "6\nADD 8 50 50 50\nADD 2 50 50 50\nADD 4 100 0 0\nRANK\nSUMMARY\nSCORE 8\n",
+        "expected": "OK\nOK\nOK\n3\n2 50\n8 50\n4 20\n3 40 2\n50",
+        "passed": false
+      },
+      {
+        "returncode": 0,
+        "stdout": "OK\nOK\n62\nOK\n83\n1 41 1\n",
+        "stderr": "",
+        "input": "6\nADD 3 10 20 30\nUPDATE 3 2 100\nSCORE 3\nUPDATE 3 0 90\nSCORE 3\nSUMMARY\n",
+        "expected": "OK\nOK\n58\nOK\n74\n1 74 1",
+        "passed": false
+      },
+      {
+        "returncode": 0,
+        "stdout": "OK\nOK\nOK\nOK\n2\n2 37\n7 100\nOK\n1 50 1\nERR\n1 50 1\n",
+        "stderr": "",
+        "input": "9\nADD 7 100 100 100\nADD 2 30 40 50\nADD 9 0 0 0\nDROP 2\nRANK\nDROP 7\nSUMMARY\nDROP 9\nSUMMARY\n",
+        "expected": "OK\nOK\nOK\nOK\n2\n7 100\n9 0\nOK\n1 0 0\nOK\n0 0 0",
+        "passed": false
+      },
+      {
+        "returncode": 0,
+        "stdout": "ERR\nOK\nERR\nERR\nERR\n27\nERR\n1\n4 27\n",
+        "stderr": "",
+        "input": "8\nADD 1 100 100 101\nADD 4 20 30 40\nADD 4 99 99 99\nUPDATE 4 3 4\nUPDATE 4 1 -1\nSCORE 4\nSCORE 99\nRANK\n",
+        "expected": "ERR\nOK\nERR\nERR\nERR\n33\nERR\n1\n4 33",
+        "passed": false
+      }
+    ],
+    "passed": false
+  },
+  "final": {
+    "compiled": true,
+    "diagnostics": "",
+    "tests": [
+      {
+        "returncode": 0,
+        "stdout": "OK\nOK\nOK\n3\n2 50\n4 50\n8 50\n3 50 3\n50\n",
+        "stderr": "",
+        "input": "6\nADD 8 50 50 50\nADD 2 50 50 50\nADD 4 100 0 0\nRANK\nSUMMARY\nSCORE 8\n",
+        "expected": "OK\nOK\nOK\n3\n2 50\n8 50\n4 20\n3 40 2\n50",
+        "passed": false
+      },
+      {
+        "returncode": 0,
+        "stdout": "OK\nOK\n31\nOK\n71\n1 71 1\n",
+        "stderr": "",
+        "input": "6\nADD 3 10 20 30\nUPDATE 3 2 100\nSCORE 3\nUPDATE 3 0 90\nSCORE 3\nSUMMARY\n",
+        "expected": "OK\nOK\n58\nOK\n74\n1 74 1",
+        "passed": false
+      },
+      {
+        "returncode": 0,
+        "stdout": "OK\nOK\nOK\nOK\n2\n7 100\n9 0\nOK\n1 0 0\nOK\n0 0 0\n",
+        "stderr": "",
+        "input": "9\nADD 7 100 100 100\nADD 2 30 40 50\nADD 9 0 0 0\nDROP 2\nRANK\nDROP 7\nSUMMARY\nDROP 9\nSUMMARY\n",
+        "expected": "OK\nOK\nOK\nOK\n2\n7 100\n9 0\nOK\n1 0 0\nOK\n0 0 0",
+        "passed": true
+      },
+      {
+        "returncode": 0,
+        "stdout": "ERR\nOK\nERR\nERR\nERR\n27\nERR\n1\n4 27\n",
+        "stderr": "",
+        "input": "8\nADD 1 100 100 101\nADD 4 20 30 40\nADD 4 99 99 99\nUPDATE 4 3 4\nUPDATE 4 1 -1\nSCORE 4\nSCORE 99\nRANK\n",
+        "expected": "ERR\nOK\nERR\nERR\nERR\n33\nERR\n1\n4 33",
+        "passed": false
+      }
+    ],
+    "passed": false
+  },
+  "history": [
+    {
+      "request": {
+        "name": "locate_student",
+        "retry": 0,
+        "source_sha256": "d2cad0ce48a7993940b4968b1d761487583f99ae3215f212c8d907e25c9e972e",
+        "prompt": "Program behavior:\nGradebook. Read q (0..200), then q commands. Up to 100 students, IDs 0..1000. ADD id a b c adds an absent student with three marks 0..100. UPDATE id subject mark updates an existing student's subject indexed 0,1,2, rejecting other subject numbers or marks outside 0..100. DROP id removes an existing student. Mutations print OK or ERR and rejected mutations change nothing. SCORE id prints floor((2*a+3*b+5*c)/10), or ERR if absent. RANK prints student count then 'id score' rows sorted by decreasing score, breaking ties by increasing ID. SUMMARY prints 'count mean_score passing_count', where mean_score is floor of the mean of already-rounded student scores and passing_count counts scores >=50. Empty summary is '0 0 0'. Supplied invalid marks and subject indices must be rejected. One output record per line.\nShared declarations:\n#include <stdio.h>\n#include <string.h>\n\n#define MAX_STUDENTS 100\n\ntypedef struct {\n    int id;\n    int marks[3];\n} Student;\n\nstatic Student students[MAX_STUDENTS];\nstatic int student_count;\nRelated function interfaces (do not implement these):\nstatic int register_student(int id, int a, int b, int c);\nstatic int remove_student(int id);\nstatic void show_score(int id);\nstatic int update_mark(int id, int subject, int mark);\nAssigned function locate_student:\n```c\nstatic int locate_student(int id)\n{\n    int i;\n    for (i = 0; i < student_count; ++i) {\n        if (students[i].id == id) {\n            return i;\n        }\n    }\n    return -1;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"6\\nADD 8 50 50 50\\nADD 2 50 50 50\\nADD 4 100 0 0\\nRANK\\nSUMMARY\\nSCORE 8\\n\", \"expected\": \"OK\\nOK\\nOK\\n3\\n2 50\\n8 50\\n4 20\\n3 40 2\\n50\", \"actual\": \"OK\\nOK\\nOK\\n3\\n8 50\\n4 50\\n2 50\\n3 37 0\\n50\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic int locate_student(int id)\n{\n    int i;\n    for (i = 0; i < student_count; ++i) {\n        if (students[i].id == id) {\n            return i;\n        }\n    }\n    return -1;\n}\n```",
+        "usage": {
+          "prompt_tokens": 645,
+          "completion_tokens": 58,
+          "total_tokens": 703
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 29.129
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\n3\n8 50\n4 50\n2 50\n3 37 0\n50\n",
+            "stderr": "",
+            "input": "6\nADD 8 50 50 50\nADD 2 50 50 50\nADD 4 100 0 0\nRANK\nSUMMARY\nSCORE 8\n",
+            "expected": "OK\nOK\nOK\n3\n2 50\n8 50\n4 20\n3 40 2\n50",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\n62\nOK\n83\n1 41 1\n",
+            "stderr": "",
+            "input": "6\nADD 3 10 20 30\nUPDATE 3 2 100\nSCORE 3\nUPDATE 3 0 90\nSCORE 3\nSUMMARY\n",
+            "expected": "OK\nOK\n58\nOK\n74\n1 74 1",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n2\n2 37\n7 100\nOK\n1 50 1\nERR\n1 50 1\n",
+            "stderr": "",
+            "input": "9\nADD 7 100 100 100\nADD 2 30 40 50\nADD 9 0 0 0\nDROP 2\nRANK\nDROP 7\nSUMMARY\nDROP 9\nSUMMARY\n",
+            "expected": "OK\nOK\nOK\nOK\n2\n7 100\n9 0\nOK\n1 0 0\nOK\n0 0 0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "ERR\nOK\nERR\nERR\nERR\n27\nERR\n1\n4 27\n",
+            "stderr": "",
+            "input": "8\nADD 1 100 100 101\nADD 4 20 30 40\nADD 4 99 99 99\nUPDATE 4 3 4\nUPDATE 4 1 -1\nSCORE 4\nSCORE 99\nRANK\n",
+            "expected": "ERR\nOK\nERR\nERR\nERR\n33\nERR\n1\n4 33",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <string.h>\n\n#define MAX_STUDENTS 100\n\ntypedef struct {\n    int id;\n    int marks[3];\n} Student;\n\nstatic Student students[MAX_STUDENTS];\nstatic int student_count;\n\nstatic int locate_student(int id)\n{\n    int i;\n    for (i = 0; i < student_count; ++i) {\n        if (students[i].id == id) {\n            return i;\n        }\n    }\n    return -1;\n}\n\nstatic int valid_mark(int mark)\n{\n    return mark >= 0 && mark <= 100;\n}\n\nstatic int score(const Student *student)\n{\n    return (5 * student->marks[0] + 3 * student->marks[1]\n            + 2 * student->marks[2]) / 10;\n}\n\nstatic int register_student(int id, int a, int b, int c)\n{\n    Student *student;\n    if (student_count == MAX_STUDENTS || locate_student(id) >= 0) {\n        return 0;\n    }\n    if (!valid_mark(a) || !valid_mark(b) || !valid_mark(c)) {\n        return 0;\n    }\n    student = &students[student_count];\n    student->id = id;\n    student->marks[0] = a;\n    student->marks[1] = b;\n    student->marks[2] = c;\n    ++student_count;\n    return 1;\n}\n\nstatic int update_mark(int id, int subject, int mark)\n{\n    int index = locate_student(id);\n    if (index < 0 || subject < 0 || subject > 2 || !valid_mark(mark)) {\n        return 0;\n    }\n    students[index].marks[(subject + 1) % 3] = mark;\n    return 1;\n}\n\nstatic int remove_student(int id)\n{\n    int index = locate_student(id);\n    int i;\n    if (index < 0) {\n        return 0;\n    }\n    for (i = index; i + 1 < student_count; ++i) {\n        students[i + 1] = students[i];\n    }\n    --student_count;\n    return 1;\n}\n\nstatic int outranks(int left, int right)\n{\n    int a = score(&students[left]);\n    int b = score(&students[right]);\n    if (a != b) {\n        return a < b;\n    }\n    return students[left].id > students[right].id;\n}\n\nstatic void rank_students(void)\n{\n    int order[MAX_STUDENTS];\n    int i;\n    int j;\n    for (i = 0; i < student_count; ++i) {\n        order[i] = i;\n    }\n    for (i = 0; i < student_count; ++i) {\n        for (j = i + 1; j < student_count; ++j) {\n            if (outranks(order[j], order[i])) {\n                int temporary = order[i];\n                order[i] = order[j];\n                order[j] = temporary;\n            }\n        }\n    }\n    printf(\"%d\\n\", student_count);\n    for (i = 0; i < student_count; ++i) {\n        Student *student = &students[order[i]];\n        printf(\"%d %d\\n\", student->id, score(student));\n    }\n}\n\nstatic void class_summary(void)\n{\n    int total = 0;\n    int passing = 0;\n    int i;\n    for (i = 0; i < student_count; ++i) {\n        int value = score(&students[i]);\n        total += value;\n        if (value > 50) {\n            ++passing;\n        }\n    }\n    if (student_count == 0) {\n        puts(\"0 0 0\");\n    } else {\n        printf(\"%d %d %d\\n\", student_count, total / (student_count + 1), passing);\n    }\n}\n\nstatic void show_score(int id)\n{\n    int index = locate_student(id);\n    if (index < 0) {\n        puts(\"ERR\");\n    } else {\n        printf(\"%d\\n\", score(&students[index]));\n    }\n}\n\nstatic void process_command(void)\n{\n    char command[16];\n    int id;\n    int a;\n    int b;\n    int c;\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"ADD\") == 0) {\n        scanf(\"%d%d%d%d\", &id, &a, &b, &c);\n        puts(register_student(id, a, b, c) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"UPDATE\") == 0) {\n        scanf(\"%d%d%d\", &id, &a, &b);\n        puts(update_mark(id, a, b) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"DROP\") == 0) {\n        scanf(\"%d\", &id);\n        puts(remove_student(id) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"SCORE\") == 0) {\n        scanf(\"%d\", &id);\n        show_score(id);\n    } else if (strcmp(command, \"RANK\") == 0) {\n        rank_students();\n    } else if (strcmp(command, \"SUMMARY\") == 0) {\n        class_summary();\n    }\n}\n\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d\", &commands) != 1) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n",
+      "reason": "unchanged"
+    },
+    {
+      "request": {
+        "name": "valid_mark",
+        "retry": 0,
+        "source_sha256": "d2cad0ce48a7993940b4968b1d761487583f99ae3215f212c8d907e25c9e972e",
+        "prompt": "Program behavior:\nGradebook. Read q (0..200), then q commands. Up to 100 students, IDs 0..1000. ADD id a b c adds an absent student with three marks 0..100. UPDATE id subject mark updates an existing student's subject indexed 0,1,2, rejecting other subject numbers or marks outside 0..100. DROP id removes an existing student. Mutations print OK or ERR and rejected mutations change nothing. SCORE id prints floor((2*a+3*b+5*c)/10), or ERR if absent. RANK prints student count then 'id score' rows sorted by decreasing score, breaking ties by increasing ID. SUMMARY prints 'count mean_score passing_count', where mean_score is floor of the mean of already-rounded student scores and passing_count counts scores >=50. Empty summary is '0 0 0'. Supplied invalid marks and subject indices must be rejected. One output record per line.\nShared declarations:\n#include <stdio.h>\n#include <string.h>\n\n#define MAX_STUDENTS 100\n\ntypedef struct {\n    int id;\n    int marks[3];\n} Student;\n\nstatic Student students[MAX_STUDENTS];\nstatic int student_count;\nRelated function interfaces (do not implement these):\nstatic int register_student(int id, int a, int b, int c);\nstatic int update_mark(int id, int subject, int mark);\nAssigned function valid_mark:\n```c\nstatic int valid_mark(int mark)\n{\n    return mark >= 0 && mark <= 100;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"6\\nADD 8 50 50 50\\nADD 2 50 50 50\\nADD 4 100 0 0\\nRANK\\nSUMMARY\\nSCORE 8\\n\", \"expected\": \"OK\\nOK\\nOK\\n3\\n2 50\\n8 50\\n4 20\\n3 40 2\\n50\", \"actual\": \"OK\\nOK\\nOK\\n3\\n8 50\\n4 50\\n2 50\\n3 37 0\\n50\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic int valid_mark(int mark)\n{\n    return mark >= 0 && mark <= 100;\n}\n```",
+        "usage": {
+          "prompt_tokens": 600,
+          "completion_tokens": 27,
+          "total_tokens": 627
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 14.097
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\n3\n8 50\n4 50\n2 50\n3 37 0\n50\n",
+            "stderr": "",
+            "input": "6\nADD 8 50 50 50\nADD 2 50 50 50\nADD 4 100 0 0\nRANK\nSUMMARY\nSCORE 8\n",
+            "expected": "OK\nOK\nOK\n3\n2 50\n8 50\n4 20\n3 40 2\n50",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\n62\nOK\n83\n1 41 1\n",
+            "stderr": "",
+            "input": "6\nADD 3 10 20 30\nUPDATE 3 2 100\nSCORE 3\nUPDATE 3 0 90\nSCORE 3\nSUMMARY\n",
+            "expected": "OK\nOK\n58\nOK\n74\n1 74 1",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n2\n2 37\n7 100\nOK\n1 50 1\nERR\n1 50 1\n",
+            "stderr": "",
+            "input": "9\nADD 7 100 100 100\nADD 2 30 40 50\nADD 9 0 0 0\nDROP 2\nRANK\nDROP 7\nSUMMARY\nDROP 9\nSUMMARY\n",
+            "expected": "OK\nOK\nOK\nOK\n2\n7 100\n9 0\nOK\n1 0 0\nOK\n0 0 0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "ERR\nOK\nERR\nERR\nERR\n27\nERR\n1\n4 27\n",
+            "stderr": "",
+            "input": "8\nADD 1 100 100 101\nADD 4 20 30 40\nADD 4 99 99 99\nUPDATE 4 3 4\nUPDATE 4 1 -1\nSCORE 4\nSCORE 99\nRANK\n",
+            "expected": "ERR\nOK\nERR\nERR\nERR\n33\nERR\n1\n4 33",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <string.h>\n\n#define MAX_STUDENTS 100\n\ntypedef struct {\n    int id;\n    int marks[3];\n} Student;\n\nstatic Student students[MAX_STUDENTS];\nstatic int student_count;\n\nstatic int locate_student(int id)\n{\n    int i;\n    for (i = 0; i < student_count; ++i) {\n        if (students[i].id == id) {\n            return i;\n        }\n    }\n    return -1;\n}\n\nstatic int valid_mark(int mark)\n{\n    return mark >= 0 && mark <= 100;\n}\n\nstatic int score(const Student *student)\n{\n    return (5 * student->marks[0] + 3 * student->marks[1]\n            + 2 * student->marks[2]) / 10;\n}\n\nstatic int register_student(int id, int a, int b, int c)\n{\n    Student *student;\n    if (student_count == MAX_STUDENTS || locate_student(id) >= 0) {\n        return 0;\n    }\n    if (!valid_mark(a) || !valid_mark(b) || !valid_mark(c)) {\n        return 0;\n    }\n    student = &students[student_count];\n    student->id = id;\n    student->marks[0] = a;\n    student->marks[1] = b;\n    student->marks[2] = c;\n    ++student_count;\n    return 1;\n}\n\nstatic int update_mark(int id, int subject, int mark)\n{\n    int index = locate_student(id);\n    if (index < 0 || subject < 0 || subject > 2 || !valid_mark(mark)) {\n        return 0;\n    }\n    students[index].marks[(subject + 1) % 3] = mark;\n    return 1;\n}\n\nstatic int remove_student(int id)\n{\n    int index = locate_student(id);\n    int i;\n    if (index < 0) {\n        return 0;\n    }\n    for (i = index; i + 1 < student_count; ++i) {\n        students[i + 1] = students[i];\n    }\n    --student_count;\n    return 1;\n}\n\nstatic int outranks(int left, int right)\n{\n    int a = score(&students[left]);\n    int b = score(&students[right]);\n    if (a != b) {\n        return a < b;\n    }\n    return students[left].id > students[right].id;\n}\n\nstatic void rank_students(void)\n{\n    int order[MAX_STUDENTS];\n    int i;\n    int j;\n    for (i = 0; i < student_count; ++i) {\n        order[i] = i;\n    }\n    for (i = 0; i < student_count; ++i) {\n        for (j = i + 1; j < student_count; ++j) {\n            if (outranks(order[j], order[i])) {\n                int temporary = order[i];\n                order[i] = order[j];\n                order[j] = temporary;\n            }\n        }\n    }\n    printf(\"%d\\n\", student_count);\n    for (i = 0; i < student_count; ++i) {\n        Student *student = &students[order[i]];\n        printf(\"%d %d\\n\", student->id, score(student));\n    }\n}\n\nstatic void class_summary(void)\n{\n    int total = 0;\n    int passing = 0;\n    int i;\n    for (i = 0; i < student_count; ++i) {\n        int value = score(&students[i]);\n        total += value;\n        if (value > 50) {\n            ++passing;\n        }\n    }\n    if (student_count == 0) {\n        puts(\"0 0 0\");\n    } else {\n        printf(\"%d %d %d\\n\", student_count, total / (student_count + 1), passing);\n    }\n}\n\nstatic void show_score(int id)\n{\n    int index = locate_student(id);\n    if (index < 0) {\n        puts(\"ERR\");\n    } else {\n        printf(\"%d\\n\", score(&students[index]));\n    }\n}\n\nstatic void process_command(void)\n{\n    char command[16];\n    int id;\n    int a;\n    int b;\n    int c;\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"ADD\") == 0) {\n        scanf(\"%d%d%d%d\", &id, &a, &b, &c);\n        puts(register_student(id, a, b, c) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"UPDATE\") == 0) {\n        scanf(\"%d%d%d\", &id, &a, &b);\n        puts(update_mark(id, a, b) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"DROP\") == 0) {\n        scanf(\"%d\", &id);\n        puts(remove_student(id) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"SCORE\") == 0) {\n        scanf(\"%d\", &id);\n        show_score(id);\n    } else if (strcmp(command, \"RANK\") == 0) {\n        rank_students();\n    } else if (strcmp(command, \"SUMMARY\") == 0) {\n        class_summary();\n    }\n}\n\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d\", &commands) != 1) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n",
+      "reason": "unchanged"
+    },
+    {
+      "request": {
+        "name": "score",
+        "retry": 0,
+        "source_sha256": "d2cad0ce48a7993940b4968b1d761487583f99ae3215f212c8d907e25c9e972e",
+        "prompt": "Program behavior:\nGradebook. Read q (0..200), then q commands. Up to 100 students, IDs 0..1000. ADD id a b c adds an absent student with three marks 0..100. UPDATE id subject mark updates an existing student's subject indexed 0,1,2, rejecting other subject numbers or marks outside 0..100. DROP id removes an existing student. Mutations print OK or ERR and rejected mutations change nothing. SCORE id prints floor((2*a+3*b+5*c)/10), or ERR if absent. RANK prints student count then 'id score' rows sorted by decreasing score, breaking ties by increasing ID. SUMMARY prints 'count mean_score passing_count', where mean_score is floor of the mean of already-rounded student scores and passing_count counts scores >=50. Empty summary is '0 0 0'. Supplied invalid marks and subject indices must be rejected. One output record per line.\nShared declarations:\n#include <stdio.h>\n#include <string.h>\n\n#define MAX_STUDENTS 100\n\ntypedef struct {\n    int id;\n    int marks[3];\n} Student;\n\nstatic Student students[MAX_STUDENTS];\nstatic int student_count;\nRelated function interfaces (do not implement these):\nstatic void class_summary(void);\nstatic int outranks(int left, int right);\nstatic void rank_students(void);\nstatic void show_score(int id);\nAssigned function score:\n```c\nstatic int score(const Student *student)\n{\n    return (5 * student->marks[0] + 3 * student->marks[1]\n            + 2 * student->marks[2]) / 10;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"6\\nADD 8 50 50 50\\nADD 2 50 50 50\\nADD 4 100 0 0\\nRANK\\nSUMMARY\\nSCORE 8\\n\", \"expected\": \"OK\\nOK\\nOK\\n3\\n2 50\\n8 50\\n4 20\\n3 40 2\\n50\", \"actual\": \"OK\\nOK\\nOK\\n3\\n8 50\\n4 50\\n2 50\\n3 37 0\\n50\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic int score(const Student *student)\n{\n    if (student->marks[0] < 0 || student->marks[0] > 100 ||\n        student->marks[1] < 0 || student->marks[1] > 100 ||\n        student->marks[2] < 0 || student->marks[2] > 100) {\n        return -1; // ERR\n    }\n    return (5 * student->marks[0] + 3 * student->marks[1] + 2 * student->marks[2]) / 10;\n}\n```",
+        "usage": {
+          "prompt_tokens": 623,
+          "completion_tokens": 132,
+          "total_tokens": 755
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 31.846
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\n3\n8 50\n4 50\n2 50\n3 37 0\n50\n",
+            "stderr": "",
+            "input": "6\nADD 8 50 50 50\nADD 2 50 50 50\nADD 4 100 0 0\nRANK\nSUMMARY\nSCORE 8\n",
+            "expected": "OK\nOK\nOK\n3\n2 50\n8 50\n4 20\n3 40 2\n50",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\n62\nOK\n83\n1 41 1\n",
+            "stderr": "",
+            "input": "6\nADD 3 10 20 30\nUPDATE 3 2 100\nSCORE 3\nUPDATE 3 0 90\nSCORE 3\nSUMMARY\n",
+            "expected": "OK\nOK\n58\nOK\n74\n1 74 1",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n2\n2 37\n7 100\nOK\n1 50 1\nERR\n1 50 1\n",
+            "stderr": "",
+            "input": "9\nADD 7 100 100 100\nADD 2 30 40 50\nADD 9 0 0 0\nDROP 2\nRANK\nDROP 7\nSUMMARY\nDROP 9\nSUMMARY\n",
+            "expected": "OK\nOK\nOK\nOK\n2\n7 100\n9 0\nOK\n1 0 0\nOK\n0 0 0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "ERR\nOK\nERR\nERR\nERR\n27\nERR\n1\n4 27\n",
+            "stderr": "",
+            "input": "8\nADD 1 100 100 101\nADD 4 20 30 40\nADD 4 99 99 99\nUPDATE 4 3 4\nUPDATE 4 1 -1\nSCORE 4\nSCORE 99\nRANK\n",
+            "expected": "ERR\nOK\nERR\nERR\nERR\n33\nERR\n1\n4 33",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <string.h>\n\n#define MAX_STUDENTS 100\n\ntypedef struct {\n    int id;\n    int marks[3];\n} Student;\n\nstatic Student students[MAX_STUDENTS];\nstatic int student_count;\n\nstatic int locate_student(int id)\n{\n    int i;\n    for (i = 0; i < student_count; ++i) {\n        if (students[i].id == id) {\n            return i;\n        }\n    }\n    return -1;\n}\n\nstatic int valid_mark(int mark)\n{\n    return mark >= 0 && mark <= 100;\n}\n\nstatic int score(const Student *student)\n{\n    if (student->marks[0] < 0 || student->marks[0] > 100 ||\n        student->marks[1] < 0 || student->marks[1] > 100 ||\n        student->marks[2] < 0 || student->marks[2] > 100) {\n        return -1; // ERR\n    }\n    return (5 * student->marks[0] + 3 * student->marks[1] + 2 * student->marks[2]) / 10;\n}\n\nstatic int register_student(int id, int a, int b, int c)\n{\n    Student *student;\n    if (student_count == MAX_STUDENTS || locate_student(id) >= 0) {\n        return 0;\n    }\n    if (!valid_mark(a) || !valid_mark(b) || !valid_mark(c)) {\n        return 0;\n    }\n    student = &students[student_count];\n    student->id = id;\n    student->marks[0] = a;\n    student->marks[1] = b;\n    student->marks[2] = c;\n    ++student_count;\n    return 1;\n}\n\nstatic int update_mark(int id, int subject, int mark)\n{\n    int index = locate_student(id);\n    if (index < 0 || subject < 0 || subject > 2 || !valid_mark(mark)) {\n        return 0;\n    }\n    students[index].marks[(subject + 1) % 3] = mark;\n    return 1;\n}\n\nstatic int remove_student(int id)\n{\n    int index = locate_student(id);\n    int i;\n    if (index < 0) {\n        return 0;\n    }\n    for (i = index; i + 1 < student_count; ++i) {\n        students[i + 1] = students[i];\n    }\n    --student_count;\n    return 1;\n}\n\nstatic int outranks(int left, int right)\n{\n    int a = score(&students[left]);\n    int b = score(&students[right]);\n    if (a != b) {\n        return a < b;\n    }\n    return students[left].id > students[right].id;\n}\n\nstatic void rank_students(void)\n{\n    int order[MAX_STUDENTS];\n    int i;\n    int j;\n    for (i = 0; i < student_count; ++i) {\n        order[i] = i;\n    }\n    for (i = 0; i < student_count; ++i) {\n        for (j = i + 1; j < student_count; ++j) {\n            if (outranks(order[j], order[i])) {\n                int temporary = order[i];\n                order[i] = order[j];\n                order[j] = temporary;\n            }\n        }\n    }\n    printf(\"%d\\n\", student_count);\n    for (i = 0; i < student_count; ++i) {\n        Student *student = &students[order[i]];\n        printf(\"%d %d\\n\", student->id, score(student));\n    }\n}\n\nstatic void class_summary(void)\n{\n    int total = 0;\n    int passing = 0;\n    int i;\n    for (i = 0; i < student_count; ++i) {\n        int value = score(&students[i]);\n        total += value;\n        if (value > 50) {\n            ++passing;\n        }\n    }\n    if (student_count == 0) {\n        puts(\"0 0 0\");\n    } else {\n        printf(\"%d %d %d\\n\", student_count, total / (student_count + 1), passing);\n    }\n}\n\nstatic void show_score(int id)\n{\n    int index = locate_student(id);\n    if (index < 0) {\n        puts(\"ERR\");\n    } else {\n        printf(\"%d\\n\", score(&students[index]));\n    }\n}\n\nstatic void process_command(void)\n{\n    char command[16];\n    int id;\n    int a;\n    int b;\n    int c;\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"ADD\") == 0) {\n        scanf(\"%d%d%d%d\", &id, &a, &b, &c);\n        puts(register_student(id, a, b, c) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"UPDATE\") == 0) {\n        scanf(\"%d%d%d\", &id, &a, &b);\n        puts(update_mark(id, a, b) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"DROP\") == 0) {\n        scanf(\"%d\", &id);\n        puts(remove_student(id) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"SCORE\") == 0) {\n        scanf(\"%d\", &id);\n        show_score(id);\n    } else if (strcmp(command, \"RANK\") == 0) {\n        rank_students();\n    } else if (strcmp(command, \"SUMMARY\") == 0) {\n        class_summary();\n    }\n}\n\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d\", &commands) != 1) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "register_student",
+        "retry": 0,
+        "source_sha256": "42843dd37a2f3d8f9962045c8e80c1a02def4d138e1d82e5e9a3e5ed25909bea",
+        "prompt": "Program behavior:\nGradebook. Read q (0..200), then q commands. Up to 100 students, IDs 0..1000. ADD id a b c adds an absent student with three marks 0..100. UPDATE id subject mark updates an existing student's subject indexed 0,1,2, rejecting other subject numbers or marks outside 0..100. DROP id removes an existing student. Mutations print OK or ERR and rejected mutations change nothing. SCORE id prints floor((2*a+3*b+5*c)/10), or ERR if absent. RANK prints student count then 'id score' rows sorted by decreasing score, breaking ties by increasing ID. SUMMARY prints 'count mean_score passing_count', where mean_score is floor of the mean of already-rounded student scores and passing_count counts scores >=50. Empty summary is '0 0 0'. Supplied invalid marks and subject indices must be rejected. One output record per line.\nShared declarations:\n#include <stdio.h>\n#include <string.h>\n\n#define MAX_STUDENTS 100\n\ntypedef struct {\n    int id;\n    int marks[3];\n} Student;\n\nstatic Student students[MAX_STUDENTS];\nstatic int student_count;\nRelated function interfaces (do not implement these):\nstatic int locate_student(int id);\nstatic void process_command(void);\nstatic int valid_mark(int mark);\nAssigned function register_student:\n```c\nstatic int register_student(int id, int a, int b, int c)\n{\n    Student *student;\n    if (student_count == MAX_STUDENTS || locate_student(id) >= 0) {\n        return 0;\n    }\n    if (!valid_mark(a) || !valid_mark(b) || !valid_mark(c)) {\n        return 0;\n    }\n    student = &students[student_count];\n    student->id = id;\n    student->marks[0] = a;\n    student->marks[1] = b;\n    student->marks[2] = c;\n    ++student_count;\n    return 1;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"6\\nADD 8 50 50 50\\nADD 2 50 50 50\\nADD 4 100 0 0\\nRANK\\nSUMMARY\\nSCORE 8\\n\", \"expected\": \"OK\\nOK\\nOK\\n3\\n2 50\\n8 50\\n4 20\\n3 40 2\\n50\", \"actual\": \"OK\\nOK\\nOK\\n3\\n8 50\\n4 50\\n2 50\\n3 37 0\\n50\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic int register_student(int id, int a, int b, int c)\n{\n    Student *student;\n    if (student_count == MAX_STUDENTS || locate_student(id) >= 0) {\n        return 0;\n    }\n    if (!valid_mark(a) || !valid_mark(b) || !valid_mark(c)) {\n        return 0;\n    }\n    student = &students[student_count];\n    student->id = id;\n    student->marks[0] = a;\n    student->marks[1] = b;\n    student->marks[2] = c;\n    ++student_count;\n    return 1;\n}\n```",
+        "usage": {
+          "prompt_tokens": 701,
+          "completion_tokens": 137,
+          "total_tokens": 838
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 362,
+        "seconds": 32.695
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\n3\n8 50\n4 50\n2 50\n3 37 0\n50\n",
+            "stderr": "",
+            "input": "6\nADD 8 50 50 50\nADD 2 50 50 50\nADD 4 100 0 0\nRANK\nSUMMARY\nSCORE 8\n",
+            "expected": "OK\nOK\nOK\n3\n2 50\n8 50\n4 20\n3 40 2\n50",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\n62\nOK\n83\n1 41 1\n",
+            "stderr": "",
+            "input": "6\nADD 3 10 20 30\nUPDATE 3 2 100\nSCORE 3\nUPDATE 3 0 90\nSCORE 3\nSUMMARY\n",
+            "expected": "OK\nOK\n58\nOK\n74\n1 74 1",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n2\n2 37\n7 100\nOK\n1 50 1\nERR\n1 50 1\n",
+            "stderr": "",
+            "input": "9\nADD 7 100 100 100\nADD 2 30 40 50\nADD 9 0 0 0\nDROP 2\nRANK\nDROP 7\nSUMMARY\nDROP 9\nSUMMARY\n",
+            "expected": "OK\nOK\nOK\nOK\n2\n7 100\n9 0\nOK\n1 0 0\nOK\n0 0 0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "ERR\nOK\nERR\nERR\nERR\n27\nERR\n1\n4 27\n",
+            "stderr": "",
+            "input": "8\nADD 1 100 100 101\nADD 4 20 30 40\nADD 4 99 99 99\nUPDATE 4 3 4\nUPDATE 4 1 -1\nSCORE 4\nSCORE 99\nRANK\n",
+            "expected": "ERR\nOK\nERR\nERR\nERR\n33\nERR\n1\n4 33",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <string.h>\n\n#define MAX_STUDENTS 100\n\ntypedef struct {\n    int id;\n    int marks[3];\n} Student;\n\nstatic Student students[MAX_STUDENTS];\nstatic int student_count;\n\nstatic int locate_student(int id)\n{\n    int i;\n    for (i = 0; i < student_count; ++i) {\n        if (students[i].id == id) {\n            return i;\n        }\n    }\n    return -1;\n}\n\nstatic int valid_mark(int mark)\n{\n    return mark >= 0 && mark <= 100;\n}\n\nstatic int score(const Student *student)\n{\n    if (student->marks[0] < 0 || student->marks[0] > 100 ||\n        student->marks[1] < 0 || student->marks[1] > 100 ||\n        student->marks[2] < 0 || student->marks[2] > 100) {\n        return -1; // ERR\n    }\n    return (5 * student->marks[0] + 3 * student->marks[1] + 2 * student->marks[2]) / 10;\n}\n\nstatic int register_student(int id, int a, int b, int c)\n{\n    Student *student;\n    if (student_count == MAX_STUDENTS || locate_student(id) >= 0) {\n        return 0;\n    }\n    if (!valid_mark(a) || !valid_mark(b) || !valid_mark(c)) {\n        return 0;\n    }\n    student = &students[student_count];\n    student->id = id;\n    student->marks[0] = a;\n    student->marks[1] = b;\n    student->marks[2] = c;\n    ++student_count;\n    return 1;\n}\n\nstatic int update_mark(int id, int subject, int mark)\n{\n    int index = locate_student(id);\n    if (index < 0 || subject < 0 || subject > 2 || !valid_mark(mark)) {\n        return 0;\n    }\n    students[index].marks[(subject + 1) % 3] = mark;\n    return 1;\n}\n\nstatic int remove_student(int id)\n{\n    int index = locate_student(id);\n    int i;\n    if (index < 0) {\n        return 0;\n    }\n    for (i = index; i + 1 < student_count; ++i) {\n        students[i + 1] = students[i];\n    }\n    --student_count;\n    return 1;\n}\n\nstatic int outranks(int left, int right)\n{\n    int a = score(&students[left]);\n    int b = score(&students[right]);\n    if (a != b) {\n        return a < b;\n    }\n    return students[left].id > students[right].id;\n}\n\nstatic void rank_students(void)\n{\n    int order[MAX_STUDENTS];\n    int i;\n    int j;\n    for (i = 0; i < student_count; ++i) {\n        order[i] = i;\n    }\n    for (i = 0; i < student_count; ++i) {\n        for (j = i + 1; j < student_count; ++j) {\n            if (outranks(order[j], order[i])) {\n                int temporary = order[i];\n                order[i] = order[j];\n                order[j] = temporary;\n            }\n        }\n    }\n    printf(\"%d\\n\", student_count);\n    for (i = 0; i < student_count; ++i) {\n        Student *student = &students[order[i]];\n        printf(\"%d %d\\n\", student->id, score(student));\n    }\n}\n\nstatic void class_summary(void)\n{\n    int total = 0;\n    int passing = 0;\n    int i;\n    for (i = 0; i < student_count; ++i) {\n        int value = score(&students[i]);\n        total += value;\n        if (value > 50) {\n            ++passing;\n        }\n    }\n    if (student_count == 0) {\n        puts(\"0 0 0\");\n    } else {\n        printf(\"%d %d %d\\n\", student_count, total / (student_count + 1), passing);\n    }\n}\n\nstatic void show_score(int id)\n{\n    int index = locate_student(id);\n    if (index < 0) {\n        puts(\"ERR\");\n    } else {\n        printf(\"%d\\n\", score(&students[index]));\n    }\n}\n\nstatic void process_command(void)\n{\n    char command[16];\n    int id;\n    int a;\n    int b;\n    int c;\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"ADD\") == 0) {\n        scanf(\"%d%d%d%d\", &id, &a, &b, &c);\n        puts(register_student(id, a, b, c) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"UPDATE\") == 0) {\n        scanf(\"%d%d%d\", &id, &a, &b);\n        puts(update_mark(id, a, b) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"DROP\") == 0) {\n        scanf(\"%d\", &id);\n        puts(remove_student(id) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"SCORE\") == 0) {\n        scanf(\"%d\", &id);\n        show_score(id);\n    } else if (strcmp(command, \"RANK\") == 0) {\n        rank_students();\n    } else if (strcmp(command, \"SUMMARY\") == 0) {\n        class_summary();\n    }\n}\n\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d\", &commands) != 1) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n",
+      "reason": "unchanged"
+    },
+    {
+      "request": {
+        "name": "update_mark",
+        "retry": 0,
+        "source_sha256": "42843dd37a2f3d8f9962045c8e80c1a02def4d138e1d82e5e9a3e5ed25909bea",
+        "prompt": "Program behavior:\nGradebook. Read q (0..200), then q commands. Up to 100 students, IDs 0..1000. ADD id a b c adds an absent student with three marks 0..100. UPDATE id subject mark updates an existing student's subject indexed 0,1,2, rejecting other subject numbers or marks outside 0..100. DROP id removes an existing student. Mutations print OK or ERR and rejected mutations change nothing. SCORE id prints floor((2*a+3*b+5*c)/10), or ERR if absent. RANK prints student count then 'id score' rows sorted by decreasing score, breaking ties by increasing ID. SUMMARY prints 'count mean_score passing_count', where mean_score is floor of the mean of already-rounded student scores and passing_count counts scores >=50. Empty summary is '0 0 0'. Supplied invalid marks and subject indices must be rejected. One output record per line.\nShared declarations:\n#include <stdio.h>\n#include <string.h>\n\n#define MAX_STUDENTS 100\n\ntypedef struct {\n    int id;\n    int marks[3];\n} Student;\n\nstatic Student students[MAX_STUDENTS];\nstatic int student_count;\nRelated function interfaces (do not implement these):\nstatic int locate_student(int id);\nstatic void process_command(void);\nstatic int valid_mark(int mark);\nAssigned function update_mark:\n```c\nstatic int update_mark(int id, int subject, int mark)\n{\n    int index = locate_student(id);\n    if (index < 0 || subject < 0 || subject > 2 || !valid_mark(mark)) {\n        return 0;\n    }\n    students[index].marks[(subject + 1) % 3] = mark;\n    return 1;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"6\\nADD 8 50 50 50\\nADD 2 50 50 50\\nADD 4 100 0 0\\nRANK\\nSUMMARY\\nSCORE 8\\n\", \"expected\": \"OK\\nOK\\nOK\\n3\\n2 50\\n8 50\\n4 20\\n3 40 2\\n50\", \"actual\": \"OK\\nOK\\nOK\\n3\\n8 50\\n4 50\\n2 50\\n3 37 0\\n50\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic int update_mark(int id, int subject, int mark)\n{\n    int index = locate_student(id);\n    if (index < 0 || subject < 0 || subject > 2 || !valid_mark(mark)) {\n        return 0;\n    }\n    students[index].marks[subject] = mark;\n    return 1;\n}\n```",
+        "usage": {
+          "prompt_tokens": 645,
+          "completion_tokens": 74,
+          "total_tokens": 719
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 22.68
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\n3\n8 50\n4 50\n2 50\n3 37 0\n50\n",
+            "stderr": "",
+            "input": "6\nADD 8 50 50 50\nADD 2 50 50 50\nADD 4 100 0 0\nRANK\nSUMMARY\nSCORE 8\n",
+            "expected": "OK\nOK\nOK\n3\n2 50\n8 50\n4 20\n3 40 2\n50",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\n31\nOK\n71\n1 35 1\n",
+            "stderr": "",
+            "input": "6\nADD 3 10 20 30\nUPDATE 3 2 100\nSCORE 3\nUPDATE 3 0 90\nSCORE 3\nSUMMARY\n",
+            "expected": "OK\nOK\n58\nOK\n74\n1 74 1",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n2\n2 37\n7 100\nOK\n1 50 1\nERR\n1 50 1\n",
+            "stderr": "",
+            "input": "9\nADD 7 100 100 100\nADD 2 30 40 50\nADD 9 0 0 0\nDROP 2\nRANK\nDROP 7\nSUMMARY\nDROP 9\nSUMMARY\n",
+            "expected": "OK\nOK\nOK\nOK\n2\n7 100\n9 0\nOK\n1 0 0\nOK\n0 0 0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "ERR\nOK\nERR\nERR\nERR\n27\nERR\n1\n4 27\n",
+            "stderr": "",
+            "input": "8\nADD 1 100 100 101\nADD 4 20 30 40\nADD 4 99 99 99\nUPDATE 4 3 4\nUPDATE 4 1 -1\nSCORE 4\nSCORE 99\nRANK\n",
+            "expected": "ERR\nOK\nERR\nERR\nERR\n33\nERR\n1\n4 33",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <string.h>\n\n#define MAX_STUDENTS 100\n\ntypedef struct {\n    int id;\n    int marks[3];\n} Student;\n\nstatic Student students[MAX_STUDENTS];\nstatic int student_count;\n\nstatic int locate_student(int id)\n{\n    int i;\n    for (i = 0; i < student_count; ++i) {\n        if (students[i].id == id) {\n            return i;\n        }\n    }\n    return -1;\n}\n\nstatic int valid_mark(int mark)\n{\n    return mark >= 0 && mark <= 100;\n}\n\nstatic int score(const Student *student)\n{\n    if (student->marks[0] < 0 || student->marks[0] > 100 ||\n        student->marks[1] < 0 || student->marks[1] > 100 ||\n        student->marks[2] < 0 || student->marks[2] > 100) {\n        return -1; // ERR\n    }\n    return (5 * student->marks[0] + 3 * student->marks[1] + 2 * student->marks[2]) / 10;\n}\n\nstatic int register_student(int id, int a, int b, int c)\n{\n    Student *student;\n    if (student_count == MAX_STUDENTS || locate_student(id) >= 0) {\n        return 0;\n    }\n    if (!valid_mark(a) || !valid_mark(b) || !valid_mark(c)) {\n        return 0;\n    }\n    student = &students[student_count];\n    student->id = id;\n    student->marks[0] = a;\n    student->marks[1] = b;\n    student->marks[2] = c;\n    ++student_count;\n    return 1;\n}\n\nstatic int update_mark(int id, int subject, int mark)\n{\n    int index = locate_student(id);\n    if (index < 0 || subject < 0 || subject > 2 || !valid_mark(mark)) {\n        return 0;\n    }\n    students[index].marks[subject] = mark;\n    return 1;\n}\n\nstatic int remove_student(int id)\n{\n    int index = locate_student(id);\n    int i;\n    if (index < 0) {\n        return 0;\n    }\n    for (i = index; i + 1 < student_count; ++i) {\n        students[i + 1] = students[i];\n    }\n    --student_count;\n    return 1;\n}\n\nstatic int outranks(int left, int right)\n{\n    int a = score(&students[left]);\n    int b = score(&students[right]);\n    if (a != b) {\n        return a < b;\n    }\n    return students[left].id > students[right].id;\n}\n\nstatic void rank_students(void)\n{\n    int order[MAX_STUDENTS];\n    int i;\n    int j;\n    for (i = 0; i < student_count; ++i) {\n        order[i] = i;\n    }\n    for (i = 0; i < student_count; ++i) {\n        for (j = i + 1; j < student_count; ++j) {\n            if (outranks(order[j], order[i])) {\n                int temporary = order[i];\n                order[i] = order[j];\n                order[j] = temporary;\n            }\n        }\n    }\n    printf(\"%d\\n\", student_count);\n    for (i = 0; i < student_count; ++i) {\n        Student *student = &students[order[i]];\n        printf(\"%d %d\\n\", student->id, score(student));\n    }\n}\n\nstatic void class_summary(void)\n{\n    int total = 0;\n    int passing = 0;\n    int i;\n    for (i = 0; i < student_count; ++i) {\n        int value = score(&students[i]);\n        total += value;\n        if (value > 50) {\n            ++passing;\n        }\n    }\n    if (student_count == 0) {\n        puts(\"0 0 0\");\n    } else {\n        printf(\"%d %d %d\\n\", student_count, total / (student_count + 1), passing);\n    }\n}\n\nstatic void show_score(int id)\n{\n    int index = locate_student(id);\n    if (index < 0) {\n        puts(\"ERR\");\n    } else {\n        printf(\"%d\\n\", score(&students[index]));\n    }\n}\n\nstatic void process_command(void)\n{\n    char command[16];\n    int id;\n    int a;\n    int b;\n    int c;\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"ADD\") == 0) {\n        scanf(\"%d%d%d%d\", &id, &a, &b, &c);\n        puts(register_student(id, a, b, c) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"UPDATE\") == 0) {\n        scanf(\"%d%d%d\", &id, &a, &b);\n        puts(update_mark(id, a, b) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"DROP\") == 0) {\n        scanf(\"%d\", &id);\n        puts(remove_student(id) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"SCORE\") == 0) {\n        scanf(\"%d\", &id);\n        show_score(id);\n    } else if (strcmp(command, \"RANK\") == 0) {\n        rank_students();\n    } else if (strcmp(command, \"SUMMARY\") == 0) {\n        class_summary();\n    }\n}\n\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d\", &commands) != 1) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "remove_student",
+        "retry": 0,
+        "source_sha256": "b630cb52a84f06c3c6db00ee86d839d3c27eb13e1aa441bb5f1d0ddd3dfbca99",
+        "prompt": "Program behavior:\nGradebook. Read q (0..200), then q commands. Up to 100 students, IDs 0..1000. ADD id a b c adds an absent student with three marks 0..100. UPDATE id subject mark updates an existing student's subject indexed 0,1,2, rejecting other subject numbers or marks outside 0..100. DROP id removes an existing student. Mutations print OK or ERR and rejected mutations change nothing. SCORE id prints floor((2*a+3*b+5*c)/10), or ERR if absent. RANK prints student count then 'id score' rows sorted by decreasing score, breaking ties by increasing ID. SUMMARY prints 'count mean_score passing_count', where mean_score is floor of the mean of already-rounded student scores and passing_count counts scores >=50. Empty summary is '0 0 0'. Supplied invalid marks and subject indices must be rejected. One output record per line.\nShared declarations:\n#include <stdio.h>\n#include <string.h>\n\n#define MAX_STUDENTS 100\n\ntypedef struct {\n    int id;\n    int marks[3];\n} Student;\n\nstatic Student students[MAX_STUDENTS];\nstatic int student_count;\nRelated function interfaces (do not implement these):\nstatic int locate_student(int id);\nstatic void process_command(void);\nAssigned function remove_student:\n```c\nstatic int remove_student(int id)\n{\n    int index = locate_student(id);\n    int i;\n    if (index < 0) {\n        return 0;\n    }\n    for (i = index; i + 1 < student_count; ++i) {\n        students[i + 1] = students[i];\n    }\n    --student_count;\n    return 1;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"6\\nADD 8 50 50 50\\nADD 2 50 50 50\\nADD 4 100 0 0\\nRANK\\nSUMMARY\\nSCORE 8\\n\", \"expected\": \"OK\\nOK\\nOK\\n3\\n2 50\\n8 50\\n4 20\\n3 40 2\\n50\", \"actual\": \"OK\\nOK\\nOK\\n3\\n8 50\\n4 50\\n2 50\\n3 37 0\\n50\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic int remove_student(int id)\n{\n    int index = locate_student(id);\n    if (index < 0) {\n        return 0;\n    }\n    for (int i = index; i < student_count - 1; ++i) {\n        students[i] = students[i + 1];\n    }\n    --student_count;\n    return 1;\n}\n```",
+        "usage": {
+          "prompt_tokens": 640,
+          "completion_tokens": 80,
+          "total_tokens": 720
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 22.868
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\n3\n8 50\n4 50\n2 50\n3 37 0\n50\n",
+            "stderr": "",
+            "input": "6\nADD 8 50 50 50\nADD 2 50 50 50\nADD 4 100 0 0\nRANK\nSUMMARY\nSCORE 8\n",
+            "expected": "OK\nOK\nOK\n3\n2 50\n8 50\n4 20\n3 40 2\n50",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\n31\nOK\n71\n1 35 1\n",
+            "stderr": "",
+            "input": "6\nADD 3 10 20 30\nUPDATE 3 2 100\nSCORE 3\nUPDATE 3 0 90\nSCORE 3\nSUMMARY\n",
+            "expected": "OK\nOK\n58\nOK\n74\n1 74 1",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n2\n9 0\n7 100\nOK\n1 0 0\nOK\n0 0 0\n",
+            "stderr": "",
+            "input": "9\nADD 7 100 100 100\nADD 2 30 40 50\nADD 9 0 0 0\nDROP 2\nRANK\nDROP 7\nSUMMARY\nDROP 9\nSUMMARY\n",
+            "expected": "OK\nOK\nOK\nOK\n2\n7 100\n9 0\nOK\n1 0 0\nOK\n0 0 0",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "ERR\nOK\nERR\nERR\nERR\n27\nERR\n1\n4 27\n",
+            "stderr": "",
+            "input": "8\nADD 1 100 100 101\nADD 4 20 30 40\nADD 4 99 99 99\nUPDATE 4 3 4\nUPDATE 4 1 -1\nSCORE 4\nSCORE 99\nRANK\n",
+            "expected": "ERR\nOK\nERR\nERR\nERR\n33\nERR\n1\n4 33",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <string.h>\n\n#define MAX_STUDENTS 100\n\ntypedef struct {\n    int id;\n    int marks[3];\n} Student;\n\nstatic Student students[MAX_STUDENTS];\nstatic int student_count;\n\nstatic int locate_student(int id)\n{\n    int i;\n    for (i = 0; i < student_count; ++i) {\n        if (students[i].id == id) {\n            return i;\n        }\n    }\n    return -1;\n}\n\nstatic int valid_mark(int mark)\n{\n    return mark >= 0 && mark <= 100;\n}\n\nstatic int score(const Student *student)\n{\n    if (student->marks[0] < 0 || student->marks[0] > 100 ||\n        student->marks[1] < 0 || student->marks[1] > 100 ||\n        student->marks[2] < 0 || student->marks[2] > 100) {\n        return -1; // ERR\n    }\n    return (5 * student->marks[0] + 3 * student->marks[1] + 2 * student->marks[2]) / 10;\n}\n\nstatic int register_student(int id, int a, int b, int c)\n{\n    Student *student;\n    if (student_count == MAX_STUDENTS || locate_student(id) >= 0) {\n        return 0;\n    }\n    if (!valid_mark(a) || !valid_mark(b) || !valid_mark(c)) {\n        return 0;\n    }\n    student = &students[student_count];\n    student->id = id;\n    student->marks[0] = a;\n    student->marks[1] = b;\n    student->marks[2] = c;\n    ++student_count;\n    return 1;\n}\n\nstatic int update_mark(int id, int subject, int mark)\n{\n    int index = locate_student(id);\n    if (index < 0 || subject < 0 || subject > 2 || !valid_mark(mark)) {\n        return 0;\n    }\n    students[index].marks[subject] = mark;\n    return 1;\n}\n\nstatic int remove_student(int id)\n{\n    int index = locate_student(id);\n    if (index < 0) {\n        return 0;\n    }\n    for (int i = index; i < student_count - 1; ++i) {\n        students[i] = students[i + 1];\n    }\n    --student_count;\n    return 1;\n}\n\nstatic int outranks(int left, int right)\n{\n    int a = score(&students[left]);\n    int b = score(&students[right]);\n    if (a != b) {\n        return a < b;\n    }\n    return students[left].id > students[right].id;\n}\n\nstatic void rank_students(void)\n{\n    int order[MAX_STUDENTS];\n    int i;\n    int j;\n    for (i = 0; i < student_count; ++i) {\n        order[i] = i;\n    }\n    for (i = 0; i < student_count; ++i) {\n        for (j = i + 1; j < student_count; ++j) {\n            if (outranks(order[j], order[i])) {\n                int temporary = order[i];\n                order[i] = order[j];\n                order[j] = temporary;\n            }\n        }\n    }\n    printf(\"%d\\n\", student_count);\n    for (i = 0; i < student_count; ++i) {\n        Student *student = &students[order[i]];\n        printf(\"%d %d\\n\", student->id, score(student));\n    }\n}\n\nstatic void class_summary(void)\n{\n    int total = 0;\n    int passing = 0;\n    int i;\n    for (i = 0; i < student_count; ++i) {\n        int value = score(&students[i]);\n        total += value;\n        if (value > 50) {\n            ++passing;\n        }\n    }\n    if (student_count == 0) {\n        puts(\"0 0 0\");\n    } else {\n        printf(\"%d %d %d\\n\", student_count, total / (student_count + 1), passing);\n    }\n}\n\nstatic void show_score(int id)\n{\n    int index = locate_student(id);\n    if (index < 0) {\n        puts(\"ERR\");\n    } else {\n        printf(\"%d\\n\", score(&students[index]));\n    }\n}\n\nstatic void process_command(void)\n{\n    char command[16];\n    int id;\n    int a;\n    int b;\n    int c;\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"ADD\") == 0) {\n        scanf(\"%d%d%d%d\", &id, &a, &b, &c);\n        puts(register_student(id, a, b, c) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"UPDATE\") == 0) {\n        scanf(\"%d%d%d\", &id, &a, &b);\n        puts(update_mark(id, a, b) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"DROP\") == 0) {\n        scanf(\"%d\", &id);\n        puts(remove_student(id) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"SCORE\") == 0) {\n        scanf(\"%d\", &id);\n        show_score(id);\n    } else if (strcmp(command, \"RANK\") == 0) {\n        rank_students();\n    } else if (strcmp(command, \"SUMMARY\") == 0) {\n        class_summary();\n    }\n}\n\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d\", &commands) != 1) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "outranks",
+        "retry": 0,
+        "source_sha256": "8d6feebc4575151c71f58bd81a792baf01015542dafd634df774deac325f1d94",
+        "prompt": "Program behavior:\nGradebook. Read q (0..200), then q commands. Up to 100 students, IDs 0..1000. ADD id a b c adds an absent student with three marks 0..100. UPDATE id subject mark updates an existing student's subject indexed 0,1,2, rejecting other subject numbers or marks outside 0..100. DROP id removes an existing student. Mutations print OK or ERR and rejected mutations change nothing. SCORE id prints floor((2*a+3*b+5*c)/10), or ERR if absent. RANK prints student count then 'id score' rows sorted by decreasing score, breaking ties by increasing ID. SUMMARY prints 'count mean_score passing_count', where mean_score is floor of the mean of already-rounded student scores and passing_count counts scores >=50. Empty summary is '0 0 0'. Supplied invalid marks and subject indices must be rejected. One output record per line.\nShared declarations:\n#include <stdio.h>\n#include <string.h>\n\n#define MAX_STUDENTS 100\n\ntypedef struct {\n    int id;\n    int marks[3];\n} Student;\n\nstatic Student students[MAX_STUDENTS];\nstatic int student_count;\nRelated function interfaces (do not implement these):\nstatic void rank_students(void);\nstatic int score(const Student *student);\nAssigned function outranks:\n```c\nstatic int outranks(int left, int right)\n{\n    int a = score(&students[left]);\n    int b = score(&students[right]);\n    if (a != b) {\n        return a < b;\n    }\n    return students[left].id > students[right].id;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"6\\nADD 8 50 50 50\\nADD 2 50 50 50\\nADD 4 100 0 0\\nRANK\\nSUMMARY\\nSCORE 8\\n\", \"expected\": \"OK\\nOK\\nOK\\n3\\n2 50\\n8 50\\n4 20\\n3 40 2\\n50\", \"actual\": \"OK\\nOK\\nOK\\n3\\n8 50\\n4 50\\n2 50\\n3 37 0\\n50\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic int outranks(int left, int right)\n{\n    int a = score(&students[left]);\n    int b = score(&students[right]);\n    if (a != b) {\n        return a > b;\n    }\n    return students[left].id < students[right].id;\n}\n```",
+        "usage": {
+          "prompt_tokens": 620,
+          "completion_tokens": 62,
+          "total_tokens": 682
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 19.612
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\n3\n2 50\n4 50\n8 50\n3 37 0\n50\n",
+            "stderr": "",
+            "input": "6\nADD 8 50 50 50\nADD 2 50 50 50\nADD 4 100 0 0\nRANK\nSUMMARY\nSCORE 8\n",
+            "expected": "OK\nOK\nOK\n3\n2 50\n8 50\n4 20\n3 40 2\n50",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\n31\nOK\n71\n1 35 1\n",
+            "stderr": "",
+            "input": "6\nADD 3 10 20 30\nUPDATE 3 2 100\nSCORE 3\nUPDATE 3 0 90\nSCORE 3\nSUMMARY\n",
+            "expected": "OK\nOK\n58\nOK\n74\n1 74 1",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n2\n7 100\n9 0\nOK\n1 0 0\nOK\n0 0 0\n",
+            "stderr": "",
+            "input": "9\nADD 7 100 100 100\nADD 2 30 40 50\nADD 9 0 0 0\nDROP 2\nRANK\nDROP 7\nSUMMARY\nDROP 9\nSUMMARY\n",
+            "expected": "OK\nOK\nOK\nOK\n2\n7 100\n9 0\nOK\n1 0 0\nOK\n0 0 0",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "ERR\nOK\nERR\nERR\nERR\n27\nERR\n1\n4 27\n",
+            "stderr": "",
+            "input": "8\nADD 1 100 100 101\nADD 4 20 30 40\nADD 4 99 99 99\nUPDATE 4 3 4\nUPDATE 4 1 -1\nSCORE 4\nSCORE 99\nRANK\n",
+            "expected": "ERR\nOK\nERR\nERR\nERR\n33\nERR\n1\n4 33",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <string.h>\n\n#define MAX_STUDENTS 100\n\ntypedef struct {\n    int id;\n    int marks[3];\n} Student;\n\nstatic Student students[MAX_STUDENTS];\nstatic int student_count;\n\nstatic int locate_student(int id)\n{\n    int i;\n    for (i = 0; i < student_count; ++i) {\n        if (students[i].id == id) {\n            return i;\n        }\n    }\n    return -1;\n}\n\nstatic int valid_mark(int mark)\n{\n    return mark >= 0 && mark <= 100;\n}\n\nstatic int score(const Student *student)\n{\n    if (student->marks[0] < 0 || student->marks[0] > 100 ||\n        student->marks[1] < 0 || student->marks[1] > 100 ||\n        student->marks[2] < 0 || student->marks[2] > 100) {\n        return -1; // ERR\n    }\n    return (5 * student->marks[0] + 3 * student->marks[1] + 2 * student->marks[2]) / 10;\n}\n\nstatic int register_student(int id, int a, int b, int c)\n{\n    Student *student;\n    if (student_count == MAX_STUDENTS || locate_student(id) >= 0) {\n        return 0;\n    }\n    if (!valid_mark(a) || !valid_mark(b) || !valid_mark(c)) {\n        return 0;\n    }\n    student = &students[student_count];\n    student->id = id;\n    student->marks[0] = a;\n    student->marks[1] = b;\n    student->marks[2] = c;\n    ++student_count;\n    return 1;\n}\n\nstatic int update_mark(int id, int subject, int mark)\n{\n    int index = locate_student(id);\n    if (index < 0 || subject < 0 || subject > 2 || !valid_mark(mark)) {\n        return 0;\n    }\n    students[index].marks[subject] = mark;\n    return 1;\n}\n\nstatic int remove_student(int id)\n{\n    int index = locate_student(id);\n    if (index < 0) {\n        return 0;\n    }\n    for (int i = index; i < student_count - 1; ++i) {\n        students[i] = students[i + 1];\n    }\n    --student_count;\n    return 1;\n}\n\nstatic int outranks(int left, int right)\n{\n    int a = score(&students[left]);\n    int b = score(&students[right]);\n    if (a != b) {\n        return a > b;\n    }\n    return students[left].id < students[right].id;\n}\n\nstatic void rank_students(void)\n{\n    int order[MAX_STUDENTS];\n    int i;\n    int j;\n    for (i = 0; i < student_count; ++i) {\n        order[i] = i;\n    }\n    for (i = 0; i < student_count; ++i) {\n        for (j = i + 1; j < student_count; ++j) {\n            if (outranks(order[j], order[i])) {\n                int temporary = order[i];\n                order[i] = order[j];\n                order[j] = temporary;\n            }\n        }\n    }\n    printf(\"%d\\n\", student_count);\n    for (i = 0; i < student_count; ++i) {\n        Student *student = &students[order[i]];\n        printf(\"%d %d\\n\", student->id, score(student));\n    }\n}\n\nstatic void class_summary(void)\n{\n    int total = 0;\n    int passing = 0;\n    int i;\n    for (i = 0; i < student_count; ++i) {\n        int value = score(&students[i]);\n        total += value;\n        if (value > 50) {\n            ++passing;\n        }\n    }\n    if (student_count == 0) {\n        puts(\"0 0 0\");\n    } else {\n        printf(\"%d %d %d\\n\", student_count, total / (student_count + 1), passing);\n    }\n}\n\nstatic void show_score(int id)\n{\n    int index = locate_student(id);\n    if (index < 0) {\n        puts(\"ERR\");\n    } else {\n        printf(\"%d\\n\", score(&students[index]));\n    }\n}\n\nstatic void process_command(void)\n{\n    char command[16];\n    int id;\n    int a;\n    int b;\n    int c;\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"ADD\") == 0) {\n        scanf(\"%d%d%d%d\", &id, &a, &b, &c);\n        puts(register_student(id, a, b, c) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"UPDATE\") == 0) {\n        scanf(\"%d%d%d\", &id, &a, &b);\n        puts(update_mark(id, a, b) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"DROP\") == 0) {\n        scanf(\"%d\", &id);\n        puts(remove_student(id) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"SCORE\") == 0) {\n        scanf(\"%d\", &id);\n        show_score(id);\n    } else if (strcmp(command, \"RANK\") == 0) {\n        rank_students();\n    } else if (strcmp(command, \"SUMMARY\") == 0) {\n        class_summary();\n    }\n}\n\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d\", &commands) != 1) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "rank_students",
+        "retry": 0,
+        "source_sha256": "54096b6c879b68da342a539db8fee0252fbb69d71636607790bf2051d8db0f26",
+        "prompt": "Program behavior:\nGradebook. Read q (0..200), then q commands. Up to 100 students, IDs 0..1000. ADD id a b c adds an absent student with three marks 0..100. UPDATE id subject mark updates an existing student's subject indexed 0,1,2, rejecting other subject numbers or marks outside 0..100. DROP id removes an existing student. Mutations print OK or ERR and rejected mutations change nothing. SCORE id prints floor((2*a+3*b+5*c)/10), or ERR if absent. RANK prints student count then 'id score' rows sorted by decreasing score, breaking ties by increasing ID. SUMMARY prints 'count mean_score passing_count', where mean_score is floor of the mean of already-rounded student scores and passing_count counts scores >=50. Empty summary is '0 0 0'. Supplied invalid marks and subject indices must be rejected. One output record per line.\nShared declarations:\n#include <stdio.h>\n#include <string.h>\n\n#define MAX_STUDENTS 100\n\ntypedef struct {\n    int id;\n    int marks[3];\n} Student;\n\nstatic Student students[MAX_STUDENTS];\nstatic int student_count;\nRelated function interfaces (do not implement these):\nstatic int outranks(int left, int right);\nstatic void process_command(void);\nstatic int score(const Student *student);\nAssigned function rank_students:\n```c\nstatic void rank_students(void)\n{\n    int order[MAX_STUDENTS];\n    int i;\n    int j;\n    for (i = 0; i < student_count; ++i) {\n        order[i] = i;\n    }\n    for (i = 0; i < student_count; ++i) {\n        for (j = i + 1; j < student_count; ++j) {\n            if (outranks(order[j], order[i])) {\n                int temporary = order[i];\n                order[i] = order[j];\n                order[j] = temporary;\n            }\n        }\n    }\n    printf(\"%d\\n\", student_count);\n    for (i = 0; i < student_count; ++i) {\n        Student *student = &students[order[i]];\n        printf(\"%d %d\\n\", student->id, score(student));\n    }\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"6\\nADD 8 50 50 50\\nADD 2 50 50 50\\nADD 4 100 0 0\\nRANK\\nSUMMARY\\nSCORE 8\\n\", \"expected\": \"OK\\nOK\\nOK\\n3\\n2 50\\n8 50\\n4 20\\n3 40 2\\n50\", \"actual\": \"OK\\nOK\\nOK\\n3\\n2 50\\n4 50\\n8 50\\n3 37 0\\n50\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void rank_students(void)\n{\n    int order[MAX_STUDENTS];\n    int i;\n    int j;\n    for (i = 0; i < student_count; ++i) {\n        order[i] = i;\n    }\n    for (i = 0; i < student_count; ++i) {\n        for (j = i + 1; j < student_count; ++j) {\n            if (outranks(order[j], order[i])) {\n                int temporary = order[i];\n                order[i] = order[j];\n                order[j] = temporary;\n            }\n        }\n    }\n    printf(\"%d\\n\", student_count);\n    for (i = 0; i < student_count; ++i) {\n        Student *student = &students[order[i]];\n        printf(\"%d %d\\n\", student->id, score(student));\n    }\n}\n```",
+        "usage": {
+          "prompt_tokens": 753,
+          "completion_tokens": 185,
+          "total_tokens": 938
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 458,
+        "seconds": 42.636
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\n3\n2 50\n4 50\n8 50\n3 37 0\n50\n",
+            "stderr": "",
+            "input": "6\nADD 8 50 50 50\nADD 2 50 50 50\nADD 4 100 0 0\nRANK\nSUMMARY\nSCORE 8\n",
+            "expected": "OK\nOK\nOK\n3\n2 50\n8 50\n4 20\n3 40 2\n50",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\n31\nOK\n71\n1 35 1\n",
+            "stderr": "",
+            "input": "6\nADD 3 10 20 30\nUPDATE 3 2 100\nSCORE 3\nUPDATE 3 0 90\nSCORE 3\nSUMMARY\n",
+            "expected": "OK\nOK\n58\nOK\n74\n1 74 1",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n2\n7 100\n9 0\nOK\n1 0 0\nOK\n0 0 0\n",
+            "stderr": "",
+            "input": "9\nADD 7 100 100 100\nADD 2 30 40 50\nADD 9 0 0 0\nDROP 2\nRANK\nDROP 7\nSUMMARY\nDROP 9\nSUMMARY\n",
+            "expected": "OK\nOK\nOK\nOK\n2\n7 100\n9 0\nOK\n1 0 0\nOK\n0 0 0",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "ERR\nOK\nERR\nERR\nERR\n27\nERR\n1\n4 27\n",
+            "stderr": "",
+            "input": "8\nADD 1 100 100 101\nADD 4 20 30 40\nADD 4 99 99 99\nUPDATE 4 3 4\nUPDATE 4 1 -1\nSCORE 4\nSCORE 99\nRANK\n",
+            "expected": "ERR\nOK\nERR\nERR\nERR\n33\nERR\n1\n4 33",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <string.h>\n\n#define MAX_STUDENTS 100\n\ntypedef struct {\n    int id;\n    int marks[3];\n} Student;\n\nstatic Student students[MAX_STUDENTS];\nstatic int student_count;\n\nstatic int locate_student(int id)\n{\n    int i;\n    for (i = 0; i < student_count; ++i) {\n        if (students[i].id == id) {\n            return i;\n        }\n    }\n    return -1;\n}\n\nstatic int valid_mark(int mark)\n{\n    return mark >= 0 && mark <= 100;\n}\n\nstatic int score(const Student *student)\n{\n    if (student->marks[0] < 0 || student->marks[0] > 100 ||\n        student->marks[1] < 0 || student->marks[1] > 100 ||\n        student->marks[2] < 0 || student->marks[2] > 100) {\n        return -1; // ERR\n    }\n    return (5 * student->marks[0] + 3 * student->marks[1] + 2 * student->marks[2]) / 10;\n}\n\nstatic int register_student(int id, int a, int b, int c)\n{\n    Student *student;\n    if (student_count == MAX_STUDENTS || locate_student(id) >= 0) {\n        return 0;\n    }\n    if (!valid_mark(a) || !valid_mark(b) || !valid_mark(c)) {\n        return 0;\n    }\n    student = &students[student_count];\n    student->id = id;\n    student->marks[0] = a;\n    student->marks[1] = b;\n    student->marks[2] = c;\n    ++student_count;\n    return 1;\n}\n\nstatic int update_mark(int id, int subject, int mark)\n{\n    int index = locate_student(id);\n    if (index < 0 || subject < 0 || subject > 2 || !valid_mark(mark)) {\n        return 0;\n    }\n    students[index].marks[subject] = mark;\n    return 1;\n}\n\nstatic int remove_student(int id)\n{\n    int index = locate_student(id);\n    if (index < 0) {\n        return 0;\n    }\n    for (int i = index; i < student_count - 1; ++i) {\n        students[i] = students[i + 1];\n    }\n    --student_count;\n    return 1;\n}\n\nstatic int outranks(int left, int right)\n{\n    int a = score(&students[left]);\n    int b = score(&students[right]);\n    if (a != b) {\n        return a > b;\n    }\n    return students[left].id < students[right].id;\n}\n\nstatic void rank_students(void)\n{\n    int order[MAX_STUDENTS];\n    int i;\n    int j;\n    for (i = 0; i < student_count; ++i) {\n        order[i] = i;\n    }\n    for (i = 0; i < student_count; ++i) {\n        for (j = i + 1; j < student_count; ++j) {\n            if (outranks(order[j], order[i])) {\n                int temporary = order[i];\n                order[i] = order[j];\n                order[j] = temporary;\n            }\n        }\n    }\n    printf(\"%d\\n\", student_count);\n    for (i = 0; i < student_count; ++i) {\n        Student *student = &students[order[i]];\n        printf(\"%d %d\\n\", student->id, score(student));\n    }\n}\n\nstatic void class_summary(void)\n{\n    int total = 0;\n    int passing = 0;\n    int i;\n    for (i = 0; i < student_count; ++i) {\n        int value = score(&students[i]);\n        total += value;\n        if (value > 50) {\n            ++passing;\n        }\n    }\n    if (student_count == 0) {\n        puts(\"0 0 0\");\n    } else {\n        printf(\"%d %d %d\\n\", student_count, total / (student_count + 1), passing);\n    }\n}\n\nstatic void show_score(int id)\n{\n    int index = locate_student(id);\n    if (index < 0) {\n        puts(\"ERR\");\n    } else {\n        printf(\"%d\\n\", score(&students[index]));\n    }\n}\n\nstatic void process_command(void)\n{\n    char command[16];\n    int id;\n    int a;\n    int b;\n    int c;\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"ADD\") == 0) {\n        scanf(\"%d%d%d%d\", &id, &a, &b, &c);\n        puts(register_student(id, a, b, c) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"UPDATE\") == 0) {\n        scanf(\"%d%d%d\", &id, &a, &b);\n        puts(update_mark(id, a, b) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"DROP\") == 0) {\n        scanf(\"%d\", &id);\n        puts(remove_student(id) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"SCORE\") == 0) {\n        scanf(\"%d\", &id);\n        show_score(id);\n    } else if (strcmp(command, \"RANK\") == 0) {\n        rank_students();\n    } else if (strcmp(command, \"SUMMARY\") == 0) {\n        class_summary();\n    }\n}\n\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d\", &commands) != 1) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n",
+      "reason": "unchanged"
+    },
+    {
+      "request": {
+        "name": "class_summary",
+        "retry": 0,
+        "source_sha256": "54096b6c879b68da342a539db8fee0252fbb69d71636607790bf2051d8db0f26",
+        "prompt": "Program behavior:\nGradebook. Read q (0..200), then q commands. Up to 100 students, IDs 0..1000. ADD id a b c adds an absent student with three marks 0..100. UPDATE id subject mark updates an existing student's subject indexed 0,1,2, rejecting other subject numbers or marks outside 0..100. DROP id removes an existing student. Mutations print OK or ERR and rejected mutations change nothing. SCORE id prints floor((2*a+3*b+5*c)/10), or ERR if absent. RANK prints student count then 'id score' rows sorted by decreasing score, breaking ties by increasing ID. SUMMARY prints 'count mean_score passing_count', where mean_score is floor of the mean of already-rounded student scores and passing_count counts scores >=50. Empty summary is '0 0 0'. Supplied invalid marks and subject indices must be rejected. One output record per line.\nShared declarations:\n#include <stdio.h>\n#include <string.h>\n\n#define MAX_STUDENTS 100\n\ntypedef struct {\n    int id;\n    int marks[3];\n} Student;\n\nstatic Student students[MAX_STUDENTS];\nstatic int student_count;\nRelated function interfaces (do not implement these):\nstatic void process_command(void);\nstatic int score(const Student *student);\nAssigned function class_summary:\n```c\nstatic void class_summary(void)\n{\n    int total = 0;\n    int passing = 0;\n    int i;\n    for (i = 0; i < student_count; ++i) {\n        int value = score(&students[i]);\n        total += value;\n        if (value > 50) {\n            ++passing;\n        }\n    }\n    if (student_count == 0) {\n        puts(\"0 0 0\");\n    } else {\n        printf(\"%d %d %d\\n\", student_count, total / (student_count + 1), passing);\n    }\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"6\\nADD 8 50 50 50\\nADD 2 50 50 50\\nADD 4 100 0 0\\nRANK\\nSUMMARY\\nSCORE 8\\n\", \"expected\": \"OK\\nOK\\nOK\\n3\\n2 50\\n8 50\\n4 20\\n3 40 2\\n50\", \"actual\": \"OK\\nOK\\nOK\\n3\\n2 50\\n4 50\\n8 50\\n3 37 0\\n50\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void class_summary(void)\n{\n    int total = 0;\n    int passing = 0;\n    int i;\n    for (i = 0; i < student_count; ++i) {\n        int value = score(&students[i]);\n        total += value;\n        if (value >= 50) {\n            ++passing;\n        }\n    }\n    if (student_count == 0) {\n        puts(\"0 0 0\");\n    } else {\n        printf(\"%d %d %d\\n\", student_count, total / student_count, passing);\n    }\n}\n```",
+        "usage": {
+          "prompt_tokens": 687,
+          "completion_tokens": 125,
+          "total_tokens": 812
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 346,
+        "seconds": 29.668
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\n3\n2 50\n4 50\n8 50\n3 50 3\n50\n",
+            "stderr": "",
+            "input": "6\nADD 8 50 50 50\nADD 2 50 50 50\nADD 4 100 0 0\nRANK\nSUMMARY\nSCORE 8\n",
+            "expected": "OK\nOK\nOK\n3\n2 50\n8 50\n4 20\n3 40 2\n50",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\n31\nOK\n71\n1 71 1\n",
+            "stderr": "",
+            "input": "6\nADD 3 10 20 30\nUPDATE 3 2 100\nSCORE 3\nUPDATE 3 0 90\nSCORE 3\nSUMMARY\n",
+            "expected": "OK\nOK\n58\nOK\n74\n1 74 1",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n2\n7 100\n9 0\nOK\n1 0 0\nOK\n0 0 0\n",
+            "stderr": "",
+            "input": "9\nADD 7 100 100 100\nADD 2 30 40 50\nADD 9 0 0 0\nDROP 2\nRANK\nDROP 7\nSUMMARY\nDROP 9\nSUMMARY\n",
+            "expected": "OK\nOK\nOK\nOK\n2\n7 100\n9 0\nOK\n1 0 0\nOK\n0 0 0",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "ERR\nOK\nERR\nERR\nERR\n27\nERR\n1\n4 27\n",
+            "stderr": "",
+            "input": "8\nADD 1 100 100 101\nADD 4 20 30 40\nADD 4 99 99 99\nUPDATE 4 3 4\nUPDATE 4 1 -1\nSCORE 4\nSCORE 99\nRANK\n",
+            "expected": "ERR\nOK\nERR\nERR\nERR\n33\nERR\n1\n4 33",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <string.h>\n\n#define MAX_STUDENTS 100\n\ntypedef struct {\n    int id;\n    int marks[3];\n} Student;\n\nstatic Student students[MAX_STUDENTS];\nstatic int student_count;\n\nstatic int locate_student(int id)\n{\n    int i;\n    for (i = 0; i < student_count; ++i) {\n        if (students[i].id == id) {\n            return i;\n        }\n    }\n    return -1;\n}\n\nstatic int valid_mark(int mark)\n{\n    return mark >= 0 && mark <= 100;\n}\n\nstatic int score(const Student *student)\n{\n    if (student->marks[0] < 0 || student->marks[0] > 100 ||\n        student->marks[1] < 0 || student->marks[1] > 100 ||\n        student->marks[2] < 0 || student->marks[2] > 100) {\n        return -1; // ERR\n    }\n    return (5 * student->marks[0] + 3 * student->marks[1] + 2 * student->marks[2]) / 10;\n}\n\nstatic int register_student(int id, int a, int b, int c)\n{\n    Student *student;\n    if (student_count == MAX_STUDENTS || locate_student(id) >= 0) {\n        return 0;\n    }\n    if (!valid_mark(a) || !valid_mark(b) || !valid_mark(c)) {\n        return 0;\n    }\n    student = &students[student_count];\n    student->id = id;\n    student->marks[0] = a;\n    student->marks[1] = b;\n    student->marks[2] = c;\n    ++student_count;\n    return 1;\n}\n\nstatic int update_mark(int id, int subject, int mark)\n{\n    int index = locate_student(id);\n    if (index < 0 || subject < 0 || subject > 2 || !valid_mark(mark)) {\n        return 0;\n    }\n    students[index].marks[subject] = mark;\n    return 1;\n}\n\nstatic int remove_student(int id)\n{\n    int index = locate_student(id);\n    if (index < 0) {\n        return 0;\n    }\n    for (int i = index; i < student_count - 1; ++i) {\n        students[i] = students[i + 1];\n    }\n    --student_count;\n    return 1;\n}\n\nstatic int outranks(int left, int right)\n{\n    int a = score(&students[left]);\n    int b = score(&students[right]);\n    if (a != b) {\n        return a > b;\n    }\n    return students[left].id < students[right].id;\n}\n\nstatic void rank_students(void)\n{\n    int order[MAX_STUDENTS];\n    int i;\n    int j;\n    for (i = 0; i < student_count; ++i) {\n        order[i] = i;\n    }\n    for (i = 0; i < student_count; ++i) {\n        for (j = i + 1; j < student_count; ++j) {\n            if (outranks(order[j], order[i])) {\n                int temporary = order[i];\n                order[i] = order[j];\n                order[j] = temporary;\n            }\n        }\n    }\n    printf(\"%d\\n\", student_count);\n    for (i = 0; i < student_count; ++i) {\n        Student *student = &students[order[i]];\n        printf(\"%d %d\\n\", student->id, score(student));\n    }\n}\n\nstatic void class_summary(void)\n{\n    int total = 0;\n    int passing = 0;\n    int i;\n    for (i = 0; i < student_count; ++i) {\n        int value = score(&students[i]);\n        total += value;\n        if (value >= 50) {\n            ++passing;\n        }\n    }\n    if (student_count == 0) {\n        puts(\"0 0 0\");\n    } else {\n        printf(\"%d %d %d\\n\", student_count, total / student_count, passing);\n    }\n}\n\nstatic void show_score(int id)\n{\n    int index = locate_student(id);\n    if (index < 0) {\n        puts(\"ERR\");\n    } else {\n        printf(\"%d\\n\", score(&students[index]));\n    }\n}\n\nstatic void process_command(void)\n{\n    char command[16];\n    int id;\n    int a;\n    int b;\n    int c;\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"ADD\") == 0) {\n        scanf(\"%d%d%d%d\", &id, &a, &b, &c);\n        puts(register_student(id, a, b, c) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"UPDATE\") == 0) {\n        scanf(\"%d%d%d\", &id, &a, &b);\n        puts(update_mark(id, a, b) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"DROP\") == 0) {\n        scanf(\"%d\", &id);\n        puts(remove_student(id) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"SCORE\") == 0) {\n        scanf(\"%d\", &id);\n        show_score(id);\n    } else if (strcmp(command, \"RANK\") == 0) {\n        rank_students();\n    } else if (strcmp(command, \"SUMMARY\") == 0) {\n        class_summary();\n    }\n}\n\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d\", &commands) != 1) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "show_score",
+        "retry": 0,
+        "source_sha256": "42c363bd1ef9f657271bd992650fa681aab066ff5802f914e75e8e14d03d6229",
+        "prompt": "Program behavior:\nGradebook. Read q (0..200), then q commands. Up to 100 students, IDs 0..1000. ADD id a b c adds an absent student with three marks 0..100. UPDATE id subject mark updates an existing student's subject indexed 0,1,2, rejecting other subject numbers or marks outside 0..100. DROP id removes an existing student. Mutations print OK or ERR and rejected mutations change nothing. SCORE id prints floor((2*a+3*b+5*c)/10), or ERR if absent. RANK prints student count then 'id score' rows sorted by decreasing score, breaking ties by increasing ID. SUMMARY prints 'count mean_score passing_count', where mean_score is floor of the mean of already-rounded student scores and passing_count counts scores >=50. Empty summary is '0 0 0'. Supplied invalid marks and subject indices must be rejected. One output record per line.\nShared declarations:\n#include <stdio.h>\n#include <string.h>\n\n#define MAX_STUDENTS 100\n\ntypedef struct {\n    int id;\n    int marks[3];\n} Student;\n\nstatic Student students[MAX_STUDENTS];\nstatic int student_count;\nRelated function interfaces (do not implement these):\nstatic int locate_student(int id);\nstatic void process_command(void);\nstatic int score(const Student *student);\nAssigned function show_score:\n```c\nstatic void show_score(int id)\n{\n    int index = locate_student(id);\n    if (index < 0) {\n        puts(\"ERR\");\n    } else {\n        printf(\"%d\\n\", score(&students[index]));\n    }\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"6\\nADD 8 50 50 50\\nADD 2 50 50 50\\nADD 4 100 0 0\\nRANK\\nSUMMARY\\nSCORE 8\\n\", \"expected\": \"OK\\nOK\\nOK\\n3\\n2 50\\n8 50\\n4 20\\n3 40 2\\n50\", \"actual\": \"OK\\nOK\\nOK\\n3\\n2 50\\n4 50\\n8 50\\n3 50 3\\n50\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void show_score(int id)\n{\n    int index = locate_student(id);\n    if (index < 0) {\n        puts(\"ERR\");\n    } else {\n        printf(\"%d\\n\", score(&students[index]));\n    }\n}\n```",
+        "usage": {
+          "prompt_tokens": 617,
+          "completion_tokens": 52,
+          "total_tokens": 669
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 17.82
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\n3\n2 50\n4 50\n8 50\n3 50 3\n50\n",
+            "stderr": "",
+            "input": "6\nADD 8 50 50 50\nADD 2 50 50 50\nADD 4 100 0 0\nRANK\nSUMMARY\nSCORE 8\n",
+            "expected": "OK\nOK\nOK\n3\n2 50\n8 50\n4 20\n3 40 2\n50",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\n31\nOK\n71\n1 71 1\n",
+            "stderr": "",
+            "input": "6\nADD 3 10 20 30\nUPDATE 3 2 100\nSCORE 3\nUPDATE 3 0 90\nSCORE 3\nSUMMARY\n",
+            "expected": "OK\nOK\n58\nOK\n74\n1 74 1",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n2\n7 100\n9 0\nOK\n1 0 0\nOK\n0 0 0\n",
+            "stderr": "",
+            "input": "9\nADD 7 100 100 100\nADD 2 30 40 50\nADD 9 0 0 0\nDROP 2\nRANK\nDROP 7\nSUMMARY\nDROP 9\nSUMMARY\n",
+            "expected": "OK\nOK\nOK\nOK\n2\n7 100\n9 0\nOK\n1 0 0\nOK\n0 0 0",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "ERR\nOK\nERR\nERR\nERR\n27\nERR\n1\n4 27\n",
+            "stderr": "",
+            "input": "8\nADD 1 100 100 101\nADD 4 20 30 40\nADD 4 99 99 99\nUPDATE 4 3 4\nUPDATE 4 1 -1\nSCORE 4\nSCORE 99\nRANK\n",
+            "expected": "ERR\nOK\nERR\nERR\nERR\n33\nERR\n1\n4 33",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <string.h>\n\n#define MAX_STUDENTS 100\n\ntypedef struct {\n    int id;\n    int marks[3];\n} Student;\n\nstatic Student students[MAX_STUDENTS];\nstatic int student_count;\n\nstatic int locate_student(int id)\n{\n    int i;\n    for (i = 0; i < student_count; ++i) {\n        if (students[i].id == id) {\n            return i;\n        }\n    }\n    return -1;\n}\n\nstatic int valid_mark(int mark)\n{\n    return mark >= 0 && mark <= 100;\n}\n\nstatic int score(const Student *student)\n{\n    if (student->marks[0] < 0 || student->marks[0] > 100 ||\n        student->marks[1] < 0 || student->marks[1] > 100 ||\n        student->marks[2] < 0 || student->marks[2] > 100) {\n        return -1; // ERR\n    }\n    return (5 * student->marks[0] + 3 * student->marks[1] + 2 * student->marks[2]) / 10;\n}\n\nstatic int register_student(int id, int a, int b, int c)\n{\n    Student *student;\n    if (student_count == MAX_STUDENTS || locate_student(id) >= 0) {\n        return 0;\n    }\n    if (!valid_mark(a) || !valid_mark(b) || !valid_mark(c)) {\n        return 0;\n    }\n    student = &students[student_count];\n    student->id = id;\n    student->marks[0] = a;\n    student->marks[1] = b;\n    student->marks[2] = c;\n    ++student_count;\n    return 1;\n}\n\nstatic int update_mark(int id, int subject, int mark)\n{\n    int index = locate_student(id);\n    if (index < 0 || subject < 0 || subject > 2 || !valid_mark(mark)) {\n        return 0;\n    }\n    students[index].marks[subject] = mark;\n    return 1;\n}\n\nstatic int remove_student(int id)\n{\n    int index = locate_student(id);\n    if (index < 0) {\n        return 0;\n    }\n    for (int i = index; i < student_count - 1; ++i) {\n        students[i] = students[i + 1];\n    }\n    --student_count;\n    return 1;\n}\n\nstatic int outranks(int left, int right)\n{\n    int a = score(&students[left]);\n    int b = score(&students[right]);\n    if (a != b) {\n        return a > b;\n    }\n    return students[left].id < students[right].id;\n}\n\nstatic void rank_students(void)\n{\n    int order[MAX_STUDENTS];\n    int i;\n    int j;\n    for (i = 0; i < student_count; ++i) {\n        order[i] = i;\n    }\n    for (i = 0; i < student_count; ++i) {\n        for (j = i + 1; j < student_count; ++j) {\n            if (outranks(order[j], order[i])) {\n                int temporary = order[i];\n                order[i] = order[j];\n                order[j] = temporary;\n            }\n        }\n    }\n    printf(\"%d\\n\", student_count);\n    for (i = 0; i < student_count; ++i) {\n        Student *student = &students[order[i]];\n        printf(\"%d %d\\n\", student->id, score(student));\n    }\n}\n\nstatic void class_summary(void)\n{\n    int total = 0;\n    int passing = 0;\n    int i;\n    for (i = 0; i < student_count; ++i) {\n        int value = score(&students[i]);\n        total += value;\n        if (value >= 50) {\n            ++passing;\n        }\n    }\n    if (student_count == 0) {\n        puts(\"0 0 0\");\n    } else {\n        printf(\"%d %d %d\\n\", student_count, total / student_count, passing);\n    }\n}\n\nstatic void show_score(int id)\n{\n    int index = locate_student(id);\n    if (index < 0) {\n        puts(\"ERR\");\n    } else {\n        printf(\"%d\\n\", score(&students[index]));\n    }\n}\n\nstatic void process_command(void)\n{\n    char command[16];\n    int id;\n    int a;\n    int b;\n    int c;\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"ADD\") == 0) {\n        scanf(\"%d%d%d%d\", &id, &a, &b, &c);\n        puts(register_student(id, a, b, c) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"UPDATE\") == 0) {\n        scanf(\"%d%d%d\", &id, &a, &b);\n        puts(update_mark(id, a, b) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"DROP\") == 0) {\n        scanf(\"%d\", &id);\n        puts(remove_student(id) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"SCORE\") == 0) {\n        scanf(\"%d\", &id);\n        show_score(id);\n    } else if (strcmp(command, \"RANK\") == 0) {\n        rank_students();\n    } else if (strcmp(command, \"SUMMARY\") == 0) {\n        class_summary();\n    }\n}\n\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d\", &commands) != 1) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n",
+      "reason": "unchanged"
+    },
+    {
+      "request": {
+        "name": "process_command",
+        "retry": 0,
+        "source_sha256": "42c363bd1ef9f657271bd992650fa681aab066ff5802f914e75e8e14d03d6229",
+        "prompt": "Program behavior:\nGradebook. Read q (0..200), then q commands. Up to 100 students, IDs 0..1000. ADD id a b c adds an absent student with three marks 0..100. UPDATE id subject mark updates an existing student's subject indexed 0,1,2, rejecting other subject numbers or marks outside 0..100. DROP id removes an existing student. Mutations print OK or ERR and rejected mutations change nothing. SCORE id prints floor((2*a+3*b+5*c)/10), or ERR if absent. RANK prints student count then 'id score' rows sorted by decreasing score, breaking ties by increasing ID. SUMMARY prints 'count mean_score passing_count', where mean_score is floor of the mean of already-rounded student scores and passing_count counts scores >=50. Empty summary is '0 0 0'. Supplied invalid marks and subject indices must be rejected. One output record per line.\nShared declarations:\n#include <stdio.h>\n#include <string.h>\n\n#define MAX_STUDENTS 100\n\ntypedef struct {\n    int id;\n    int marks[3];\n} Student;\n\nstatic Student students[MAX_STUDENTS];\nstatic int student_count;\nRelated function interfaces (do not implement these):\nstatic void class_summary(void);\nint main(void);\nstatic void rank_students(void);\nstatic int register_student(int id, int a, int b, int c);\nstatic int remove_student(int id);\nstatic void show_score(int id);\nstatic int update_mark(int id, int subject, int mark);\nAssigned function process_command:\n```c\nstatic void process_command(void)\n{\n    char command[16];\n    int id;\n    int a;\n    int b;\n    int c;\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"ADD\") == 0) {\n        scanf(\"%d%d%d%d\", &id, &a, &b, &c);\n        puts(register_student(id, a, b, c) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"UPDATE\") == 0) {\n        scanf(\"%d%d%d\", &id, &a, &b);\n        puts(update_mark(id, a, b) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"DROP\") == 0) {\n        scanf(\"%d\", &id);\n        puts(remove_student(id) ? \"OK\" : \"ERR\");\n    } else if (strcmp(command, \"SCORE\") == 0) {\n        scanf(\"%d\", &id);\n        show_score(id);\n    } else if (strcmp(command, \"RANK\") == 0) {\n        rank_students();\n    } else if (strcmp(command, \"SUMMARY\") == 0) {\n        class_summary();\n    }\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"6\\nADD 8 50 50 50\\nADD 2 50 50 50\\nADD 4 100 0 0\\nRANK\\nSUMMARY\\nSCORE 8\\n\", \"expected\": \"OK\\nOK\\nOK\\n3\\n2 50\\n8 50\\n4 20\\n3 40 2\\n50\", \"actual\": \"OK\\nOK\\nOK\\n3\\n2 50\\n4 50\\n8 50\\n3 50 3\\n50\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nstatic void process_command(void)\n{\n    char command[16];\n    int id;\n    int a;\n    int b;\n    int c;\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"ADD\") == 0) {\n        scanf(\"%d%d%d%d\", &id, &a, &b, &c);\n        if (id >= 0 && id <= 1000 && a >= 0 && a <= 100 && b >= 0 && b <= 100 && c >= 0 && c <= 100) {\n            puts(register_student(id, a, b, c) ? \"OK\" : \"ERR\");\n        } else {\n            puts(\"ERR\");\n        }\n    } else if (strcmp(command, \"UPDATE\") == 0) {\n        scanf(\"%d%d%d\", &id, &a, &b);\n        if (id >= 0 && id <= 1000 && a >= 0 && a <= 100 && b >= 0 && b <= 100) {\n            puts(update_mark(id, a, b) ? \"OK\" : \"ERR\");\n        } else {\n            puts(\"ERR\");\n        }\n    } else if (strcmp(command, \"DROP\") == 0) {\n        scanf(\"%d\", &id);\n        if (id >= 0 && id <= 1000) {\n            puts(remove_student(id) ? \"OK\" : \"ERR\");\n        } else {\n            puts(\"ERR\");\n        }\n    } else if (strcmp(command, \"SCORE\") == 0) {\n        scanf(\"%d\", &id);\n        if (id >= 0 && id <= 1000) {\n            show_score(id);\n        } else {\n            puts(\"ERR\");\n        }\n    } else if (strcmp(command, \"RANK\") == 0) {\n        rank_students();\n    } else if (strcmp(command, \"SUMMARY\") == 0) {\n        class_summary();\n    }\n}\n```",
+        "usage": {
+          "prompt_tokens": 862,
+          "completion_tokens": 431,
+          "total_tokens": 1293
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 606,
+        "seconds": 75.861
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\n3\n2 50\n4 50\n8 50\n3 50 3\n50\n",
+            "stderr": "",
+            "input": "6\nADD 8 50 50 50\nADD 2 50 50 50\nADD 4 100 0 0\nRANK\nSUMMARY\nSCORE 8\n",
+            "expected": "OK\nOK\nOK\n3\n2 50\n8 50\n4 20\n3 40 2\n50",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\n31\nOK\n71\n1 71 1\n",
+            "stderr": "",
+            "input": "6\nADD 3 10 20 30\nUPDATE 3 2 100\nSCORE 3\nUPDATE 3 0 90\nSCORE 3\nSUMMARY\n",
+            "expected": "OK\nOK\n58\nOK\n74\n1 74 1",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n2\n7 100\n9 0\nOK\n1 0 0\nOK\n0 0 0\n",
+            "stderr": "",
+            "input": "9\nADD 7 100 100 100\nADD 2 30 40 50\nADD 9 0 0 0\nDROP 2\nRANK\nDROP 7\nSUMMARY\nDROP 9\nSUMMARY\n",
+            "expected": "OK\nOK\nOK\nOK\n2\n7 100\n9 0\nOK\n1 0 0\nOK\n0 0 0",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "ERR\nOK\nERR\nERR\nERR\n27\nERR\n1\n4 27\n",
+            "stderr": "",
+            "input": "8\nADD 1 100 100 101\nADD 4 20 30 40\nADD 4 99 99 99\nUPDATE 4 3 4\nUPDATE 4 1 -1\nSCORE 4\nSCORE 99\nRANK\n",
+            "expected": "ERR\nOK\nERR\nERR\nERR\n33\nERR\n1\n4 33",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <string.h>\n\n#define MAX_STUDENTS 100\n\ntypedef struct {\n    int id;\n    int marks[3];\n} Student;\n\nstatic Student students[MAX_STUDENTS];\nstatic int student_count;\n\nstatic int locate_student(int id)\n{\n    int i;\n    for (i = 0; i < student_count; ++i) {\n        if (students[i].id == id) {\n            return i;\n        }\n    }\n    return -1;\n}\n\nstatic int valid_mark(int mark)\n{\n    return mark >= 0 && mark <= 100;\n}\n\nstatic int score(const Student *student)\n{\n    if (student->marks[0] < 0 || student->marks[0] > 100 ||\n        student->marks[1] < 0 || student->marks[1] > 100 ||\n        student->marks[2] < 0 || student->marks[2] > 100) {\n        return -1; // ERR\n    }\n    return (5 * student->marks[0] + 3 * student->marks[1] + 2 * student->marks[2]) / 10;\n}\n\nstatic int register_student(int id, int a, int b, int c)\n{\n    Student *student;\n    if (student_count == MAX_STUDENTS || locate_student(id) >= 0) {\n        return 0;\n    }\n    if (!valid_mark(a) || !valid_mark(b) || !valid_mark(c)) {\n        return 0;\n    }\n    student = &students[student_count];\n    student->id = id;\n    student->marks[0] = a;\n    student->marks[1] = b;\n    student->marks[2] = c;\n    ++student_count;\n    return 1;\n}\n\nstatic int update_mark(int id, int subject, int mark)\n{\n    int index = locate_student(id);\n    if (index < 0 || subject < 0 || subject > 2 || !valid_mark(mark)) {\n        return 0;\n    }\n    students[index].marks[subject] = mark;\n    return 1;\n}\n\nstatic int remove_student(int id)\n{\n    int index = locate_student(id);\n    if (index < 0) {\n        return 0;\n    }\n    for (int i = index; i < student_count - 1; ++i) {\n        students[i] = students[i + 1];\n    }\n    --student_count;\n    return 1;\n}\n\nstatic int outranks(int left, int right)\n{\n    int a = score(&students[left]);\n    int b = score(&students[right]);\n    if (a != b) {\n        return a > b;\n    }\n    return students[left].id < students[right].id;\n}\n\nstatic void rank_students(void)\n{\n    int order[MAX_STUDENTS];\n    int i;\n    int j;\n    for (i = 0; i < student_count; ++i) {\n        order[i] = i;\n    }\n    for (i = 0; i < student_count; ++i) {\n        for (j = i + 1; j < student_count; ++j) {\n            if (outranks(order[j], order[i])) {\n                int temporary = order[i];\n                order[i] = order[j];\n                order[j] = temporary;\n            }\n        }\n    }\n    printf(\"%d\\n\", student_count);\n    for (i = 0; i < student_count; ++i) {\n        Student *student = &students[order[i]];\n        printf(\"%d %d\\n\", student->id, score(student));\n    }\n}\n\nstatic void class_summary(void)\n{\n    int total = 0;\n    int passing = 0;\n    int i;\n    for (i = 0; i < student_count; ++i) {\n        int value = score(&students[i]);\n        total += value;\n        if (value >= 50) {\n            ++passing;\n        }\n    }\n    if (student_count == 0) {\n        puts(\"0 0 0\");\n    } else {\n        printf(\"%d %d %d\\n\", student_count, total / student_count, passing);\n    }\n}\n\nstatic void show_score(int id)\n{\n    int index = locate_student(id);\n    if (index < 0) {\n        puts(\"ERR\");\n    } else {\n        printf(\"%d\\n\", score(&students[index]));\n    }\n}\n\nstatic void process_command(void)\n{\n    char command[16];\n    int id;\n    int a;\n    int b;\n    int c;\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"ADD\") == 0) {\n        scanf(\"%d%d%d%d\", &id, &a, &b, &c);\n        if (id >= 0 && id <= 1000 && a >= 0 && a <= 100 && b >= 0 && b <= 100 && c >= 0 && c <= 100) {\n            puts(register_student(id, a, b, c) ? \"OK\" : \"ERR\");\n        } else {\n            puts(\"ERR\");\n        }\n    } else if (strcmp(command, \"UPDATE\") == 0) {\n        scanf(\"%d%d%d\", &id, &a, &b);\n        if (id >= 0 && id <= 1000 && a >= 0 && a <= 100 && b >= 0 && b <= 100) {\n            puts(update_mark(id, a, b) ? \"OK\" : \"ERR\");\n        } else {\n            puts(\"ERR\");\n        }\n    } else if (strcmp(command, \"DROP\") == 0) {\n        scanf(\"%d\", &id);\n        if (id >= 0 && id <= 1000) {\n            puts(remove_student(id) ? \"OK\" : \"ERR\");\n        } else {\n            puts(\"ERR\");\n        }\n    } else if (strcmp(command, \"SCORE\") == 0) {\n        scanf(\"%d\", &id);\n        if (id >= 0 && id <= 1000) {\n            show_score(id);\n        } else {\n            puts(\"ERR\");\n        }\n    } else if (strcmp(command, \"RANK\") == 0) {\n        rank_students();\n    } else if (strcmp(command, \"SUMMARY\") == 0) {\n        class_summary();\n    }\n}\n\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d\", &commands) != 1) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n",
+      "reason": "accepted"
+    },
+    {
+      "request": {
+        "name": "main",
+        "retry": 0,
+        "source_sha256": "cb7d1f5c9e117b7c73054bd69a9c42ca3de81843fbffd9383efed5a2fe6dba8b",
+        "prompt": "Program behavior:\nGradebook. Read q (0..200), then q commands. Up to 100 students, IDs 0..1000. ADD id a b c adds an absent student with three marks 0..100. UPDATE id subject mark updates an existing student's subject indexed 0,1,2, rejecting other subject numbers or marks outside 0..100. DROP id removes an existing student. Mutations print OK or ERR and rejected mutations change nothing. SCORE id prints floor((2*a+3*b+5*c)/10), or ERR if absent. RANK prints student count then 'id score' rows sorted by decreasing score, breaking ties by increasing ID. SUMMARY prints 'count mean_score passing_count', where mean_score is floor of the mean of already-rounded student scores and passing_count counts scores >=50. Empty summary is '0 0 0'. Supplied invalid marks and subject indices must be rejected. One output record per line.\nShared declarations:\n#include <stdio.h>\n#include <string.h>\n\n#define MAX_STUDENTS 100\n\ntypedef struct {\n    int id;\n    int marks[3];\n} Student;\n\nstatic Student students[MAX_STUDENTS];\nstatic int student_count;\nRelated function interfaces (do not implement these):\nstatic void process_command(void);\nAssigned function main:\n```c\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d\", &commands) != 1) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n```\nCompiler diagnostics:\n\nVisible integration failure (other functions may also be faulty):\n[{\"input\": \"6\\nADD 8 50 50 50\\nADD 2 50 50 50\\nADD 4 100 0 0\\nRANK\\nSUMMARY\\nSCORE 8\\n\", \"expected\": \"OK\\nOK\\nOK\\n3\\n2 50\\n8 50\\n4 20\\n3 40 2\\n50\", \"actual\": \"OK\\nOK\\nOK\\n3\\n2 50\\n4 50\\n8 50\\n3 50 3\\n50\\n\", \"exit\": 0}]\nCorrect the assigned function according to the stated program behavior. Check its conditions, bounds, arithmetic, state updates and return value. Fix every actual fault in this function. If it is correct, reproduce it unchanged. Preserve the EXACT function signature and all interfaces. Return ONLY this one COMPLETE C function in a ```c block. No JSON, patches, explanations, includes, globals or other function definitions. Do not hardcode example answers."
+      },
+      "generation": {
+        "raw": "```c\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d\", &commands) != 1) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n```",
+        "usage": {
+          "prompt_tokens": 616,
+          "completion_tokens": 67,
+          "total_tokens": 683
+        },
+        "finish_reason": "stop",
+        "max_output_tokens": 256,
+        "seconds": 19.91
+      },
+      "accepted": true,
+      "check": {
+        "compiled": true,
+        "diagnostics": "",
+        "tests": [
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\n3\n2 50\n4 50\n8 50\n3 50 3\n50\n",
+            "stderr": "",
+            "input": "6\nADD 8 50 50 50\nADD 2 50 50 50\nADD 4 100 0 0\nRANK\nSUMMARY\nSCORE 8\n",
+            "expected": "OK\nOK\nOK\n3\n2 50\n8 50\n4 20\n3 40 2\n50",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\n31\nOK\n71\n1 71 1\n",
+            "stderr": "",
+            "input": "6\nADD 3 10 20 30\nUPDATE 3 2 100\nSCORE 3\nUPDATE 3 0 90\nSCORE 3\nSUMMARY\n",
+            "expected": "OK\nOK\n58\nOK\n74\n1 74 1",
+            "passed": false
+          },
+          {
+            "returncode": 0,
+            "stdout": "OK\nOK\nOK\nOK\n2\n7 100\n9 0\nOK\n1 0 0\nOK\n0 0 0\n",
+            "stderr": "",
+            "input": "9\nADD 7 100 100 100\nADD 2 30 40 50\nADD 9 0 0 0\nDROP 2\nRANK\nDROP 7\nSUMMARY\nDROP 9\nSUMMARY\n",
+            "expected": "OK\nOK\nOK\nOK\n2\n7 100\n9 0\nOK\n1 0 0\nOK\n0 0 0",
+            "passed": true
+          },
+          {
+            "returncode": 0,
+            "stdout": "ERR\nOK\nERR\nERR\nERR\n27\nERR\n1\n4 27\n",
+            "stderr": "",
+            "input": "8\nADD 1 100 100 101\nADD 4 20 30 40\nADD 4 99 99 99\nUPDATE 4 3 4\nUPDATE 4 1 -1\nSCORE 4\nSCORE 99\nRANK\n",
+            "expected": "ERR\nOK\nERR\nERR\nERR\n33\nERR\n1\n4 33",
+            "passed": false
+          }
+        ],
+        "passed": false
+      },
+      "candidate": "#include <stdio.h>\n#include <string.h>\n\n#define MAX_STUDENTS 100\n\ntypedef struct {\n    int id;\n    int marks[3];\n} Student;\n\nstatic Student students[MAX_STUDENTS];\nstatic int student_count;\n\nstatic int locate_student(int id)\n{\n    int i;\n    for (i = 0; i < student_count; ++i) {\n        if (students[i].id == id) {\n            return i;\n        }\n    }\n    return -1;\n}\n\nstatic int valid_mark(int mark)\n{\n    return mark >= 0 && mark <= 100;\n}\n\nstatic int score(const Student *student)\n{\n    if (student->marks[0] < 0 || student->marks[0] > 100 ||\n        student->marks[1] < 0 || student->marks[1] > 100 ||\n        student->marks[2] < 0 || student->marks[2] > 100) {\n        return -1; // ERR\n    }\n    return (5 * student->marks[0] + 3 * student->marks[1] + 2 * student->marks[2]) / 10;\n}\n\nstatic int register_student(int id, int a, int b, int c)\n{\n    Student *student;\n    if (student_count == MAX_STUDENTS || locate_student(id) >= 0) {\n        return 0;\n    }\n    if (!valid_mark(a) || !valid_mark(b) || !valid_mark(c)) {\n        return 0;\n    }\n    student = &students[student_count];\n    student->id = id;\n    student->marks[0] = a;\n    student->marks[1] = b;\n    student->marks[2] = c;\n    ++student_count;\n    return 1;\n}\n\nstatic int update_mark(int id, int subject, int mark)\n{\n    int index = locate_student(id);\n    if (index < 0 || subject < 0 || subject > 2 || !valid_mark(mark)) {\n        return 0;\n    }\n    students[index].marks[subject] = mark;\n    return 1;\n}\n\nstatic int remove_student(int id)\n{\n    int index = locate_student(id);\n    if (index < 0) {\n        return 0;\n    }\n    for (int i = index; i < student_count - 1; ++i) {\n        students[i] = students[i + 1];\n    }\n    --student_count;\n    return 1;\n}\n\nstatic int outranks(int left, int right)\n{\n    int a = score(&students[left]);\n    int b = score(&students[right]);\n    if (a != b) {\n        return a > b;\n    }\n    return students[left].id < students[right].id;\n}\n\nstatic void rank_students(void)\n{\n    int order[MAX_STUDENTS];\n    int i;\n    int j;\n    for (i = 0; i < student_count; ++i) {\n        order[i] = i;\n    }\n    for (i = 0; i < student_count; ++i) {\n        for (j = i + 1; j < student_count; ++j) {\n            if (outranks(order[j], order[i])) {\n                int temporary = order[i];\n                order[i] = order[j];\n                order[j] = temporary;\n            }\n        }\n    }\n    printf(\"%d\\n\", student_count);\n    for (i = 0; i < student_count; ++i) {\n        Student *student = &students[order[i]];\n        printf(\"%d %d\\n\", student->id, score(student));\n    }\n}\n\nstatic void class_summary(void)\n{\n    int total = 0;\n    int passing = 0;\n    int i;\n    for (i = 0; i < student_count; ++i) {\n        int value = score(&students[i]);\n        total += value;\n        if (value >= 50) {\n            ++passing;\n        }\n    }\n    if (student_count == 0) {\n        puts(\"0 0 0\");\n    } else {\n        printf(\"%d %d %d\\n\", student_count, total / student_count, passing);\n    }\n}\n\nstatic void show_score(int id)\n{\n    int index = locate_student(id);\n    if (index < 0) {\n        puts(\"ERR\");\n    } else {\n        printf(\"%d\\n\", score(&students[index]));\n    }\n}\n\nstatic void process_command(void)\n{\n    char command[16];\n    int id;\n    int a;\n    int b;\n    int c;\n    scanf(\"%15s\", command);\n    if (strcmp(command, \"ADD\") == 0) {\n        scanf(\"%d%d%d%d\", &id, &a, &b, &c);\n        if (id >= 0 && id <= 1000 && a >= 0 && a <= 100 && b >= 0 && b <= 100 && c >= 0 && c <= 100) {\n            puts(register_student(id, a, b, c) ? \"OK\" : \"ERR\");\n        } else {\n            puts(\"ERR\");\n        }\n    } else if (strcmp(command, \"UPDATE\") == 0) {\n        scanf(\"%d%d%d\", &id, &a, &b);\n        if (id >= 0 && id <= 1000 && a >= 0 && a <= 100 && b >= 0 && b <= 100) {\n            puts(update_mark(id, a, b) ? \"OK\" : \"ERR\");\n        } else {\n            puts(\"ERR\");\n        }\n    } else if (strcmp(command, \"DROP\") == 0) {\n        scanf(\"%d\", &id);\n        if (id >= 0 && id <= 1000) {\n            puts(remove_student(id) ? \"OK\" : \"ERR\");\n        } else {\n            puts(\"ERR\");\n        }\n    } else if (strcmp(command, \"SCORE\") == 0) {\n        scanf(\"%d\", &id);\n        if (id >= 0 && id <= 1000) {\n            show_score(id);\n        } else {\n            puts(\"ERR\");\n        }\n    } else if (strcmp(command, \"RANK\") == 0) {\n        rank_students();\n    } else if (strcmp(command, \"SUMMARY\") == 0) {\n        class_summary();\n    }\n}\n\nint main(void)\n{\n    int commands;\n    int i;\n    if (scanf(\"%d\", &commands) != 1) {\n        return 0;\n    }\n    for (i = 0; i < commands; ++i) {\n        process_command();\n    }\n    return 0;\n}\n",
+      "reason": "unchanged"
+    }
+  ],
+  "calls": 12,
+  "function_count": 12,
+  "control_probe": false
+}
