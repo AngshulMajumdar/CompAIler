@@ -1,0 +1,8 @@
+include LICENSE THIRD_PARTY_NOTICES.md VALIDATION.md Dockerfile .dockerignore
+recursive-include docs *.md
+recursive-include examples *.c *.txt *.json
+recursive-include scripts *.sh
+recursive-include tests *.py
+recursive-include benchmarks *.md *.json *.c *.txt
+
+recursive-include validation *.json *.c
