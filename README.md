@@ -80,6 +80,8 @@ This initial release supports a restricted single-file console-C subset; see [su
 
 The prior constructed benchmark comprised six faulty 179–210-line programs with 43 injected faults, plus two correct controls. The recorded final verification passed 1,248/1,248 executions across TinyCC and GCC/UBSan. That final search reused 86 recorded CPU-model proposals. These are the earlier experiment results, not a claim that this newly packaged WASI release was rerun on an uncached complete suite. See [benchmark evidence](benchmarks/README.md) and [release validation](VALIDATION.md) for the distinction and actual package checks.
 
+The [frozen historical evidence archive](CompAIler_Historical_Evidence.zip) contains the retained prototype controllers, proposal traces, cached-search journals, fixtures, and verification records, with a SHA-256 inventory. See [precise scenario roles and reproduction limits](benchmarks/RECORDED_RESULTS.md) and [subsequent live validation](docs/LIVE_VALIDATION_2026-11-24.md). The original 24 evaluation scenarios were examined during development; only the final 24 scenarios per application were explicitly generated after source selection.
+
 ## Development and distribution
 
 ```bash
@@ -88,8 +90,9 @@ python -m pytest -q
 python -m build
 ```
 
-CI exercises package creation, source guards, WASI execution, failure withholding, and input isolation without downloading model weights. To publish on GitHub, upload this project's contents (including `.github`) to a new repository. Consumers can clone/download it and run the installer. `dist/` contains an installable wheel and source distribution; neither is published to PyPI by this archive.
+The automated package tests exercise source guards, WASI execution, failure withholding, and input isolation without downloading model weights. These checks were run locally; this statement does not claim a successful GitHub Actions run. Consumers can clone/download the repository and run the installer. `dist/` contains an installable wheel and source distribution; neither is published to PyPI by this archive.
 
-A Dockerfile is included for an alternative CPU-only CLI environment. A separate complete Hugging Face Space ZIP provides the browser interface.
+A Dockerfile is included for an alternative CPU-only CLI environment. The browser interface is available at [the CPU Docker Space](https://huggingface.co/spaces/Angshul/CompAIler).
 
 License: Apache-2.0 for original project code. See [third-party notices](THIRD_PARTY_NOTICES.md).
+
